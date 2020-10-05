@@ -14,18 +14,18 @@ namespace signals.src
     class Network
     {
         public int id;
-        public List<ushort> voxelpositions;
+        public HashSet<ushort> voxelpositions;
         static ushort SIZE = 16;
         public Network(int id) {
             this.id = id;
-            voxelpositions = new List<ushort>();
+            voxelpositions = new HashSet<ushort>();
           }
 
 
         public Network(int id, List<Vec3i> voxelPos)
         {
             this.id = id;
-            voxelpositions = new List<ushort>();
+            voxelpositions = new HashSet<ushort>();
             foreach (Vec3i pos in voxelPos)
             {
                 if(getIndex(pos) != null)
@@ -38,7 +38,7 @@ namespace signals.src
         public Network(int id, ushort[] voxelPos)
         {
             this.id = id;
-            voxelpositions = new List<ushort>(voxelPos);
+            voxelpositions = new HashSet<ushort>(voxelPos);
         }
 
         public Vec3i[] getVoxelPos()
@@ -161,7 +161,7 @@ namespace signals.src
 
 
             //We explore adjacent voxels, looking for a network
-            //if a network is found, we take the id. if another network is found, we merge the networks.
+            //if a network is found, we take the id. if another network is found with different id, we merge the networks.
             Network current_net = null;
             foreach (BlockFacing face in BlockFacing.ALLFACES)
             {
@@ -173,10 +173,14 @@ namespace signals.src
                     {
                         net.AddVoxel(voxelPos);
                         current_net = net;
-                    }else if(current_net != null)
+                    }else if(current_net != null && net.id != current_net.id)
                     {
                         current_net.MergeWith(net);
                         networks.Remove(net.id);
+                    }
+                    else if (net.id == current_net.id)
+                    {
+                        net.AddVoxel(voxelPos);
                     }
                 }
             }
