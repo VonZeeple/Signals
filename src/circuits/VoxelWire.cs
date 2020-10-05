@@ -21,6 +21,20 @@ namespace signals.src
             voxelpositions = new List<ushort>();
           }
 
+
+        public Network(int id, List<Vec3i> voxelPos)
+        {
+            this.id = id;
+            voxelpositions = new List<ushort>();
+            foreach (Vec3i pos in voxelPos)
+            {
+                if(getIndex(pos) != null)
+                {
+                    voxelpositions.Add(getIndex(pos).GetValueOrDefault());
+                }
+            }
+        }
+
         public Network(int id, ushort[] voxelPos)
         {
             this.id = id;
@@ -88,8 +102,6 @@ namespace signals.src
             return false;
         }
 
-
-        //Add the network logic exploration etc...
     }
     //A wire is a special component composed of voxels
     class VoxelWire
@@ -115,6 +127,10 @@ namespace signals.src
                 }
             }
             return false;
+        }
+        public bool gotWireAtPos(Vec3i pos)
+        {
+            return gotWireAtPos(pos.X, pos.Y, pos.Z);
         }
 
         public Network GetNetworkAtPos(Vec3i voxelPos)
@@ -149,8 +165,7 @@ namespace signals.src
             Network current_net = null;
             foreach (BlockFacing face in BlockFacing.ALLFACES)
             {
-                Vec3i offset = face.Normali;
-                Vec3i pos2 = voxelPos.AddCopy(offset.X, offset.Y, offset.Z);
+                Vec3i pos2 = voxelPos.AddCopy(face);
                 Network net = GetNetworkAtPos(pos2);
                 if (net!=null)
                 {
@@ -178,14 +193,66 @@ namespace signals.src
             return true;
         }
 
+        public List<Vec3i> RebuildNetwork(Vec3i pos_init, Network old_network)
+        {
+            if (!old_network.GotVoxelAtPos(pos_init)) return new List<Vec3i>();
+            List<Vec3i> to_explore = new List<Vec3i>();
+            List<Vec3i> explored = new List<Vec3i>();
+
+            to_explore.Add(pos_init);
+
+            while (to_explore.Any())
+            {
+                Vec3i current_pos = to_explore.Last();
+                foreach (BlockFacing facing in BlockFacing.ALLFACES)
+                {
+                    Vec3i offset_pos = current_pos.AddCopy(facing);
+                    if (old_network.GotVoxelAtPos(offset_pos) && !explored.Contains(offset_pos))
+                    {
+                        to_explore.Add(offset_pos);
+                    }
+                }
+                to_explore.Remove(current_pos);
+                explored.Add(current_pos);
+            }
+
+            //At the end, the explored list contains connected voxels
+            return explored;
+        }
+
         public bool OnRemove(Vec3i voxelPos)
         {
             foreach (Network net in networks.Values)
             {
                 if (net.RemoveVoxel(voxelPos)){
                     hasChanged = true;
+
+                    //Simplest case, where the voxel was the only one left in the network
+                    if(net.voxelpositions.Count == 0)
+                    {
+                        networks.Remove(net.id);
+                        return true;
+                    }
+
                     //This is where the fun begins...network exploration!
-                    
+                    //We first build a new network starting from one face
+                    //We then check if voxels on other face are in the previous networks, if not, start a new network etc..
+                    List<Vec3i> explored_pos = new List<Vec3i>();
+                    foreach (BlockFacing face in BlockFacing.ALLFACES)
+                    {
+                        if (explored_pos.Contains(voxelPos.AddCopy(face))) continue;
+                        
+                        List<Vec3i> voxels = RebuildNetwork(voxelPos.AddCopy(face), net);
+                        if(voxels.Count > 0)
+                        {
+
+                            networks.Add(nextNetworkId, new Network(nextNetworkId, voxels));
+                            nextNetworkId++;
+                            explored_pos.AddRange(voxels);
+                        }
+                    }
+                    //remove the original network
+                    networks.Remove(net.id);
                     return true;
                 }
             }
