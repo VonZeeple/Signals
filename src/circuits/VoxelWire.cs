@@ -287,33 +287,36 @@ namespace signals.src
 
         }
 
-        internal void deserialize(byte[] data)
+        static internal VoxelWire deserialize(byte[] data)
         {
             using (MemoryStream ms = new MemoryStream(data))
             {
                 BinaryReader reader = new BinaryReader(ms);
-
+                VoxelWire wire = new VoxelWire();
                 try
                 {
+                    
                     int num_networks = reader.ReadInt32();
                     for (int i = 0; i < num_networks; i++)
                     {
-                        int id = nextNetworkId;
-                        nextNetworkId++;
+                        int id = wire.nextNetworkId;
+                        wire.nextNetworkId++;
                         int size = reader.ReadInt32();
                         ushort[] voxels = new ushort[size];
                         for (int j = 0; j < size; j++)
                         {
                             voxels[j] = reader.ReadUInt16();
                         }
-                        this.networks.Add(id, new Network(id, voxels));
+                        wire.networks.Add(id, new Network(id, voxels));
                     }
 
                 }
                 catch(Exception e)
                 {
-                   
+                    
                 }
+                    return wire;
+                
             }
 
            
@@ -324,9 +327,10 @@ namespace signals.src
         {
             if (hasChanged || this.mesh == null)
             {
-                RegenMesh(api);
+                
                 hasChanged = false;
             }
+            RegenMesh(api);
             return this.mesh;
         }
 

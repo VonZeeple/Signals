@@ -22,8 +22,8 @@ namespace signals.src
     {
 
         public MeshData Mesh;
-        public int AvailableWireVoxels;
-        public CircuitComponent[] components;
+        public int AvailableWireVoxels = 0;
+        public CircuitComponent[] components = new CircuitComponent[] { new CCValve(new Vec3i(5, 1, 5)) };
         public VoxelWire wiring;
         
         //All the selection boxes avalaible for a given component
@@ -41,17 +41,11 @@ namespace signals.src
         public void Initialize(ICoreAPI api)
         {
             this.api = api;
-            if (AvailableWireVoxels == null) AvailableWireVoxels = 0;
- 
-            GenerateSelectionVoxelBoxes();
-
-            components = new CircuitComponent[] { new CCValve(new Vec3i(5,1,5))
-            };
-
             
-            if (api is ICoreClientAPI)
+            if (api.Side == EnumAppSide.Client)
             {
-                //updateMeshes();
+
+                GenerateSelectionVoxelBoxes();
             }
         }
 
@@ -118,7 +112,6 @@ namespace signals.src
         {
 
             MeshData mesh =  wiring.GetMesh(api as ICoreClientAPI);
-            if (components == null) return mesh;
             foreach (CircuitComponent comp in components) {
                 mesh.AddMeshData(comp.getMesh(capi));
                 }
@@ -182,13 +175,10 @@ namespace signals.src
 
             }
             //We now add the selection boxes of the other components
-            if (components != null)
-            {
                 foreach (CircuitComponent comp in components)
                 {
                     boxes.Add(comp.GetSelectionBox());
                 }
-            }
 
             selectionBoxesVoxels = boxes.ToArray();
         }
@@ -199,9 +189,13 @@ namespace signals.src
             Byte[] bytes = tree.GetBytes("wiring");
             if(bytes != null)
             {
-                wiring.deserialize(bytes);
+                wiring = VoxelWire.deserialize(bytes);
             }
             AvailableWireVoxels = tree.TryGetInt("availableWireVoxels").GetValueOrDefault(0);
+
+
+            GenerateSelectionVoxelBoxes();
+            
         }
 
         public void ToTreeAttributes(ITreeAttribute tree)

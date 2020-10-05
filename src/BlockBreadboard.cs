@@ -70,7 +70,6 @@ namespace signals.src
         public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack)
         {
             base.OnBlockPlaced(world, blockPos, byItemStack);
-
             BEbreadboard be = world.BlockAccessor.GetBlockEntity(blockPos) as BEbreadboard;
             if (be != null && byItemStack != null)
             {
@@ -80,7 +79,7 @@ namespace signals.src
 
                 be.FromTreeAtributes(byItemStack.Attributes, world);
                 be.MarkDirty(true);
-
+                
                 if (world.Side == EnumAppSide.Client)
                 {
                     //be.RegenMesh();
@@ -89,6 +88,13 @@ namespace signals.src
                 //be.RegenSelectionBoxes(null);
             }
         }
+
+        //this is where the rendering of the itemstack is handled
+        //public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
+        //{
+        //    CircuitBlockModelCache cache = capi.ModLoader.GetModSystem<CircuitBlockModelCache>();
+        //    renderinfo.ModelRef = cache.GetOrCreateMeshRef(itemstack);
+        //}
 
         //Detects when the player interacts with left click, usually to remove a component
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)

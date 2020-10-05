@@ -19,19 +19,14 @@ namespace signals.src
     public class BEbreadboard : BlockEntity, IBlockEntityRotatable
     {
 
-        VoxelCircuit Circuit;
+        VoxelCircuit Circuit = new VoxelCircuit();
         ICoreAPI Api;
 
         public override void Initialize(ICoreAPI api)
         {
-            base.Initialize(api);
             this.Api = api;
-
-            if (Circuit == null)
-            {
-                Circuit = new VoxelCircuit();
-                Circuit.Initialize(api);
-            }
+            base.Initialize(api);
+            Circuit.Initialize(api);
 
         }
 
@@ -70,10 +65,19 @@ namespace signals.src
             }
 
             Circuit.OnUseOver(byPlayer, voxelPos, facing, mouseBreakMode);
+            //Api.World.PlaySoundAt(new AssetLocation("signals:buzz_short"), Pos.X, Pos.Y, Pos.Z);
+            Api.World.PlaySoundAt(new AssetLocation("signals:sounds/buzz_short"), Pos.X, Pos.Y, Pos.Z);
             MarkDirty();
         }
 
-            public void SendUseOverPacket(IPlayer byPlayer, Vec3i voxelPos, BlockFacing facing, bool mouseMode)
+        internal static MeshData CreateMeshForItem(ICoreClientAPI capi, ITreeAttribute tree)
+        {
+            return null;
+        }
+
+
+        //Notifies the server that the block have been interacted with
+        public void SendUseOverPacket(IPlayer byPlayer, Vec3i voxelPos, BlockFacing facing, bool mouseMode)
         {
             byte[] data;
 
@@ -90,14 +94,24 @@ namespace signals.src
 
             ((ICoreClientAPI)Api).Network.SendBlockEntityPacket(
                 Pos.X, Pos.Y, Pos.Z,
-                (int)EnumClayFormingPacket.OnUserOver,
+                (int)EnumBECircuitPacket.OnUserOver,
                 data
             );
         }
 
+        //When the client recieve a packet from the server
+        public override void OnReceivedServerPacket(int packetid, byte[] data)
+        {
+            if(packetid == (int)EnumBECircuitPacket.PlaySound)
+            {
+
+            }
+        }
+
+        //When the server recieve a packet from a client
         public override void OnReceivedClientPacket(IPlayer player, int packetid, byte[] data)
         {
-            if(packetid == (int)EnumClayFormingPacket.OnUserOver)
+            if(packetid == (int)EnumBECircuitPacket.OnUserOver)
             {
                 Vec3i voxelPos;
                 bool mouseMode;
@@ -111,7 +125,7 @@ namespace signals.src
 
                 }
 
-                //   api.World.Logger.Notification("ok got use over packet from {0} at pos {1}", player.PlayerName, voxelPos);
+                Api.World.Logger.Notification("ok got use over packet from {0} at pos {1}", player.PlayerName, voxelPos);
                 OnUseOver(player, voxelPos, facing, mouseMode);
             }
         }
@@ -119,16 +133,8 @@ namespace signals.src
         public override void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
             base.FromTreeAtributes(tree, worldForResolving);
-            Circuit = new VoxelCircuit();
-            Circuit.Initialize(worldForResolving.Api);
             Circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), worldForResolving);
-
-            if (Api?.Side == EnumAppSide.Client)
-            {
-                MarkDirty(true);
-                Circuit.GenerateSelectionVoxelBoxes();
-            }
-            //RegenMeshAndSelectionBoxes();
+            MarkDirty(true);
         }
 
         public override void ToTreeAttributes(ITreeAttribute tree)
@@ -170,6 +176,15 @@ namespace signals.src
 
             Vec3i voxelPos = new Vec3i((int)(16 * boxes[index].X1), (int)(16 * boxes[index].Y1), (int)(16 * boxes[index].Z1));
             Circuit.GetBlockInfo(voxelPos, dsc);
+        }
+
+
+        public enum EnumBECircuitPacket
+        {
+            PlaySound = 1000,
+            //SelectRecipe = 1001,
+            OnUserOver = 1002,
+            //CancelSelect = 1003
         }
     }
 }
