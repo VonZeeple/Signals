@@ -82,7 +82,10 @@ namespace signals.src
             ITreeAttribute tree = forStack.Attributes;
             if (tree == null) tree = new TreeAttribute();
             MeshData mesh = BEbreadboard.CreateMeshForItem(capi, tree);
-            //mesh.Rgba2 = null;
+            Block block = forStack.Block;
+            MeshData mesh_board = new MeshData();
+            capi.Tesselator.TesselateBlock(block, out mesh_board);
+            mesh.AddMeshData(mesh_board);
 
             return capi.Render.UploadMesh(mesh);
         }

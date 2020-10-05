@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Vintagestory.API.Client;
@@ -72,7 +73,9 @@ namespace signals.src
 
         internal static MeshData CreateMeshForItem(ICoreClientAPI capi, ITreeAttribute tree)
         {
-            return null;
+            VoxelCircuit circuit = new VoxelCircuit();
+            circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), capi.World);
+            return circuit.getCircuitMesh(capi);
         }
 
 
@@ -99,14 +102,6 @@ namespace signals.src
             );
         }
 
-        //When the client recieve a packet from the server
-        public override void OnReceivedServerPacket(int packetid, byte[] data)
-        {
-            if(packetid == (int)EnumBECircuitPacket.PlaySound)
-            {
-
-            }
-        }
 
         //When the server recieve a packet from a client
         public override void OnReceivedClientPacket(IPlayer player, int packetid, byte[] data)
@@ -181,7 +176,6 @@ namespace signals.src
 
         public enum EnumBECircuitPacket
         {
-            PlaySound = 1000,
             //SelectRecipe = 1001,
             OnUserOver = 1002,
             //CancelSelect = 1003

@@ -111,7 +111,7 @@ namespace signals.src
         public MeshData getCircuitMesh(ICoreClientAPI capi)
         {
 
-            MeshData mesh =  wiring.GetMesh(api as ICoreClientAPI);
+            MeshData mesh =  wiring.GetMesh(capi);
             foreach (CircuitComponent comp in components) {
                 mesh.AddMeshData(comp.getMesh(capi));
                 }

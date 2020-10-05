@@ -90,11 +90,11 @@ namespace signals.src
         }
 
         //this is where the rendering of the itemstack is handled
-        //public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
-        //{
-        //    CircuitBlockModelCache cache = capi.ModLoader.GetModSystem<CircuitBlockModelCache>();
-        //    renderinfo.ModelRef = cache.GetOrCreateMeshRef(itemstack);
-        //}
+        public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
+        {
+            CircuitBlockModelCache cache = capi.ModLoader.GetModSystem<CircuitBlockModelCache>();
+            renderinfo.ModelRef = cache.GetOrCreateMeshRef(itemstack);
+        }
 
         //Detects when the player interacts with left click, usually to remove a component
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
