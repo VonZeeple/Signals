@@ -1,0 +1,86 @@
+﻿{
+    "code": "el_valve",
+    "maxstacksize": 16,
+    "creativeinventory": {
+        "general": [ "*" ],
+        "items": [ "*" ]
+    },
+    "shape": { "base": "signals:item/el_valve_shape" },
+    "attributes": {
+        "displaycaseable": true,
+        "shelvable": true,
+        "onDisplayTransform": {
+            "translation": {
+                "x": 0.5,
+                "y": 0,
+                "z": 0.5
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "origin": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "scale": 1
+        }
+
+    },
+    "guiTransform": {
+        "translation": {
+            "x": 12,
+            "y": 13,
+            "z": 3
+        },
+        "rotation": {
+            "x": -30,
+            "y": -45,
+            "z": -180
+        },
+        "origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": 2.87
+    },
+    "groundTransform": {
+        "translation": {
+            "x": 0.5,
+            "y": 0,
+            "z": 0.5
+        },
+        "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": 5.01
+    },
+    "tpHandTransform": {
+        "translation": {
+            "x": -0.1,
+            "y": -0.2,
+            "z": -0.1
+        },
+        "rotation": {
+            "x": -2,
+            "y": 180,
+            "z": 53
+        },
+        "origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": 0.97
+    }
+}

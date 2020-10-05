@@ -1,0 +1,151 @@
+﻿{
+    "code": "testbreadboard",
+    "class": "BlockSimpleCoating",
+    "variantgroups": [
+        {
+            "code": "side",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        }
+    ],
+    "shapebytype": {
+        "*-down": { "base": "block/test_breadboard_shape" },
+        "*-up": {
+            "base": "block/test_breadboard_shape",
+            "rotateX": 180
+        },
+        "*-north": {
+            "base": "block/test_breadboard_shape",
+            "rotateX": 90
+        },
+        "*-east": {
+            "base": "block/test_breadboard_shape",
+            "rotateX": 90,
+            "rotateY": 180,
+            "rotateZ": 270
+        },
+        "*-west": {
+            "base": "block/test_breadboard_shape",
+            "rotateX": 90,
+            "rotateY": 0,
+            "rotateZ": 270
+        },
+        "*-south": {
+            "base": "block/test_breadboard_shape",
+            "rotateX": 270
+        }
+    },
+    "sidesolidByType": {
+        "*-down": {
+            "all": false,
+            "down": true
+        },
+        "*-up": {
+            "all": false,
+            "up": true
+        },
+        "*-north": {
+            "all": false,
+            "north": true
+        },
+        "*-east": {
+            "all": false,
+            "east": true
+        },
+        "*-west": {
+            "all": false,
+            "west": true
+        },
+        "*-south": {
+            "all": false,
+            "south": true
+        }
+    },
+    "sideopaqueByType": {
+        "*-down": {
+            "all": false,
+            "down": true
+        },
+        "*-up": {
+            "all": false,
+            "down": true
+        },
+        "*-north": {
+            "all": false,
+            "north": true
+        },
+        "*-east": {
+            "all": false,
+            "east": true
+        },
+        "*-west": {
+            "all": false,
+            "west": true
+        },
+        "*-south": {
+            "all": false,
+            "south": true
+        }
+    },
+    "blockmaterial": "Metal",
+    "creativeinventory": {
+        "general": [ "*-down" ],
+        "decorative": [ "*-down" ]
+    },
+    "replaceable": 300,
+    "resistance": 2,
+    "lightAbsorption": 1,
+    "selectionbox": {
+        "x1": 0,
+        "y1": 0,
+        "z1": 0,
+        "x2": 1,
+        "y2": 0.0625,
+        "z2": 1,
+        "rotateXByType": {
+            "*-up": 180,
+            "*-north": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-south": 270
+        },
+        "rotateYByType": {
+            "*-east": 180,
+            "*-west": 0
+        },
+        "rotateZByType": {
+            "*-east": 270,
+            "*-west": 270
+        }
+    },
+    "collisionbox": {
+        "x1": 0,
+        "y1": 0,
+        "z1": 0,
+        "x2": 1,
+        "y2": 0.0625,
+        "z2": 1,
+        "rotateXByType": {
+            "*-up": 180,
+            "*-north": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-south": 270
+        },
+        "rotateYByType": {
+            "*-east": 180,
+            "*-west": 0
+        },
+        "rotateZByType": {
+            "*-east": 270,
+            "*-west": 270
+        }
+    },
+    "guiTransform": {
+        "origin": {
+            "x": 0.5,
+            "y": 0.0625,
+            "z": 0.5
+        }
+    }
+
+}

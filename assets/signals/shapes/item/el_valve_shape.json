@@ -1,0 +1,187 @@
+{
+    "editor": {
+        "allAngles": false,
+        "entityTextureMode": false
+    },
+    "textureWidth": 16,
+    "textureHeight": 16,
+    "textureSizes": {
+        "quartz": [ 16, 16 ],
+        "valve": [ 8, 8 ],
+        "tech-powergeneratormain": [ 16, 16 ],
+        "lead": [ 16, 16 ]
+    },
+    "textures": {
+        "valve": "signals:item/valve"
+    },
+    "elements": [
+        {
+            "name": "valve",
+            "from": [ 0.0, 0.0, 0.0 ],
+            "to": [ 3.0, 1.0, 3.0 ],
+            "rotationOrigin": [ 1.5, 0.0, 1.5 ],
+            "faces": {
+                "north": {
+                    "texture": "#valve",
+                    "uv": [ 0.0, 7.0, 3.0, 8.0 ],
+                    "autoUv": false
+                },
+                "east": {
+                    "texture": "#valve",
+                    "uv": [ 0.0, 3.0, 3.0, 4.0 ]
+                },
+                "south": {
+                    "texture": "#valve",
+                    "uv": [ 0.0, 7.0, 3.0, 8.0 ]
+                },
+                "west": {
+                    "texture": "#valve",
+                    "uv": [ 0.0, 3.0, 3.0, 4.0 ]
+                },
+                "up": {
+                    "texture": "#valve",
+                    "uv": [ 0.0, 4.0, 3.0, 7.0 ]
+                },
+                "down": {
+                    "texture": "#valve",
+                    "uv": [ 0.0, 4.0, 3.0, 7.0 ]
+                }
+            },
+            "children": [
+                {
+                    "name": "Cathode",
+                    "from": [ 1.0, 1.0, 1.0 ],
+                    "to": [ 2.0, 4.0, 2.0 ],
+                    "renderPass": 0,
+                    "rotationOrigin": [ 1.0, 1.0, 1.0 ],
+                    "faces": {
+                        "north": {
+                            "texture": "#valve",
+                            "uv": [ 0.0, 0.0, 1.0, 3.0 ]
+                        },
+                        "east": {
+                            "texture": "#valve",
+                            "uv": [ 0.0, 0.0, 1.0, 3.0 ]
+                        },
+                        "south": {
+                            "texture": "#valve",
+                            "uv": [ 0.0, 0.0, 1.0, 3.0 ]
+                        },
+                        "west": {
+                            "texture": "#valve",
+                            "uv": [ 0.0, 0.0, 1.0, 3.0 ]
+                        },
+                        "up": {
+                            "texture": "#valve",
+                            "uv": [ 0.0, 0.0, 1.0, 1.0 ]
+                        },
+                        "down": {
+                            "texture": "#valve",
+                            "uv": [ 0.0, 0.0, 1.0, 1.0 ]
+                        }
+                    }
+                },
+                {
+                    "name": "Glass",
+                    "from": [ 0.5, 1.5, 0.5 ],
+                    "to": [ 2.5, 5.5, 2.5 ],
+                    "renderPass": 3,
+                    "rotationOrigin": [ 0.0, 1.0, 0.0 ],
+                    "faces": {
+                        "north": {
+                            "texture": "#valve",
+                            "uv": [ 6.0, 4.0, 8.0, 8.0 ]
+                        },
+                        "east": {
+                            "texture": "#valve",
+                            "uv": [ 3.0, 4.0, 5.0, 8.0 ]
+                        },
+                        "south": {
+                            "texture": "#valve",
+                            "uv": [ 3.0, 0.0, 5.0, 4.0 ]
+                        },
+                        "west": {
+                            "texture": "#valve",
+                            "uv": [ 6.0, 0.0, 8.0, 4.0 ]
+                        },
+                        "up": {
+                            "texture": "#valve",
+                            "uv": [ 3.0, 6.0, 5.0, 8.0 ]
+                        },
+                        "down": {
+                            "texture": "#valve",
+                            "uv": [ 6.0, 6.0, 8.0, 8.0 ]
+                        }
+                    }
+                },
+                {
+                    "name": "Anode",
+                    "from": [ 1.0, 5.0, 1.0 ],
+                    "to": [ 2.0, 6.0, 2.0 ],
+                    "rotationOrigin": [ 1.0, 5.0, 1.0 ],
+                    "faces": {
+                        "north": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 0.0, 2.0, 1.0 ]
+                        },
+                        "east": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 0.0, 2.0, 1.0 ]
+                        },
+                        "south": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 0.0, 2.0, 1.0 ]
+                        },
+                        "west": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 0.0, 2.0, 1.0 ]
+                        },
+                        "up": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 0.0, 2.0, 1.0 ]
+                        },
+                        "down": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 0.0, 2.0, 1.0 ]
+                        }
+                    }
+                },
+                {
+                    "name": "gate",
+                    "from": [ 0.75, 2.0, 0.75 ],
+                    "to": [ 2.25, 3.5, 2.25 ],
+                    "renderPass": 0,
+                    "rotationOrigin": [ 1.0, 2.0, 1.0 ],
+                    "faces": {
+                        "north": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 2.0, 2.0, 3.0 ]
+                        },
+                        "east": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 2.0, 2.0, 3.0 ]
+                        },
+                        "south": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 2.0, 2.0, 3.0 ]
+                        },
+                        "west": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 2.0, 2.0, 3.0 ]
+                        },
+                        "up": {
+                            "texture": "#null",
+                            "uv": [ 1.0, 2.0, 2.5, 3.5 ],
+                            "enabled": false
+                        },
+                        "down": {
+                            "texture": "#valve",
+                            "uv": [ 1.0, 2.0, 2.0, 3.0 ],
+                            "enabled": false
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

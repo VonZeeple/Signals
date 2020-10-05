@@ -1,0 +1,11 @@
+﻿{
+    "code": "blockwire",
+    "creativeinventory": {
+        "general": [ "*" ]
+    },
+    "shape": { "base": "game:block/basic/cube" },
+    "drawtype": "cube",
+    "textures": {
+        "all": { "base": "game:block/metal/plate/lead" }
+    }
+}

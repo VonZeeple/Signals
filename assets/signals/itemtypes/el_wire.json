@@ -1,0 +1,10 @@
+﻿{
+    "code": "el_wire",
+    "texture": { "base": "game:item/resource/rope" },
+    "creativeinventory": {
+        "general": [ "*" ],
+        "items": [ "*" ]
+    },
+    "maxstacksize": 16,
+    "materialDensity": 510
+}

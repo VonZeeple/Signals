@@ -1,0 +1,5 @@
+﻿.ignore
+*.csproj
+*.csproj.user
+*.dll
+*.pdb
