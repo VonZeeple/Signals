@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
@@ -42,15 +43,59 @@ namespace signals.src
 
         }
 
+        //when the player uses the middle button to select a block
+        public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
+        {
+            BEbreadboard bec = world.BlockAccessor.GetBlockEntity(pos) as BEbreadboard;
+            if (bec == null)
+            {
+                return null;
+            }
+
+            TreeAttribute tree = new TreeAttribute();
+
+            bec.ToTreeAttributes(tree);
+            tree.RemoveAttribute("posx");
+            tree.RemoveAttribute("posy");
+            tree.RemoveAttribute("posz");
+
+            return new ItemStack(this.Id, EnumItemClass.Block, 1, tree, world);
+        }
+
+        public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+        {
+            return new ItemStack[] { OnPickBlock(world, pos) };
+        }
+
+        public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack)
+        {
+            base.OnBlockPlaced(world, blockPos, byItemStack);
+
+            BEbreadboard be = world.BlockAccessor.GetBlockEntity(blockPos) as BEbreadboard;
+            if (be != null && byItemStack != null)
+            {
+                byItemStack.Attributes.SetInt("posx", blockPos.X);
+                byItemStack.Attributes.SetInt("posy", blockPos.Y);
+                byItemStack.Attributes.SetInt("posz", blockPos.Z);
+
+                be.FromTreeAtributes(byItemStack.Attributes, world);
+                be.MarkDirty(true);
+
+                if (world.Side == EnumAppSide.Client)
+                {
+                    //be.RegenMesh();
+                }
+
+                //be.RegenSelectionBoxes(null);
+            }
+        }
+
         //Detects when the player interacts with left click, usually to remove a component
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
         {
-            //base.OnGettingBroken(player, blockSel, itemslot, remainingResistance, dt, counter);
             BEbreadboard entity = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BEbreadboard;
             entity?.OnUseOver(player, blockSel, true);
-
-            //TODO: test if any action (return a bool), if false, return the time from base
-            return 100f;
+            return base.OnGettingBroken(player, blockSel,itemslot,remainingResistance,dt,counter);
         }
 
         public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos)

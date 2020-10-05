@@ -145,8 +145,12 @@ namespace signals.src
             return;
         }
 
+ 
+
         internal Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
         {
+            ICoreClientAPI capi = Api as ICoreClientAPI;
+            Item held_item = capi?.World?.Player?.InventoryManager?.ActiveHotbarSlot?.Itemstack?.Item;
             return Circuit?.GetSelectionBoxes();
         }
 

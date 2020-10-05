@@ -343,7 +343,8 @@ namespace signals.src
 
         private void RegenMesh(ICoreClientAPI api)
         {
-            //change this to wire block
+            //The final mesh is composed of 1x1x1 cuboids. Not optimal. We need to implement a greedy algo thing to decease the
+            //number of cuboids
             Block wireblock = api.World.GetBlock(new AssetLocation("signals:blockwire"));
             if (wireblock == null) return;
 
