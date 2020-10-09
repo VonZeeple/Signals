@@ -11,16 +11,29 @@ using Vintagestory.GameContent;
 namespace signals.src
 {
 
-    class Network
+    public class Network
     {
         public int id;
         public HashSet<ushort> voxelpositions;
         static ushort SIZE = 16;
+        public bool state = false;
+        public bool nextState = false;
+        public bool asUpdated;
+
         public Network(int id) {
             this.id = id;
             voxelpositions = new HashSet<ushort>();
           }
 
+        public void Update()
+        {
+            if (nextState != state)
+            {
+                state = nextState;
+                //notifications etc...
+            }
+            nextState = false;
+        }
 
         public Network(int id, List<Vec3i> voxelPos)
         {
@@ -104,9 +117,8 @@ namespace signals.src
 
     }
     //A wire is a special component composed of voxels
-    class VoxelWire
+    public class VoxelWire
     {
-        MeshData mesh;
         bool hasChanged;
         public Dictionary<int, Network> networks;  
         private int nextNetworkId;
@@ -264,6 +276,39 @@ namespace signals.src
             return false;
         }
 
+
+        static public int GetNumberOfVoxelsFromBytes(byte[] data)
+        {
+            if (data == null) return 0;
+            int quantity = 0;
+            using (MemoryStream ms = new MemoryStream(data))
+            {
+                BinaryReader reader = new BinaryReader(ms);
+                try
+                {
+
+                    int num_networks = reader.ReadInt32();
+                    for (int i = 0; i < num_networks; i++)
+                    {
+                        int size = reader.ReadInt32();
+                        _ = reader.ReadBoolean();
+                        quantity += size;
+                        for (int j = 0; j < size; j++)
+                        {
+                            reader.ReadUInt16();
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+                return quantity;
+
+        }
+
         internal byte[] serialize()
         {
             byte[] data;
@@ -274,6 +319,7 @@ namespace signals.src
                 foreach (Network net in networks.Values)
                 {
                     writer.Write(net.voxelpositions.Count);
+                    writer.Write(net.state);
                     foreach(ushort pos in net.voxelpositions)
                     {
                         writer.Write(pos);
@@ -302,12 +348,14 @@ namespace signals.src
                         int id = wire.nextNetworkId;
                         wire.nextNetworkId++;
                         int size = reader.ReadInt32();
+                        bool state = reader.ReadBoolean();
                         ushort[] voxels = new ushort[size];
                         for (int j = 0; j < size; j++)
                         {
                             voxels[j] = reader.ReadUInt16();
                         }
                         wire.networks.Add(id, new Network(id, voxels));
+                        wire.networks[id].state = state;
                     }
 
                 }
@@ -322,116 +370,5 @@ namespace signals.src
            
 
         }
-
-        public MeshData GetMesh(ICoreClientAPI api)
-        {
-            if (hasChanged || this.mesh == null)
-            {
-                
-                hasChanged = false;
-            }
-            RegenMesh(api);
-            return this.mesh;
-        }
-
-
-
-        private byte[] getColor(int i)
-        {
-            byte[][] colors = { new byte[]{ 255, 255, 255 }, new byte[] { 255, 0, 0 }, new byte[] { 0, 255, 0 },
-                new byte[]{ 0, 0, 255 }, new byte[]{ 255, 255, 0 }, new byte[]{ 255, 0, 255 }, new byte[]{ 0, 255, 255 }, new byte[]{ 0, 0, 0 } };
-
-            return colors[i % colors.Length];
-
-        }
-
-        private void RegenMesh(ICoreClientAPI api)
-        {
-            //The final mesh is composed of 1x1x1 cuboids. Not optimal. We need to implement a greedy algo thing to decease the
-            //number of cuboids
-            Block wireblock = api.World.GetBlock(new AssetLocation("signals:blockwire"));
-            if (wireblock == null) return;
-
-            MeshData mesh = new MeshData(24, 36, false);
-
-            float subPixelPaddingx = api.BlockTextureAtlas.SubPixelPaddingX;
-            float subPixelPaddingy = api.BlockTextureAtlas.SubPixelPaddingY;
-
-            TextureAtlasPosition tpos = api.BlockTextureAtlas.GetPosition(wireblock, wireblock.Textures.First().Key);
-
-            //We first generate a mesh for a single voxel
-            MeshData singleVoxelMesh = CubeMeshUtil.GetCubeOnlyScaleXyz(1 / 32f, 1 / 32f, new Vec3f(1 / 32f, 1 / 32f, 1 / 32f));
-            singleVoxelMesh.Rgba = new byte[6 * 4 * 4].Fill((byte)255);
-            CubeMeshUtil.SetXyzFacesAndPacketNormals(singleVoxelMesh);
-
-            int texId = tpos.atlasTextureId;
-
-
-            for (int i = 0; i < singleVoxelMesh.Uv.Length; i++)
-            {
-                if (i % 2 > 0)
-                {
-                    singleVoxelMesh.Uv[i] = tpos.y1 + singleVoxelMesh.Uv[i] * 2f / api.BlockTextureAtlas.Size.Height - subPixelPaddingy;
-                }
-                else
-                {
-                    singleVoxelMesh.Uv[i] = tpos.x1 + singleVoxelMesh.Uv[i] * 2f / api.BlockTextureAtlas.Size.Width - subPixelPaddingx;
-                }
-            }
-
-            singleVoxelMesh.XyzFaces = (byte[])CubeMeshUtil.CubeFaceIndices.Clone();
-            singleVoxelMesh.XyzFacesCount = 6;
-            singleVoxelMesh.ClimateColorMapIds = new byte[6];
-            singleVoxelMesh.SeasonColorMapIds = new byte[6];
-            singleVoxelMesh.ColorMapIdsCount = 6;
-            singleVoxelMesh.RenderPasses = new short[singleVoxelMesh.VerticesCount / 4].Fill((short)0);
-            singleVoxelMesh.RenderPassCount = singleVoxelMesh.VerticesCount / 4;
-
-            MeshData voxelMeshOffset = singleVoxelMesh.Clone();
-
-            //We now place a mesh at each position
-            foreach (Network net in networks.Values)
-            {
-                byte[] color = getColor(net.id).Append(new byte[] { 255 });
-
-                foreach ( Vec3i vec in net.getVoxelPos())
-                {
-
-                    
-                    float px = vec.X / 16f;
-                    float py = vec.Y / 16f;
-                    float pz = vec.Z / 16f;
-                    
-                    for (int i = 0; i < singleVoxelMesh.xyz.Length; i += 3)
-                    {
-                        voxelMeshOffset.xyz[i] = px + singleVoxelMesh.xyz[i];
-                        voxelMeshOffset.xyz[i + 1] = py + singleVoxelMesh.xyz[i + 1];
-                        voxelMeshOffset.xyz[i + 2] = pz + singleVoxelMesh.xyz[i + 2];
-
-                        voxelMeshOffset.Rgba[i/3*4] = color[0];
-                        voxelMeshOffset.Rgba[i / 3*4+1] = color[1];
-                        voxelMeshOffset.Rgba[i / 3*4+2] = color[2];
-                        voxelMeshOffset.Rgba[i / 3*4+3] = color[3];
-                    }
-
-                    float offsetX = ((((vec.X + 4 * vec.Y) % 16f / 16f)) * 32f) / api.BlockTextureAtlas.Size.Width;
-                    float offsetY = (pz * 32f) / api.BlockTextureAtlas.Size.Height;
-
-                    for (int i = 0; i < singleVoxelMesh.Uv.Length; i += 2)
-                    {
-                        voxelMeshOffset.Uv[i] = singleVoxelMesh.Uv[i] + offsetX;
-                        voxelMeshOffset.Uv[i + 1] = singleVoxelMesh.Uv[i + 1] + offsetY;
-                    }
-
-                    mesh.AddMeshData(voxelMeshOffset);
-
-                }
-            }
-            this.mesh = mesh;
-
-        }
-
-
-
-        }
+    }
 }

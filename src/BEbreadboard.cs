@@ -17,27 +17,37 @@ namespace signals.src
 {
 
     //The block entity
-    public class BEbreadboard : BlockEntity, IBlockEntityRotatable
+    public class BEBreadboard : BlockEntity, IBlockEntityRotatable
     {
 
-        VoxelCircuit Circuit = new VoxelCircuit();
-        ICoreAPI Api;
+        public VoxelCircuit Circuit = new VoxelCircuit();
+
+        long listenerId;
+        CircuitBoardRenderer renderer;
 
         public override void Initialize(ICoreAPI api)
         {
             this.Api = api;
             base.Initialize(api);
             Circuit.Initialize(api);
+            listenerId = RegisterGameTickListener(Update, 100);
 
+
+            if (api.Side == EnumAppSide.Client)
+            {
+                ICoreClientAPI capi = (ICoreClientAPI)api;
+                capi.Event.RegisterRenderer(renderer = new CircuitBoardRenderer(Pos, capi), EnumRenderStage.Opaque, "circuitboard");
+            }
         }
 
-
-        public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
+        private void UpdateRenderer()
         {
+            
+        }
 
-            MeshData mesh = Circuit.getCircuitMesh(this.Api as ICoreClientAPI);
-            mesher.AddMeshData(mesh);
-            return false;
+        public void Update(float dt)
+        {
+            Circuit?.updateSimulation();
         }
 
         public void OnUseOver(IPlayer byPlayer, BlockSelection blockSel, bool mouseBreakMode)
@@ -69,13 +79,16 @@ namespace signals.src
             //Api.World.PlaySoundAt(new AssetLocation("signals:buzz_short"), Pos.X, Pos.Y, Pos.Z);
             Api.World.PlaySoundAt(new AssetLocation("signals:sounds/buzz_short"), Pos.X, Pos.Y, Pos.Z);
             MarkDirty();
+            
         }
 
         internal static MeshData CreateMeshForItem(ICoreClientAPI capi, ITreeAttribute tree)
         {
             VoxelCircuit circuit = new VoxelCircuit();
             circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), capi.World);
-            return circuit.getCircuitMesh(capi);
+            CircuitBoardRenderer renderer = new CircuitBoardRenderer(null, capi);
+            renderer.RegenCircuitMesh(circuit);
+            return renderer.getMeshForItem();
         }
 
 
@@ -125,11 +138,33 @@ namespace signals.src
             }
         }
 
+
+        public override void OnBlockRemoved()
+        {
+            if (renderer != null)
+            {
+                renderer.Dispose();
+                renderer = null;
+            }
+        }
+
+        public override void OnBlockUnloaded()
+        {
+            base.OnBlockUnloaded();
+            renderer?.Dispose();
+        }
+
         public override void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
             base.FromTreeAtributes(tree, worldForResolving);
             Circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), worldForResolving);
             MarkDirty(true);
+
+            if (Api == null) return;
+            if (Api.Side == EnumAppSide.Client)
+            {
+                renderer.RegenCircuitMesh(this.Circuit);
+            }
         }
 
         public override void ToTreeAttributes(ITreeAttribute tree)
@@ -168,7 +203,6 @@ namespace signals.src
             BlockPos pos = forPlayer.CurrentBlockSelection.Position;
             Cuboidf[] boxes = Block.GetSelectionBoxes(this.Api.World.GetBlockAccessor(false, false, false), pos);
             if (index >= boxes.Length) return;
-
             Vec3i voxelPos = new Vec3i((int)(16 * boxes[index].X1), (int)(16 * boxes[index].Y1), (int)(16 * boxes[index].Z1));
             Circuit.GetBlockInfo(voxelPos, dsc);
         }

@@ -36,7 +36,7 @@ namespace signals.src
             base.OnBlockInteractStart(world, byPlayer, blockSel);
             if (api.Side == EnumAppSide.Client)
             {
-                BEbreadboard entity = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEbreadboard;
+                BEBreadboard entity = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEBreadboard;
                 entity?.OnUseOver(byPlayer, blockSel, false);
             }
             return true;
@@ -46,7 +46,7 @@ namespace signals.src
         //when the player uses the middle button to select a block
         public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
-            BEbreadboard bec = world.BlockAccessor.GetBlockEntity(pos) as BEbreadboard;
+            BEBreadboard bec = world.BlockAccessor.GetBlockEntity(pos) as BEBreadboard;
             if (bec == null)
             {
                 return null;
@@ -70,7 +70,7 @@ namespace signals.src
         public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack)
         {
             base.OnBlockPlaced(world, blockPos, byItemStack);
-            BEbreadboard be = world.BlockAccessor.GetBlockEntity(blockPos) as BEbreadboard;
+            BEBreadboard be = world.BlockAccessor.GetBlockEntity(blockPos) as BEBreadboard;
             if (be != null && byItemStack != null)
             {
                 byItemStack.Attributes.SetInt("posx", blockPos.X);
@@ -99,7 +99,7 @@ namespace signals.src
         //Detects when the player interacts with left click, usually to remove a component
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
         {
-            BEbreadboard entity = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BEbreadboard;
+            BEBreadboard entity = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BEBreadboard;
             entity?.OnUseOver(player, blockSel, true);
             return base.OnGettingBroken(player, blockSel,itemslot,remainingResistance,dt,counter);
         }
@@ -114,7 +114,7 @@ namespace signals.src
             
             
 
-            BEbreadboard bec = blockAccessor.GetBlockEntity(pos) as BEbreadboard;
+            BEBreadboard bec = blockAccessor.GetBlockEntity(pos) as BEBreadboard;
             Cuboidf[] entitySB = bec?.GetSelectionBoxes(blockAccessor, pos);
             if (entitySB == null || entitySB.Length == 0)
             {
@@ -125,9 +125,10 @@ namespace signals.src
             return entitySB;
         }
 
+
         public override Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
         {
-            BEbreadboard bec = blockAccessor.GetBlockEntity(pos) as BEbreadboard;
+            BEBreadboard bec = blockAccessor.GetBlockEntity(pos) as BEBreadboard;
 
             if (bec != null)
             {
@@ -135,10 +136,15 @@ namespace signals.src
 
                 return selectionBoxes;
             }
-
             return base.GetSelectionBoxes(blockAccessor, pos);
         }
 
+        public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+        {
+            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+            ITreeAttribute tree = inSlot.Itemstack.Attributes;
+            if(tree.HasAttribute("circuit")) VoxelCircuit.GetCircuitInfo(dsc, tree.GetTreeAttribute("circuit"));
+        }
 
         public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer)
         {

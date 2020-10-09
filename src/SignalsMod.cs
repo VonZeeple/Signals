@@ -19,7 +19,7 @@ namespace signals.src
             this.api = api;
             base.Start(api);
             api.RegisterBlockClass("BlockBreadboard", typeof(BlockBreadboard));
-            api.RegisterBlockEntityClass("BlockEntityBreadboard", typeof(BEbreadboard));
+            api.RegisterBlockEntityClass("BlockEntityBreadboard", typeof(BEBreadboard));
             
         }
 

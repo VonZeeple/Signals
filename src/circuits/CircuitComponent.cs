@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Util;
 
 namespace signals.src
 {
-    abstract class CircuitComponent: ITexPositionSource
+    public class CircuitComponent: ITexPositionSource
     {
 
 
@@ -18,11 +13,14 @@ namespace signals.src
         {
             this.Size = size;
             this.Pos = position;
+            this.updated = false;
 
         }
 
         public Vec3i Size;
         public Vec3i Pos;
+        bool updated;
+
         protected Item nowTesselatingItem;
         protected Shape nowTesselatingShape;
         protected ICoreClientAPI capi;
@@ -71,10 +69,25 @@ namespace signals.src
             }
         }
 
+        public List<Vec3i> outputPos()
+        {
+            Vec3i pos = new Vec3i(3, 0, 3).AddCopy(Pos.X,Pos.Y,Pos.Z);
+            return new List<Vec3i>() { pos };
+        }
 
 
         //tmp mesh, maybe use a meshref instead
-        abstract public MeshData getMesh(ICoreClientAPI capi);
+        public MeshData getMesh(ICoreClientAPI inCapi)
+        {
+            this.capi = inCapi;
+            nowTesselatingItem = capi.World.GetItem(new AssetLocation("signals:el_valve"));
+            nowTesselatingShape = capi.TesselatorManager.GetCachedShape(nowTesselatingItem.Shape.Base);
+            MeshData mesh;
+            capi.Tesselator.TesselateItem(nowTesselatingItem, out mesh, this);
+            mesh.Translate(new Vec3f(Pos.X / 16f, Pos.Y / 16f, Pos.Z / 16f));
+
+            return mesh;
+        }
 
         public virtual bool doesIntersect(Cuboidi box)
         {

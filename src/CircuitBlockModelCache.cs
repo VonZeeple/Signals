@@ -81,7 +81,7 @@ namespace signals.src
         {
             ITreeAttribute tree = forStack.Attributes;
             if (tree == null) tree = new TreeAttribute();
-            MeshData mesh = BEbreadboard.CreateMeshForItem(capi, tree);
+            MeshData mesh = BEBreadboard.CreateMeshForItem(capi, tree);
             Block block = forStack.Block;
             MeshData mesh_board = new MeshData();
             capi.Tesselator.TesselateBlock(block, out mesh_board);
