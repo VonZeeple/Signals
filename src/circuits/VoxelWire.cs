@@ -25,14 +25,16 @@ namespace signals.src
             voxelpositions = new HashSet<ushort>();
           }
 
-        public void Update()
+        public bool Update()
         {
+            bool flag = false;
             if (nextState != state)
             {
                 state = nextState;
-                //notifications etc...
+                flag = true;
             }
             nextState = false;
+            return flag;
         }
 
         public Network(int id, List<Vec3i> voxelPos)
@@ -121,12 +123,10 @@ namespace signals.src
     {
         bool hasChanged;
         public Dictionary<int, Network> networks;  
-        private int nextNetworkId;
 
         public VoxelWire()
         {
             networks = new Dictionary<int, Network>();
-            nextNetworkId = 1;
             hasChanged = true;
         }
 
@@ -199,14 +199,23 @@ namespace signals.src
             if(current_net == null)
             {
                 //We create a new network
-                Network network = new Network(nextNetworkId);
+                int new_id = getNewId();
+                Network network = new Network(new_id);
                 network.AddVoxel(voxelPos);
-                networks.Add(nextNetworkId, network);
-                nextNetworkId++;
+                networks.Add(new_id, network);
             }
 
             hasChanged = true;
             return true;
+        }
+
+        private int getNewId()
+        {
+            if(networks.Count == 0)
+            {
+                return 1;
+            }
+            return networks.Keys.Max()+1;
         }
 
         public List<Vec3i> RebuildNetwork(Vec3i pos_init, Network old_network)
@@ -261,9 +270,8 @@ namespace signals.src
                         List<Vec3i> voxels = RebuildNetwork(voxelPos.AddCopy(face), net);
                         if(voxels.Count > 0)
                         {
-
-                            networks.Add(nextNetworkId, new Network(nextNetworkId, voxels));
-                            nextNetworkId++;
+                            int newId = getNewId();
+                            networks.Add(newId, new Network(newId, voxels));
                             explored_pos.AddRange(voxels);
                         }
                     }
@@ -318,6 +326,7 @@ namespace signals.src
                 writer.Write(networks.Count);
                 foreach (Network net in networks.Values)
                 {
+                    writer.Write(net.id);
                     writer.Write(net.voxelpositions.Count);
                     writer.Write(net.state);
                     foreach(ushort pos in net.voxelpositions)
@@ -345,8 +354,7 @@ namespace signals.src
                     int num_networks = reader.ReadInt32();
                     for (int i = 0; i < num_networks; i++)
                     {
-                        int id = wire.nextNetworkId;
-                        wire.nextNetworkId++;
+                        int id = reader.ReadInt32();
                         int size = reader.ReadInt32();
                         bool state = reader.ReadBoolean();
                         ushort[] voxels = new ushort[size];

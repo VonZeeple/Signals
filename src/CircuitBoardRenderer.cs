@@ -21,6 +21,10 @@ namespace signals.src
         protected MeshData circuitMesh;
         protected MeshRef circuitMeshRef;
 
+        protected MeshData tmpMesh;
+        protected Dictionary<int, MeshRef> wireMeshesRefs;
+        protected Dictionary<int, bool> networkStates;
+
         Matrixf ModelMat = new Matrixf();
 
         public CircuitBoardRenderer(BlockPos pos,ICoreClientAPI capi)
@@ -35,9 +39,15 @@ namespace signals.src
 
         public MeshData getMeshForItem()
         {
+            //MeshData mesh = circuitMesh.Clone();
             return circuitMesh;
         }
 
+        public void UpdateNetworkState(int id, bool state)
+        {
+            if (networkStates == null) return;
+            networkStates[id] = state;
+        }
         private MeshData getsimpleVoxelMesh(ICoreClientAPI api, TextureAtlasPosition tpos)
         {
             //We first generate a mesh for a single voxel
@@ -83,6 +93,7 @@ namespace signals.src
 
         public void RegenCircuitMesh(VoxelCircuit circuit)
         {
+            networkStates = new Dictionary<int, bool>();
             circuitMesh = new MeshData(24, 36, false);
 
             Block wireblock = capi.World.GetBlock(new AssetLocation("signals:blockwire"));
@@ -92,10 +103,15 @@ namespace signals.src
             MeshData singleVoxelMesh = getsimpleVoxelMesh(capi, tpos);
 
             //We now place a mesh at each position
-
+            wireMeshesRefs = new Dictionary<int, MeshRef>();
+            //networkStates = new bool[circuit.wiring.networks.Count];
             MeshData voxelMeshOffset = singleVoxelMesh.Clone();
+
+            int j = 0;
             foreach (Network net in circuit.wiring.networks.Values)
             {
+                networkStates[net.id] = net.state;
+                tmpMesh = new MeshData(24, 36, false);
                 byte[] color = getColor(net.id).Append(new byte[] { 255 });
 
                 foreach (Vec3i vec in net.getVoxelPos())
@@ -112,10 +128,10 @@ namespace signals.src
                         voxelMeshOffset.xyz[i + 1] = py + singleVoxelMesh.xyz[i + 1];
                         voxelMeshOffset.xyz[i + 2] = pz + singleVoxelMesh.xyz[i + 2];
 
-                        voxelMeshOffset.Rgba[i / 3 * 4] = color[0];
-                        voxelMeshOffset.Rgba[i / 3 * 4 + 1] = color[1];
-                        voxelMeshOffset.Rgba[i / 3 * 4 + 2] = color[2];
-                        voxelMeshOffset.Rgba[i / 3 * 4 + 3] = color[3];
+                        //voxelMeshOffset.Rgba[i / 3 * 4] = color[0];
+                        //voxelMeshOffset.Rgba[i / 3 * 4 + 1] = color[1];
+                        //voxelMeshOffset.Rgba[i / 3 * 4 + 2] = color[2];
+                        //voxelMeshOffset.Rgba[i / 3 * 4 + 3] = color[3];
                     }
 
                     float offsetX = ((((vec.X + 4 * vec.Y) % 16f / 16f)) * 32f) / capi.BlockTextureAtlas.Size.Width;
@@ -127,9 +143,11 @@ namespace signals.src
                         voxelMeshOffset.Uv[i + 1] = singleVoxelMesh.Uv[i + 1] + offsetY;
                     }
 
-                    circuitMesh.AddMeshData(voxelMeshOffset);
+                    tmpMesh.AddMeshData(voxelMeshOffset);
 
                 }
+                wireMeshesRefs[net.id] = capi.Render.UploadMesh(tmpMesh);
+                j++;
             }
 
             foreach (CircuitComponent comp in circuit.components)
@@ -140,11 +158,14 @@ namespace signals.src
             circuitMeshRef = capi.Render.UploadMesh(circuitMesh);
         }
 
+
+        float timer = 0;
+        float period = 3;
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
             if (circuitMeshRef == null) return;
 
-
+            timer = (timer + deltaTime)% period;
             IRenderAPI rpi = capi.Render;
             IClientWorldAccessor worldAccess = capi.World;
             Vec3d camPos = worldAccess.Player.Entity.CameraPos;
@@ -155,12 +176,21 @@ namespace signals.src
             prog.ModelMatrix = ModelMat.Identity().Translate(pos.X - camPos.X, pos.Y - camPos.Y, pos.Z - camPos.Z).Values;
             prog.ViewMatrix = rpi.CameraMatrixOriginf;
             prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;
+            
+            prog.RgbaGlowIn = new Vec4f(1f, 1f, 1f, 1);
+
+
+            foreach (var item in wireMeshesRefs)
+            {
+               prog.ExtraGlow = networkStates.ContainsKey(item.Key)? (networkStates[item.Key]?100:0):0;
+               rpi.RenderMesh(item.Value);
+            }
+
+            prog.ExtraGlow = 0;
 
             rpi.RenderMesh(circuitMeshRef);
-            prog.ExtraGlow = 1;
-
             prog.Stop();
-
+            rpi.GlEnableCullFace();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using signals.src.circuits;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +8,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
@@ -17,10 +17,9 @@ namespace signals.src
 
 
     //Represent an element (diode, resistor...)
-    class CircuitElement : IGraphNode
+    class CircuitElement
     {
 
-        List<IGraphNode> connected_nodes;
         //CircuitComponent component
         Vec3i position;
         bool hasbeenupdated = false;
@@ -29,10 +28,6 @@ namespace signals.src
             this.position = pos;
         }
 
-        public List<IGraphNode> GetConnectedNodes()
-        {
-            return connected_nodes;
-        }
 
 
 
@@ -78,8 +73,22 @@ namespace signals.src
         {
 
         }
-        public void updateSimulation()
+
+        internal void UpdateClientSide(List<Tuple<int, bool>> updatedNetworks)
         {
+            foreach (Tuple<int,bool> tuple in updatedNetworks)
+            {
+                if (!wiring.networks.ContainsKey(tuple.Item1)) continue;
+                wiring.networks[tuple.Item1].state = tuple.Item2;
+            }
+        }
+
+        public List<Tuple<int, bool>> updateSimulation()
+        {
+
+            if (api.Side == EnumAppSide.Client) return null;
+
+            List<Tuple<int, bool>> updatedNetworks = new List<Tuple<int, bool>>();
 
             foreach(CircuitComponent comp in components)
             {
@@ -88,7 +97,7 @@ namespace signals.src
                     int? netId = wiring.GetNetworkAtPos(outPutPos)?.id;
                     if (netId.GetValueOrDefault(-1) >= 0)
                     {
-                        wiring.networks[netId.GetValueOrDefault(-1)].nextState = true;
+                        wiring.networks[netId.GetValueOrDefault(-1)].nextState = comp.getOutput();
                     }
                     
                 }
@@ -97,11 +106,19 @@ namespace signals.src
             
             foreach(int key in wiring.networks.Keys)
             {
-                wiring.networks[key].Update();
+                if (wiring.networks[key].Update())
+                {
+                    updatedNetworks.Add(new Tuple<int, bool>(key, wiring.networks[key].state));
+                }
             }
+
+            return updatedNetworks;
         }
 
         #endregion
+ 
+
+
         #region voxel modification
 
         public void OnUseOver(IPlayer byPlayer, Vec3i voxelPos, BlockFacing facing, bool mouseBreakMode)
@@ -243,6 +260,8 @@ namespace signals.src
             tree.SetInt("availableWireVoxels", AvailableWireVoxels);
             
         }
+
+   
 
 
         #endregion

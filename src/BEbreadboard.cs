@@ -10,6 +10,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
@@ -30,7 +31,7 @@ namespace signals.src
             this.Api = api;
             base.Initialize(api);
             Circuit.Initialize(api);
-            listenerId = RegisterGameTickListener(Update, 100);
+            listenerId = RegisterGameTickListener(Update, 50);
 
 
             if (api.Side == EnumAppSide.Client)
@@ -40,14 +41,24 @@ namespace signals.src
             }
         }
 
-        private void UpdateRenderer()
+        private void UpdateNetworkStateInRenderer(int id, bool value)
         {
-            
+            if (renderer == null) return;
+            renderer.UpdateNetworkState(id, value);
         }
 
         public void Update(float dt)
         {
-            Circuit?.updateSimulation();
+            if (Api.Side == EnumAppSide.Client) return;
+
+            List<Tuple<int,bool>> updatedNetworks = Circuit?.updateSimulation();
+            if(updatedNetworks != null)
+            {
+                if(updatedNetworks.Count > 0)
+                {
+                    SendUpdatedNetworksPacket(updatedNetworks);
+                }
+            }
         }
 
         public void OnUseOver(IPlayer byPlayer, BlockSelection blockSel, bool mouseBreakMode)
@@ -91,6 +102,34 @@ namespace signals.src
             return renderer.getMeshForItem();
         }
 
+        private void SendUpdatedNetworksPacket(List<Tuple<int, bool>> updatedNetworks)
+        {
+
+            byte[] data;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryWriter writer = new BinaryWriter(ms);
+                foreach (Tuple<int,bool> item in updatedNetworks)
+                {
+                    writer.Write(item.Item1);
+                    writer.Write(item.Item2);
+                }
+                data = ms.ToArray();
+
+
+            }
+
+            IPlayer[] playersInRange = Api.World.GetPlayersAround(Pos.ToVec3d(), 24, 24);
+
+            foreach(IPlayer player in playersInRange)
+            {
+                ((ICoreServerAPI)Api).Network.SendBlockEntityPacket(player as IServerPlayer, Pos.X, Pos.Y, Pos.Z,
+            (int)EnumBECircuitPacket.networkUpdate,
+            data);
+            }
+            
+        }
+
 
         //Notifies the server that the block have been interacted with
         public void SendUseOverPacket(IPlayer byPlayer, Vec3i voxelPos, BlockFacing facing, bool mouseMode)
@@ -116,6 +155,46 @@ namespace signals.src
         }
 
 
+        public override void OnReceivedServerPacket(int packetid, byte[] data)
+        {
+            base.OnReceivedServerPacket(packetid, data);
+            if (packetid == (int)EnumBECircuitPacket.networkUpdate)
+            {
+                List<Tuple<int, bool>> updatedNetworks = new List<Tuple<int, bool>>();
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream(data))
+                    {
+                        BinaryReader reader = new BinaryReader(ms);
+                        while (ms.Position < ms.Length)
+                        {
+                            int net_id = reader.ReadInt32();
+                            bool value = reader.ReadBoolean();
+
+                            updatedNetworks.Add(new Tuple<int, bool>(net_id, value));
+                        }
+
+
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+                if (updatedNetworks.Count > 0)
+                {
+                    Circuit.UpdateClientSide(updatedNetworks);
+                    foreach (Tuple<int, bool> tuple in updatedNetworks)
+                    {
+                        renderer?.UpdateNetworkState(tuple.Item1, tuple.Item2);
+                    }
+                }
+
+            }
+        }
+
+
+
         //When the server recieve a packet from a client
         public override void OnReceivedClientPacket(IPlayer player, int packetid, byte[] data)
         {
@@ -136,6 +215,8 @@ namespace signals.src
                 Api.World.Logger.Notification("ok got use over packet from {0} at pos {1}", player.PlayerName, voxelPos);
                 OnUseOver(player, voxelPos, facing, mouseMode);
             }
+
+
         }
 
 
@@ -146,6 +227,7 @@ namespace signals.src
                 renderer.Dispose();
                 renderer = null;
             }
+            base.OnBlockRemoved();
         }
 
         public override void OnBlockUnloaded()
@@ -210,9 +292,9 @@ namespace signals.src
 
         public enum EnumBECircuitPacket
         {
-            //SelectRecipe = 1001,
+            networkUpdate = 1001,
             OnUserOver = 1002,
-            //CancelSelect = 1003
+            networkModification = 1003
         }
     }
 }

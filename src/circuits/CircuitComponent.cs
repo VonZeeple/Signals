@@ -14,13 +14,13 @@ namespace signals.src
             this.Size = size;
             this.Pos = position;
             this.updated = false;
-
+            this.state = false;
         }
 
         public Vec3i Size;
         public Vec3i Pos;
         bool updated;
-
+        bool state;
         protected Item nowTesselatingItem;
         protected Shape nowTesselatingShape;
         protected ICoreClientAPI capi;
@@ -69,10 +69,17 @@ namespace signals.src
             }
         }
 
+        public bool getOutput()
+        {
+
+            state = !state;
+            return !state;
+        }
         public List<Vec3i> outputPos()
         {
-            Vec3i pos = new Vec3i(3, 0, 3).AddCopy(Pos.X,Pos.Y,Pos.Z);
-            return new List<Vec3i>() { pos };
+            Vec3i pos1 = new Vec3i(3, 0, 1).AddCopy(Pos.X,Pos.Y,Pos.Z);
+            Vec3i pos2 = new Vec3i(0, 0, 1).AddCopy(Pos.X, Pos.Y, Pos.Z);
+            return new List<Vec3i>() { pos1,pos2 };
         }
 
 
