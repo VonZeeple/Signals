@@ -105,14 +105,7 @@ namespace signals.src
 
         }
 
-        internal static MeshData CreateMeshForItem(ICoreClientAPI capi, ITreeAttribute tree)
-        {
-            VoxelCircuit circuit = new VoxelCircuit();
-            circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), capi.World);
-            CircuitBoardRenderer renderer = new CircuitBoardRenderer(null, BlockFacing.NORTH, BlockFacing.DOWN ,capi);
-            renderer.RegenCircuitMesh(circuit);
-            return renderer.getMeshForItem();
-        }
+
 
         private void SendUpdatedNetworksPacket(List<Tuple<int, bool>> updatedNetworks)
         {

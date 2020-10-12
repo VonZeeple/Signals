@@ -2,6 +2,7 @@
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
 
 namespace signals.src
 {
@@ -72,12 +73,20 @@ namespace signals.src
             }
         }
 
+        internal static MeshData CreateMeshForItem(ICoreClientAPI capi, ITreeAttribute tree)
+        {
+            VoxelCircuit circuit = new VoxelCircuit();
+            circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), capi.World);
+            CircuitBoardRenderer renderer = new CircuitBoardRenderer(null, BlockFacing.DOWN, BlockFacing.NORTH, capi);
+            renderer.RegenCircuitMesh(circuit);
+            return renderer.GetCircuitMeshForItem(circuit);
+        }
 
         private MeshRef CreateModel(ItemStack forStack)
         {
             ITreeAttribute tree = forStack.Attributes;
             if (tree == null) tree = new TreeAttribute();
-            MeshData mesh = BEBreadboard.CreateMeshForItem(capi, tree);
+            MeshData mesh = CreateMeshForItem(capi, tree);
             Block block = forStack.Block;
             MeshData mesh_board = new MeshData();
             capi.Tesselator.TesselateBlock(block, out mesh_board);

@@ -44,19 +44,13 @@ namespace signals.src
         private bool PlaceWithOrientation(IWorldAccessor world, BlockPos blockpos, BlockFacing onBlockFace, Vec3d hitPosition , ItemStack itemstack)
         {
 
-            //Don't forget kids to learn you linear algebra!
-            //hitPosition projected on the onBlockFace
+            //hitPosition projected on the onBlockFace to determine block orientation
             Vec3d normal = onBlockFace.Normalf.NormalizedCopy().ToVec3d();
             normal.Mul((float)hitPosition.SubCopy(0.5,0.5,0.5).Dot(normal));
             Vec3d projVector = hitPosition.SubCopy(normal).Sub(0.5,0.5,0.5);
 
             BlockFacing orientation = BlockFacing.FromVector(projVector.X,projVector.Y,projVector.Z);
-
             BlockFacing oppositeFace = onBlockFace.GetOpposite();
-            
-
-
-
             int blockId = world.BlockAccessor.GetBlock(CodeWithParts(orientation.Code,oppositeFace.Code)).BlockId;
             world.BlockAccessor.SetBlock(blockId, blockpos, itemstack);
             return true;
@@ -104,7 +98,7 @@ namespace signals.src
         //when the player uses the middle button to select a block
         public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
-            Block block = world.BlockAccessor.GetBlock(CodeWithParts("down"));
+            Block block = world.BlockAccessor.GetBlock(CodeWithParts("north","down"));
             BEBreadboard bec = world.BlockAccessor.GetBlockEntity(pos) as BEBreadboard;
             if (bec == null)
             {
