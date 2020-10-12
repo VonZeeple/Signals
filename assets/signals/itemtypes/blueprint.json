@@ -1,0 +1,27 @@
+﻿{
+    "code": "blueprint",
+    "maxstacksize": 16,
+    "variantgroups": [
+        {
+            "code": "drawing",
+            "states": [ "empty", "full" ]
+        }
+    ],
+    "texture": { "base": "signals:item/blueprint_{drawing}" },
+    "creativeinventory": {
+        "general": [ "*" ],
+        "items": [ "*" ]
+    },
+    "fpHandTransform": {
+        "translation": {
+            "x": 0.046875,
+            "y": -0.2,
+            "z": 0
+        },
+        "rotation": {
+            "x": 180,
+            "y": 90,
+            "z": 15
+        }
+    }
+}
