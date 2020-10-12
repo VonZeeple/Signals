@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -18,6 +15,8 @@ namespace signals.src
 
         protected ICoreClientAPI capi;
         protected BlockPos pos;
+        protected BlockFacing facing;
+        protected BlockFacing orientation;
         protected MeshData circuitMesh;
         protected MeshRef circuitMeshRef;
 
@@ -27,9 +26,11 @@ namespace signals.src
 
         Matrixf ModelMat = new Matrixf();
 
-        public CircuitBoardRenderer(BlockPos pos,ICoreClientAPI capi)
+        public CircuitBoardRenderer(BlockPos pos, BlockFacing face, BlockFacing orientation, ICoreClientAPI capi)
         {
             this.pos = pos;
+            this.facing = face;
+            this.orientation = orientation;
             this.capi = capi;
         }
         public void Dispose()
@@ -107,6 +108,12 @@ namespace signals.src
             //networkStates = new bool[circuit.wiring.networks.Count];
             MeshData voxelMeshOffset = singleVoxelMesh.Clone();
 
+            Vec3f rotate = new Vec3f(0, 0, 0);
+            if (facing != null && orientation != null)
+            {
+                rotate = SignalsUtils.FacingToRotation(orientation, facing);
+            }
+
             int j = 0;
             foreach (Network net in circuit.wiring.networks.Values)
             {
@@ -146,6 +153,7 @@ namespace signals.src
                     tmpMesh.AddMeshData(voxelMeshOffset);
 
                 }
+                tmpMesh.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), rotate.X * GameMath.PI / 180, rotate.Y * GameMath.PI / 180, rotate.Z * GameMath.PI / 180);
                 wireMeshesRefs[net.id] = capi.Render.UploadMesh(tmpMesh);
                 j++;
             }
@@ -155,10 +163,13 @@ namespace signals.src
                 circuitMesh.AddMeshData(comp.getMesh(capi));
             }
 
+            
+            circuitMesh.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), rotate.X * GameMath.PI / 180, rotate.Y * GameMath.PI / 180, rotate.Z * GameMath.PI / 180);
             circuitMeshRef = capi.Render.UploadMesh(circuitMesh);
         }
 
 
+        
         float timer = 0;
         float period = 3;
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
@@ -173,7 +184,14 @@ namespace signals.src
             rpi.GlDisableCullFace();
             IStandardShaderProgram prog = capi.Render.PreparedStandardShader(pos.X, pos.Y, pos.Z);
             rpi.BindTexture2d(texId);
-            prog.ModelMatrix = ModelMat.Identity().Translate(pos.X - camPos.X, pos.Y - camPos.Y, pos.Z - camPos.Z).Values;
+
+
+            prog.ModelMatrix = ModelMat
+                .Identity()
+
+                .Translate(pos.X - camPos.X, pos.Y - camPos.Y, pos.Z - camPos.Z)
+                .Values;
+
             prog.ViewMatrix = rpi.CameraMatrixOriginf;
             prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;
             

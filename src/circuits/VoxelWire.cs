@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Vintagestory.API.Client;
-using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
-using Vintagestory.GameContent;
 
 namespace signals.src
 {
@@ -298,6 +295,7 @@ namespace signals.src
                     int num_networks = reader.ReadInt32();
                     for (int i = 0; i < num_networks; i++)
                     {
+                        int id = reader.ReadInt32();
                         int size = reader.ReadInt32();
                         _ = reader.ReadBoolean();
                         quantity += size;

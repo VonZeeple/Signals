@@ -72,8 +72,7 @@ namespace signals.src
         public bool getOutput()
         {
 
-            state = !state;
-            return !state;
+            return true;
         }
         public List<Vec3i> outputPos()
         {

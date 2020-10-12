@@ -1,39 +1,128 @@
 ﻿{
-    "code": "breadboard_empty",
+    "code": "breadboard",
     "class": "BlockBreadboard",
     "entityclass": "BlockEntityBreadboard",
     "variantgroups": [
+        {
+            "code": "orientation",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        },
         {
             "code": "side",
             "states": [ "north", "east", "south", "west", "up", "down" ]
         }
     ],
+    "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south","*-east-east", "*-east-west","*-west-east","*-west-west" ],
     "shapebytype": {
-        "*-down": { "base": "block/breadboard_empty" },
-        "*-up": {
+        "*-north-down": { "base": "block/breadboard_empty" },
+        "*-south-down": {
+            "base": "block/breadboard_empty",
+            "rotateY": 180
+        },
+        "*-east-down": {
+            "base": "block/breadboard_empty",
+            "rotateY": 270
+        },
+        "*-west-down": {
+            "base": "block/breadboard_empty",
+            "rotateY": 90
+        },
+        "*-south-up": {
             "base": "block/breadboard_empty",
             "rotateX": 180
         },
-        "*-north": {
+        "*-north-up": {
             "base": "block/breadboard_empty",
-            "rotateX": 90
+            "rotateX": 180,
+            "rotateY": 180
         },
-        "*-east": {
+        "*-west-up": {
+            "base": "block/breadboard_empty",
+            "rotateX": 180,
+            "rotateY": 90
+        },
+        "*-east-up": {
+            "base": "block/breadboard_empty",
+            "rotateX": 180,
+            "rotateY": 270,
+            "rotateZ": 0
+        },
+        "*-north-west": {
+            "base": "block/breadboard_empty",
+            "rotateX": 180,
+            "rotateY": 180,
+            "rotateZ": 90
+        },
+        "*-south-west": {
+            "base": "block/breadboard_empty",
+            "rotateY": 180,
+            "rotateZ": 90
+        },
+        "*-up-west": {
+            "base": "block/breadboard_empty",
+            "rotateX": 270,
+            "rotateY": 180,
+            "rotateZ": 90
+        },
+        "*-down-west": {
             "base": "block/breadboard_empty",
             "rotateX": 90,
             "rotateY": 180,
-            "rotateZ": 270
+            "rotateZ": 90
         },
-        "*-west": {
+        "*-up-east": {
             "base": "block/breadboard_empty",
             "rotateX": 90,
-            "rotateY": 0,
-            "rotateZ": 270
+            "rotateZ": 90
         },
-        "*-south": {
+        "*-down-east": {
+            "base": "block/breadboard_empty",
+            "rotateX": 270,
+            "rotateZ": 90
+        },
+        "*-north-east": {
+            "base": "block/breadboard_empty",
+            "rotateZ": 90
+        },
+        "*-south-east": {
+            "base": "block/breadboard_empty",
+            "rotateX": 180,
+            "rotateZ": 90
+        },
+
+        "*-up-north": { "base": "block/breadboard_empty" ,"rotateX": 90},
+        "*-down-north": {
+            "base": "block/breadboard_empty",
+            "rotateX": 90,
+            "rotateY": 180
+        },
+        "*-east-north": { "base": "block/breadboard_empty", "rotateX": 90, "rotateY": 270 },
+        "*-west-north": {
+            "base": "block/breadboard_empty",
+            "rotateX": 90,
+            "rotateY": 90
+        },
+
+        "*-up-south": {
+            "base": "block/breadboard_empty",
+            "rotateX": 270,
+            "rotateY": 180
+        },
+        "*-down-south": {
             "base": "block/breadboard_empty",
             "rotateX": 270
+        },
+        "*-east-south": {
+            "base": "block/breadboard_empty",
+            "rotateX": 270,
+            "rotateY": 270
+        },
+        "*-west-south": {
+            "base": "block/breadboard_empty",
+            "rotateX": 270,
+            "rotateY": 90
         }
+
     },
     "sidesolidByType": {
         "*-down": {
@@ -89,8 +178,8 @@
     },
     "blockmaterial": "Metal",
     "creativeinventory": {
-        "general": [ "*-down" ],
-        "decorative": [ "*-down" ]
+        "general": [ "*-north-down" ],
+        "decorative": [ "*-north-down" ]
     },
     "replaceable": 300,
     "resistance": 2,

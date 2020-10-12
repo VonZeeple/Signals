@@ -8,7 +8,7 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"bottom": "game:block/wood/workbench/bottom"
+		"bottom": "game:block/wood/chest/corners"
 	},
 	"elements": [
 		{

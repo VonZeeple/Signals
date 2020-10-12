@@ -7,6 +7,7 @@
             "states": [ "north", "east", "south", "west", "up", "down" ]
         }
     ],
+
     "shapebytype": {
         "*-down": { "base": "block/test_breadboard_shape" },
         "*-up": {
