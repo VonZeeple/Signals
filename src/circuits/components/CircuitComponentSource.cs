@@ -36,9 +36,19 @@ namespace signals.src.circuits.components
             return this.inputs.Select(x => x.AddCopy(Pos.X, Pos.Y, Pos.Z)).ToArray();
         }
 
-        override public bool[] GetOutputs()
+        override public byte[] GetOutputs()
         {
-            return new bool[] { true, true, true, true };
+            return new byte[] { 15, 15, 15, 15};
+        }
+
+        public override void SetInputs(byte[] inputs)
+        {
+            return;
+        }
+
+        public override Vec3i[] GetInputPositions()
+        {
+           return new Vec3i[] { };
         }
     }
 }

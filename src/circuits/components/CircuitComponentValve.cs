@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
 namespace signals.src.circuits
@@ -10,7 +12,7 @@ namespace signals.src.circuits
     public class CircuitComponentValve : CircuitComponent
     {
 
-        bool[] inputs;
+        byte[] inputs;
 
         public CircuitComponentValve() : base()
         {
@@ -33,23 +35,35 @@ namespace signals.src.circuits
             return new Vec3i[] { pos1, pos2};
         }
 
-        override public void SetInputs(bool[] inputs)
+        override public void SetInputs(byte[] inputs)
         {
             this.inputs = inputs;
         }
 
-        override public bool[] GetOutputs()
+        override public byte[] GetOutputs()
         {
-            if (inputs == null) return new bool[] { false};
-            if (inputs[1])
+            if (inputs == null) return new byte[] {0};
+            if (inputs[1] > 0)
             {
-                return new bool[] { false };
+                return new byte[] { 0 };
             }
             else
             {
-                return new bool[] { inputs[0] };
+                return new byte[] { inputs[0] };
             }
             
+        }
+
+        override public MeshData getMesh(ICoreClientAPI inCapi)
+        {
+            this.capi = inCapi;
+            nowTesselatingItem = capi.World.GetItem(new AssetLocation("signals:el_valve"));
+            nowTesselatingShape = capi.TesselatorManager.GetCachedShape(nowTesselatingItem.Shape.Base);
+            MeshData mesh;
+            capi.Tesselator.TesselateItem(nowTesselatingItem, out mesh, this);
+            mesh.Translate(new Vec3f(Pos.X / 16f, Pos.Y / 16f, Pos.Z / 16f));
+
+            return mesh;
         }
     }
 }

@@ -8,20 +8,22 @@ using Vintagestory.API.Util;
 namespace signals.src
 {
 
-    public class Network
+    public class VoxelWire
     {
         public int id;
         public HashSet<ushort> voxelpositions;
         static ushort SIZE = 16;
-        public bool state = false;
-        public bool nextState = false;
+        public byte state = 0;
+        public byte nextState = 0;
         public bool asUpdated;
 
-        public Network(int id) {
+        public VoxelWire(int id) {
             this.id = id;
             voxelpositions = new HashSet<ushort>();
           }
 
+        
+        // return true if something as changed
         public bool Update()
         {
             bool flag = false;
@@ -30,11 +32,11 @@ namespace signals.src
                 state = nextState;
                 flag = true;
             }
-            nextState = false;
+            nextState = 0;
             return flag;
         }
 
-        public Network(int id, List<Vec3i> voxelPos)
+        public VoxelWire(int id, List<Vec3i> voxelPos)
         {
             this.id = id;
             voxelpositions = new HashSet<ushort>();
@@ -47,7 +49,7 @@ namespace signals.src
             }
         }
 
-        public Network(int id, ushort[] voxelPos)
+        public VoxelWire(int id, ushort[] voxelPos)
         {
             this.id = id;
             voxelpositions = new HashSet<ushort>(voxelPos);
@@ -83,7 +85,7 @@ namespace signals.src
             return voxelpositions.Contains(getIndex(pos).GetValueOrDefault());
         }
 
-        public void MergeWith(Network net)
+        public void MergeWith(VoxelWire net)
         {
             voxelpositions.AddRange(net.voxelpositions);
         }
@@ -116,20 +118,20 @@ namespace signals.src
 
     }
     //A wire is a special component composed of voxels
-    public class VoxelWire
+    public class VoxelWiring
     {
         bool hasChanged;
-        public Dictionary<int, Network> networks;  
+        public Dictionary<int, VoxelWire> networks;  
 
-        public VoxelWire()
+        public VoxelWiring()
         {
-            networks = new Dictionary<int, Network>();
+            networks = new Dictionary<int, VoxelWire>();
             hasChanged = true;
         }
 
         public bool gotWireAtPos(int x, int y, int z)
         {
-            foreach(Network net in networks.Values){
+            foreach(VoxelWire net in networks.Values){
                 if(net.GotVoxelAtPos(new Vec3i(x, y, z)))
                 {
                     return true;
@@ -142,9 +144,9 @@ namespace signals.src
             return gotWireAtPos(pos.X, pos.Y, pos.Z);
         }
 
-        public Network GetNetworkAtPos(Vec3i voxelPos)
+        public VoxelWire GetNetworkAtPos(Vec3i voxelPos)
         {
-            foreach (Network net in networks.Values)
+            foreach (VoxelWire net in networks.Values)
             {
                 if (net.GotVoxelAtPos(voxelPos))
                 {
@@ -163,7 +165,7 @@ namespace signals.src
         public bool OnAdd(Vec3i voxelPos)
         {
             //We first test if the voxel is already contained in a network
-            foreach(Network net in networks.Values)
+            foreach(VoxelWire net in networks.Values)
             {
                 if (net.GotVoxelAtPos(voxelPos)) return false;
             }
@@ -171,11 +173,11 @@ namespace signals.src
 
             //We explore adjacent voxels, looking for a network
             //if a network is found, we take the id. if another network is found with different id, we merge the networks.
-            Network current_net = null;
+            VoxelWire current_net = null;
             foreach (BlockFacing face in BlockFacing.ALLFACES)
             {
                 Vec3i pos2 = voxelPos.AddCopy(face);
-                Network net = GetNetworkAtPos(pos2);
+                VoxelWire net = GetNetworkAtPos(pos2);
                 if (net!=null)
                 {
                     if(current_net == null)
@@ -197,7 +199,7 @@ namespace signals.src
             {
                 //We create a new network
                 int new_id = getNewId();
-                Network network = new Network(new_id);
+                VoxelWire network = new VoxelWire(new_id);
                 network.AddVoxel(voxelPos);
                 networks.Add(new_id, network);
             }
@@ -215,7 +217,7 @@ namespace signals.src
             return networks.Keys.Max()+1;
         }
 
-        public List<Vec3i> RebuildNetwork(Vec3i pos_init, Network old_network)
+        public List<Vec3i> RebuildNetwork(Vec3i pos_init, VoxelWire old_network)
         {
             if (!old_network.GotVoxelAtPos(pos_init)) return new List<Vec3i>();
             List<Vec3i> to_explore = new List<Vec3i>();
@@ -244,7 +246,7 @@ namespace signals.src
 
         public bool OnRemove(Vec3i voxelPos)
         {
-            foreach (Network net in networks.Values)
+            foreach (VoxelWire net in networks.Values)
             {
                 if (net.RemoveVoxel(voxelPos)){
                     hasChanged = true;
@@ -268,7 +270,7 @@ namespace signals.src
                         if(voxels.Count > 0)
                         {
                             int newId = getNewId();
-                            networks.Add(newId, new Network(newId, voxels));
+                            networks.Add(newId, new VoxelWire(newId, voxels));
                             explored_pos.AddRange(voxels);
                         }
                     }
@@ -322,7 +324,7 @@ namespace signals.src
             {
                 BinaryWriter writer = new BinaryWriter(ms);
                 writer.Write(networks.Count);
-                foreach (Network net in networks.Values)
+                foreach (VoxelWire net in networks.Values)
                 {
                     writer.Write(net.id);
                     writer.Write(net.voxelpositions.Count);
@@ -340,12 +342,12 @@ namespace signals.src
 
         }
 
-        static internal VoxelWire deserialize(byte[] data)
+        static internal VoxelWiring deserialize(byte[] data)
         {
             using (MemoryStream ms = new MemoryStream(data))
             {
                 BinaryReader reader = new BinaryReader(ms);
-                VoxelWire wire = new VoxelWire();
+                VoxelWiring wire = new VoxelWiring();
                 try
                 {
                     
@@ -354,13 +356,13 @@ namespace signals.src
                     {
                         int id = reader.ReadInt32();
                         int size = reader.ReadInt32();
-                        bool state = reader.ReadBoolean();
+                        byte state = reader.ReadByte();
                         ushort[] voxels = new ushort[size];
                         for (int j = 0; j < size; j++)
                         {
                             voxels[j] = reader.ReadUInt16();
                         }
-                        wire.networks.Add(id, new Network(id, voxels));
+                        wire.networks.Add(id, new VoxelWire(id, voxels));
                         wire.networks[id].state = state;
                     }
 

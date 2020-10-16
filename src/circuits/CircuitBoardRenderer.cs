@@ -22,7 +22,7 @@ namespace signals.src
 
         protected MeshData tmpMesh;
         protected Dictionary<int, MeshRef> wireMeshesRefs;
-        protected Dictionary<int, bool> networkStates;
+        protected Dictionary<int, byte> networkStates;
 
         Matrixf ModelMat = new Matrixf();
 
@@ -39,7 +39,7 @@ namespace signals.src
         }
 
 
-        public void UpdateNetworkState(int id, bool state)
+        public void UpdateNetworkState(int id, byte state)
         {
             if (networkStates == null) return;
             networkStates[id] = state;
@@ -92,7 +92,7 @@ namespace signals.src
 
         int texId;
 
-        private MeshData GetNetworkMesh(Network net, MeshData singleVoxelMesh)
+        private MeshData GetNetworkMesh(VoxelWire net, MeshData singleVoxelMesh)
         {
             MeshData voxelMeshOffset = singleVoxelMesh.Clone();
             networkStates[net.id] = net.state;
@@ -146,7 +146,7 @@ namespace signals.src
                 rotate = SignalsUtils.FacingToRotation(orientation, facing);
             }
 
-            foreach (Network net in circuit.wiring.networks.Values)
+            foreach (VoxelWire net in circuit.wiring.networks.Values)
             {
                 outMesh.AddMeshData(GetNetworkMesh(net, singleVoxelMesh));
             }
@@ -161,7 +161,7 @@ namespace signals.src
 
         public void RegenCircuitMesh(VoxelCircuit circuit)
         {
-            networkStates = new Dictionary<int, bool>();
+            networkStates = new Dictionary<int, byte>();
             circuitMesh = new MeshData(24, 36, false);
 
             MeshData singleVoxelMesh = getsimpleVoxelMesh();
@@ -174,7 +174,7 @@ namespace signals.src
             }
 
             int j = 0;
-            foreach (Network net in circuit.wiring.networks.Values)
+            foreach (VoxelWire net in circuit.wiring.networks.Values)
             {
 
                 tmpMesh = GetNetworkMesh(net, singleVoxelMesh);
@@ -225,7 +225,7 @@ namespace signals.src
 
             foreach (var item in wireMeshesRefs)
             {
-               prog.ExtraGlow = networkStates.ContainsKey(item.Key)? (networkStates[item.Key]?100:0):0;
+               prog.ExtraGlow = networkStates.ContainsKey(item.Key)? (networkStates[item.Key]*100/15):0;
                rpi.RenderMesh(item.Value);
             }
 

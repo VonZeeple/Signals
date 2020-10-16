@@ -1,19 +1,18 @@
 ﻿{
-    "code": "el_source",
-    "class": "ItemCircuitComponent",
+    "code": "el_resistor",
     "maxstacksize": 16,
     "creativeinventory": {
         "general": [ "*" ],
         "items": [ "*" ]
     },
-    "shape": { "base": "signals:item/el_source_shape" },
+    "shape": { "base": "signals:item/el_resistor" },
     "attributes": {
         "circuitComponent": {
-            "class": "source",
+            "class": "resistor",
             "size": {
                 "x": 3,
-                "y": 3,
-                "z": 3
+                "y": 1,
+                "z": 1
             }
         },
         "displaycaseable": true,

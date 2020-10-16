@@ -22,6 +22,7 @@ namespace signals.src
 
             RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
             RegisterCircuitComponentClass("source", typeof(CircuitComponentSource));
+            RegisterCircuitComponentClass("resistor", typeof(CircuitComponentResistor));
 
 
         }
@@ -33,13 +34,13 @@ namespace signals.src
         }
         public void RegisterCircuitComponentClass(string code, Type type)
         {
-            if (typeof(CircuitComponent).IsAssignableFrom(type))
+            if (typeof(ICircuitComponent).IsAssignableFrom(type))
             {
                 CircuitComponentsRegistry.Add(code, type);
             }
             else
             {
-                api.World.Logger.Warning("Tried to register class {0} with name {1}, but it doesn't inherit from CircuitComponent", type, code);
+                api.World.Logger.Warning("Tried to register class {0} with name {1}, but it doesn't implements ICircuitComponent", type, code);
             }
             
         }

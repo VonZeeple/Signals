@@ -18,7 +18,7 @@ namespace signals.src
         public MeshData Mesh;
         public int AvailableWireVoxels = 0;
         public List<CircuitComponent> components = new List<CircuitComponent>();
-        public VoxelWire wiring;
+        public VoxelWiring wiring;//Contains list of wires
 
         
         //All the selection boxes avalaible for a given component
@@ -33,7 +33,7 @@ namespace signals.src
 
         public VoxelCircuit()
         {
-            wiring = new VoxelWire();
+            wiring = new VoxelWiring();
         }
 
         public void Initialize(ICoreAPI api)
@@ -54,32 +54,32 @@ namespace signals.src
 
         }
 
-        internal void UpdateClientSide(List<Tuple<int, bool>> updatedNetworks)
+        internal void UpdateClientSide(List<Tuple<int, byte>> updatedNetworks)
         {
-            foreach (Tuple<int,bool> tuple in updatedNetworks)
+            foreach (Tuple<int,byte> tuple in updatedNetworks)
             {
                 if (!wiring.networks.ContainsKey(tuple.Item1)) continue;
                 wiring.networks[tuple.Item1].state = tuple.Item2;
             }
         }
 
-        private bool getStateAtPos(Vec3i pos)
+        private byte getStateAtPos(Vec3i pos)
         {
-            Network net = wiring.GetNetworkAtPos(pos);
-            if (net == null) return false;
+            VoxelWire net = wiring.GetNetworkAtPos(pos);
+            if (net == null) return 0;
             return net.state;
         }
-        public List<Tuple<int, bool>> updateSimulation(float dt)
+        public List<Tuple<int, byte>> updateSimulation(float dt)
         {
 
             if (api.Side == EnumAppSide.Client) return null;
 
-            List<Tuple<int, bool>> updatedNetworks = new List<Tuple<int, bool>>();
+            List<Tuple<int, byte>> updatedNetworks = new List<Tuple<int, byte>>();
 
             foreach(CircuitComponent comp in components)
             {
                 Vec3i[] inPos = comp.GetInputPositions();
-                bool[] inputs = inPos.Select(x => getStateAtPos(x)).ToArray();
+                byte[] inputs = inPos.Select(x => getStateAtPos(x)).ToArray();
                 comp.SetInputs(inputs);
                 comp.Update(dt);
             }
@@ -91,7 +91,7 @@ namespace signals.src
                     int? netId = wiring.GetNetworkAtPos(outPos[i])?.id;
                     if (netId.GetValueOrDefault(-1) >= 0)
                     {
-                        if (!wiring.networks[netId.GetValueOrDefault(-1)].nextState)
+                        if (wiring.networks[netId.GetValueOrDefault(-1)].nextState < comp.GetOutputs()[i])
                         {
                             wiring.networks[netId.GetValueOrDefault(-1)].nextState = comp.GetOutputs()[i];
                         }
@@ -105,7 +105,7 @@ namespace signals.src
             {
                 if (wiring.networks[key].Update())
                 {
-                    updatedNetworks.Add(new Tuple<int, bool>(key, wiring.networks[key].state));
+                    updatedNetworks.Add(new Tuple<int, byte>(key, wiring.networks[key].state));
                 }
             }
 
@@ -320,7 +320,7 @@ namespace signals.src
             Byte[] bytes = tree.GetBytes("wiring");
             if(bytes != null)
             {
-                wiring = VoxelWire.deserialize(bytes);
+                wiring = VoxelWiring.deserialize(bytes);
             }
             AvailableWireVoxels = tree.TryGetInt("availableWireVoxels").GetValueOrDefault(0);
             ComponentsFromTree(ref components, tree.GetTreeAttribute("components"), worldForResolving);
@@ -377,7 +377,7 @@ namespace signals.src
         //Get info for the itemblock
         public static void GetCircuitInfo(StringBuilder dsc, ITreeAttribute tree)
         {
-            int n_voxels = VoxelWire.GetNumberOfVoxelsFromBytes(tree.GetBytes("wiring"));
+            int n_voxels = VoxelWiring.GetNumberOfVoxelsFromBytes(tree.GetBytes("wiring"));
             dsc.AppendLine(Lang.Get("Wire voxels: {0}", n_voxels));
             //TODO: number of each components
             //TODO: implement circuit naming
@@ -385,11 +385,11 @@ namespace signals.src
         public void GetBlockInfo(Vec3i pos, StringBuilder dsc)
         {
             int? networkId = wiring?.GetNetworkAtPos(pos)?.id;
-            bool? networkState = wiring?.GetNetworkAtPos(pos)?.state;
+            byte? networkState = wiring?.GetNetworkAtPos(pos)?.state;
             dsc.AppendLine(Lang.Get("Available Wire voxels: {0}", AvailableWireVoxels));
-            dsc.AppendLine(Lang.Get("Networks count: {0}", wiring?.networks.Count));
-            if(networkId != null) dsc.AppendLine(Lang.Get("Network id: {0}", networkId));
-            if (networkId != null) dsc.AppendLine(Lang.Get("Network state: {0}", networkState));
+            dsc.AppendLine(Lang.Get("Number of wires: {0}", wiring?.networks.Count));
+            if(networkId != null) dsc.AppendLine(Lang.Get("Wire id: {0}", networkId));
+            if (networkId != null) dsc.AppendLine(Lang.Get("Wire state: {0}", networkState));
 
         }
 

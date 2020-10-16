@@ -19,13 +19,16 @@ namespace signals.src
         public int rotation;
         public Vec3i Pos;
         public string className;
+        protected ItemStack itemStack;
         bool updated;
-        bool state;
+        byte state;
         protected Item nowTesselatingItem;
         protected Shape nowTesselatingShape;
         protected ICoreClientAPI capi;
 
         public Size2i AtlasSize => capi.BlockTextureAtlas.Size;
+
+        public ItemStack ItemStack { get =>  (itemStack == null)?new ItemStack():itemStack ; set{ itemStack = value; } }
 
         //Overload of the [] operator
         public TextureAtlasPosition this[string textureCode]
@@ -114,27 +117,13 @@ namespace signals.src
             return GetSelectionBox();
         }
 
-        virtual public Vec3i[] GetOutputPositions()
-        {
-            Vec3i pos1 = new Vec3i(3, 0, 1).AddCopy(Pos.X, Pos.Y, Pos.Z);
-            Vec3i pos2 = new Vec3i(0, 0, 1).AddCopy(Pos.X, Pos.Y, Pos.Z);
-            return new Vec3i[]{ pos1, pos2 };
-        }
+        abstract public Vec3i[] GetOutputPositions();
 
-        virtual public Vec3i[] GetInputPositions()
-        {
-            return new Vec3i[] { };
-        }
+        abstract public Vec3i[] GetInputPositions();
 
-        virtual public bool[] GetOutputs()
-        {
-            return new bool[] { true, true };
-        }
+        abstract public byte[] GetOutputs();
 
-        virtual public void SetInputs(bool[] inputs)
-        {
-            return;
-        }
+        abstract public void SetInputs(byte[] inputs);
 
         virtual public void Update(float dt)
         {
@@ -143,12 +132,12 @@ namespace signals.src
 
         virtual public void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
-            string newClassName = tree.GetString("class");
-            //if(className != null && newClassName != className)
+            string newClassName = tree.GetString("class","");
             this.Pos = new Vec3i(0, 0, 0);
             Pos.X = tree.GetInt("posX", 0);
             Pos.Y = tree.GetInt("posY", 0);
             Pos.Z = tree.GetInt("posZ", 0);
+            this.ItemStack = tree.GetItemstack("itemStack", new ItemStack());
         }
 
         virtual public void ToTreeAttributes(ITreeAttribute tree)
@@ -157,6 +146,17 @@ namespace signals.src
             tree.SetInt("posX", Pos.X);
             tree.SetInt("posY", Pos.Y);
             tree.SetInt("posZ", Pos.Z);
+            tree.SetItemstack("itemStack", this.ItemStack);
+        }
+
+        virtual public ItemStack GetItemStackOnRemove()
+        {
+            return this.ItemStack;
+        }
+
+        virtual public bool DoesInstantUpdate()
+        {
+            return false;
         }
 
         #endregion

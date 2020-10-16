@@ -27,7 +27,7 @@ namespace signals.src
             this.Api = api;
             base.Initialize(api);
             Circuit.Initialize(api);
-            listenerId = RegisterGameTickListener(Update, 100);
+            listenerId = RegisterGameTickListener(Update, 50);
             facing = BlockFacing.FromCode(this.Block?.LastCodePart(0)?.ToString());
             orientation = BlockFacing.FromCode(this.Block?.LastCodePart(1)?.ToString());
 
@@ -43,7 +43,7 @@ namespace signals.src
             }
         }
 
-        private void UpdateNetworkStateInRenderer(int id, bool value)
+        private void UpdateNetworkStateInRenderer(int id, byte value)
         {
             if (renderer == null) return;
             renderer.UpdateNetworkState(id, value);
@@ -54,7 +54,7 @@ namespace signals.src
         {
             if (Api.Side == EnumAppSide.Client) return;
 
-            List<Tuple<int, bool>> updatedNetworks = Circuit?.updateSimulation(dt);
+            List<Tuple<int, byte>> updatedNetworks = Circuit?.updateSimulation(dt);
             if (updatedNetworks != null)
             {
                 if (updatedNetworks.Count > 0)
@@ -224,14 +224,14 @@ namespace signals.src
         #endregion
         #region network
 
-        private void SendUpdatedNetworksPacket(List<Tuple<int, bool>> updatedNetworks)
+        private void SendUpdatedNetworksPacket(List<Tuple<int, byte>> updatedNetworks)
         {
 
             byte[] data;
             using (MemoryStream ms = new MemoryStream())
             {
                 BinaryWriter writer = new BinaryWriter(ms);
-                foreach (Tuple<int, bool> item in updatedNetworks)
+                foreach (Tuple<int, byte> item in updatedNetworks)
                 {
                     writer.Write(item.Item1);
                     writer.Write(item.Item2);
@@ -284,7 +284,7 @@ namespace signals.src
             base.OnReceivedServerPacket(packetid, data);
             if (packetid == (int)EnumBECircuitPacket.networkUpdate)
             {
-                List<Tuple<int, bool>> updatedNetworks = new List<Tuple<int, bool>>();
+                List<Tuple<int, byte>> updatedNetworks = new List<Tuple<int, byte>>();
                 try
                 {
                     using (MemoryStream ms = new MemoryStream(data))
@@ -293,9 +293,9 @@ namespace signals.src
                         while (ms.Position < ms.Length)
                         {
                             int net_id = reader.ReadInt32();
-                            bool value = reader.ReadBoolean();
+                            byte value = reader.ReadByte();
 
-                            updatedNetworks.Add(new Tuple<int, bool>(net_id, value));
+                            updatedNetworks.Add(new Tuple<int, byte>(net_id, value));
                         }
 
 
@@ -308,7 +308,7 @@ namespace signals.src
                 if (updatedNetworks.Count > 0)
                 {
                     Circuit.UpdateClientSide(updatedNetworks);
-                    foreach (Tuple<int, bool> tuple in updatedNetworks)
+                    foreach (Tuple<int, byte> tuple in updatedNetworks)
                     {
                         renderer?.UpdateNetworkState(tuple.Item1, tuple.Item2);
                     }

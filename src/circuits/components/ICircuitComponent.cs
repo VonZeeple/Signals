@@ -13,16 +13,19 @@ namespace signals.src.circuits
     interface ICircuitComponent
     {
 
-        
+        ItemStack ItemStack { get; set; }
+
+        bool DoesInstantUpdate();
+
         Vec3i[] GetOutputPositions();
         Vec3i[] GetInputPositions();
-        bool[] GetOutputs();
+        byte[] GetOutputs();
 
-        void SetInputs(bool[] inputs);
+        void SetInputs(byte[] inputs);
 
         void Update(float dt);
 
-
+        ItemStack GetItemStackOnRemove();
         Cuboidf GetSelectionBox();
 
         //Used to detect collisions with other components of the circuit

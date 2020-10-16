@@ -10,8 +10,10 @@ using Vintagestory.API.MathTools;
 
 namespace signals.src
 {
+
     public class SignalsUtils
     {
+
         private static Dictionary<string, Vec3f> rotations = new Dictionary<string, Vec3f>() {
             { "*-north-down", new Vec3f(0,0,0) },
             { "*-south-down", new Vec3f(0, 180, 0) },
@@ -97,5 +99,6 @@ namespace signals.src
 
             return size;
         }
+
     }
 }

@@ -1,0 +1,27 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 4,
+	"textureHeight": 4,
+	"textureSizes": {
+	},
+	"textures": {
+		"resistor": "signals:item/resistor"
+	},
+	"elements": [
+		{
+			"name": "Cube1",
+			"from": [ 0.0, 0.0, 0.0 ], 
+			"to": [ 3.0, 1.0, 1.0 ], 
+			"faces": {
+				"north": { "texture": "#resistor", "uv": [ 1.0, 1.0, 4.0, 2.0 ] },
+				"east": { "texture": "#resistor", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"south": { "texture": "#resistor", "uv": [ 1.0, 1.0, 4.0, 2.0 ] },
+				"west": { "texture": "#resistor", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"up": { "texture": "#resistor", "uv": [ 1.0, 0.0, 4.0, 1.0 ] },
+				"down": { "texture": "#resistor", "uv": [ 1.0, 0.0, 4.0, 1.0 ] }
+			}
+		}
+	]}
