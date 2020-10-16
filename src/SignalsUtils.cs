@@ -78,6 +78,7 @@ namespace signals.src
 
         public static CircuitComponent GetCircuitComponentFromItem(ICoreAPI api, Item item)
         {
+            if (item == null) return null;
             SignalsMod mod = api.ModLoader.GetModSystem<SignalsMod>();
             JsonObject jsonObj = item.Attributes?["circuitComponent"];
             if (jsonObj == null) return null;

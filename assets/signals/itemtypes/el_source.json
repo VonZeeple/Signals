@@ -1,0 +1,111 @@
+﻿{
+    "code": "el_source",
+    "class": "ItemCircuitComponent",
+    "maxstacksize": 16,
+    "creativeinventory": {
+        "general": [ "*" ],
+        "items": [ "*" ]
+    },
+    "shape": { "base": "signals:item/el_source_shape" },
+    "attributes": {
+        "circuitComponent": {
+            "class": "source",
+            "size": {
+                "x": 3,
+                "y": 6,
+                "z": 3
+            },
+            "anode": {
+                "x": 3,
+                "y": 0,
+                "z": 1
+            },
+            "cathode": {
+                "x": -1,
+                "y": 0,
+                "z": 1
+            },
+            "gate": {
+                "x": 1,
+                "y": 7,
+                "z": 1
+            }
+
+        },
+        "displaycaseable": true,
+        "shelvable": true,
+        "onDisplayTransform": {
+            "translation": {
+                "x": 0.5,
+                "y": 0,
+                "z": 0.5
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "origin": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "scale": 1
+        }
+
+    },
+    "guiTransform": {
+        "translation": {
+            "x": 12,
+            "y": 13,
+            "z": 3
+        },
+        "rotation": {
+            "x": -30,
+            "y": -45,
+            "z": -180
+        },
+        "origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": 2.87
+    },
+    "groundTransform": {
+        "translation": {
+            "x": 0.5,
+            "y": 0,
+            "z": 0.5
+        },
+        "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": 5.01
+    },
+    "tpHandTransform": {
+        "translation": {
+            "x": -0.1,
+            "y": -0.2,
+            "z": -0.1
+        },
+        "rotation": {
+            "x": -2,
+            "y": 180,
+            "z": 53
+        },
+        "origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": 0.97
+    }
+}

@@ -82,7 +82,7 @@ namespace signals.src
 
 
         //tmp mesh, maybe use a meshref instead
-        public MeshData getMesh(ICoreClientAPI inCapi)
+        public virtual MeshData getMesh(ICoreClientAPI inCapi)
         {
             this.capi = inCapi;
             nowTesselatingItem = capi.World.GetItem(new AssetLocation("signals:el_valve"));
@@ -114,34 +114,34 @@ namespace signals.src
             return GetSelectionBox();
         }
 
-        public Vec3i[] GetOutputPositions()
+        virtual public Vec3i[] GetOutputPositions()
         {
             Vec3i pos1 = new Vec3i(3, 0, 1).AddCopy(Pos.X, Pos.Y, Pos.Z);
             Vec3i pos2 = new Vec3i(0, 0, 1).AddCopy(Pos.X, Pos.Y, Pos.Z);
             return new Vec3i[]{ pos1, pos2 };
         }
 
-        public Vec3i[] GetInputPositions()
+        virtual public Vec3i[] GetInputPositions()
         {
             return new Vec3i[] { };
         }
 
-        public bool[] GetOutputs()
+        virtual public bool[] GetOutputs()
         {
             return new bool[] { true, true };
         }
 
-        public void SetInputs(bool[] inputs)
+        virtual public void SetInputs(bool[] inputs)
         {
             return;
         }
 
-        public void Update(float dt)
+        virtual public void Update(float dt)
         {
             return;
         }
 
-        public void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
+        virtual public void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
             string newClassName = tree.GetString("class");
             //if(className != null && newClassName != className)
@@ -151,7 +151,7 @@ namespace signals.src
             Pos.Z = tree.GetInt("posZ", 0);
         }
 
-        public void ToTreeAttributes(ITreeAttribute tree)
+        virtual public void ToTreeAttributes(ITreeAttribute tree)
         {
             tree.SetString("class", this.className);
             tree.SetInt("posX", Pos.X);

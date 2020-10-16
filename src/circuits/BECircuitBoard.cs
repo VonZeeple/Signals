@@ -54,7 +54,7 @@ namespace signals.src
         {
             if (Api.Side == EnumAppSide.Client) return;
 
-            List<Tuple<int, bool>> updatedNetworks = Circuit?.updateSimulation();
+            List<Tuple<int, bool>> updatedNetworks = Circuit?.updateSimulation(dt);
             if (updatedNetworks != null)
             {
                 if (updatedNetworks.Count > 0)

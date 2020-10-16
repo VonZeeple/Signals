@@ -1,0 +1,27 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 8,
+	"textureHeight": 8,
+	"textureSizes": {
+	},
+	"textures": {
+		"tech-powergeneratormain": "game:block/tech/tech-powergeneratormain"
+	},
+	"elements": [
+		{
+			"name": "Cube1",
+			"from": [ 0.0, 0.0, 0.0 ], 
+			"to": [ 3.0, 3.0, 3.0 ], 
+			"faces": {
+				"north": { "texture": "#tech-powergeneratormain", "uv": [ 3.5, 0.0, 6.5, 3.0 ] },
+				"east": { "texture": "#tech-powergeneratormain", "uv": [ 3.5, 0.0, 6.5, 3.0 ] },
+				"south": { "texture": "#tech-powergeneratormain", "uv": [ 3.5, 0.0, 6.5, 3.0 ] },
+				"west": { "texture": "#tech-powergeneratormain", "uv": [ 3.5, 0.0, 6.5, 3.0 ] },
+				"up": { "texture": "#tech-powergeneratormain", "uv": [ 0.5, 0.5, 3.5, 3.5 ] },
+				"down": { "texture": "#null", "uv": [ 0.0, 0.0, 3.0, 3.0 ], "enabled": false }
+			}
+		}
+	]}

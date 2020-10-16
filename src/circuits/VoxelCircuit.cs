@@ -63,7 +63,13 @@ namespace signals.src
             }
         }
 
-        public List<Tuple<int, bool>> updateSimulation()
+        private bool getStateAtPos(Vec3i pos)
+        {
+            Network net = wiring.GetNetworkAtPos(pos);
+            if (net == null) return false;
+            return net.state;
+        }
+        public List<Tuple<int, bool>> updateSimulation(float dt)
         {
 
             if (api.Side == EnumAppSide.Client) return null;
@@ -72,13 +78,23 @@ namespace signals.src
 
             foreach(CircuitComponent comp in components)
             {
+                Vec3i[] inPos = comp.GetInputPositions();
+                bool[] inputs = inPos.Select(x => getStateAtPos(x)).ToArray();
+                comp.SetInputs(inputs);
+                comp.Update(dt);
+            }
+            foreach(CircuitComponent comp in components)
+            {
                 Vec3i[] outPos = comp.GetOutputPositions();
                 for (int i=0;i<outPos.Length;i++)
                 {
                     int? netId = wiring.GetNetworkAtPos(outPos[i])?.id;
                     if (netId.GetValueOrDefault(-1) >= 0)
                     {
-                        wiring.networks[netId.GetValueOrDefault(-1)].nextState = comp.GetOutputs()[i];
+                        if (!wiring.networks[netId.GetValueOrDefault(-1)].nextState)
+                        {
+                            wiring.networks[netId.GetValueOrDefault(-1)].nextState = comp.GetOutputs()[i];
+                        }
                     }
                     
                 }
