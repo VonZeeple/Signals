@@ -1,24 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using signals.src.circuits;
+using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
 namespace signals.src
 {
-    public class CircuitComponent: ITexPositionSource
+    public abstract class CircuitComponent: ICircuitComponent, ITexPositionSource
     {
 
-
-        public CircuitComponent(Vec3i size, Vec3i position)
+        public CircuitComponent()
         {
-            this.Size = size;
-            this.Pos = position;
-            this.updated = false;
-            this.state = false;
+
         }
 
         public Vec3i Size;
+        public int rotation;
         public Vec3i Pos;
+        public string className;
         bool updated;
         bool state;
         protected Item nowTesselatingItem;
@@ -27,6 +27,7 @@ namespace signals.src
 
         public Size2i AtlasSize => capi.BlockTextureAtlas.Size;
 
+        //Overload of the [] operator
         public TextureAtlasPosition this[string textureCode]
         {
             get
@@ -69,17 +70,15 @@ namespace signals.src
             }
         }
 
-        public bool getOutput()
-        {
 
-            return true;
-        }
-        public List<Vec3i> outputPos()
+
+        public virtual bool doesIntersect(Cuboidi box)
         {
-            Vec3i pos1 = new Vec3i(3, 0, 1).AddCopy(Pos.X,Pos.Y,Pos.Z);
-            Vec3i pos2 = new Vec3i(0, 0, 1).AddCopy(Pos.X, Pos.Y, Pos.Z);
-            return new List<Vec3i>() { pos1,pos2 };
+            return new Cuboidi(Pos, Pos.AddCopy(Size.X,Size.Y,Size.Z)).Intersects(box);
         }
+
+
+        #region ICircuitComponentImplementation
 
 
         //tmp mesh, maybe use a meshref instead
@@ -95,10 +94,7 @@ namespace signals.src
             return mesh;
         }
 
-        public virtual bool doesIntersect(Cuboidi box)
-        {
-            return new Cuboidi(Pos, Pos.AddCopy(Size.X,Size.Y,Size.Z)).Intersects(box);
-        }
+
 
         //Used to select the component once placed
         public virtual Cuboidf GetSelectionBox()
@@ -117,5 +113,52 @@ namespace signals.src
         {
             return GetSelectionBox();
         }
+
+        public Vec3i[] GetOutputPositions()
+        {
+            Vec3i pos1 = new Vec3i(3, 0, 1).AddCopy(Pos.X, Pos.Y, Pos.Z);
+            Vec3i pos2 = new Vec3i(0, 0, 1).AddCopy(Pos.X, Pos.Y, Pos.Z);
+            return new Vec3i[]{ pos1, pos2 };
+        }
+
+        public Vec3i[] GetInputPositions()
+        {
+            return new Vec3i[] { };
+        }
+
+        public bool[] GetOutputs()
+        {
+            return new bool[] { true, true };
+        }
+
+        public void SetInputs(bool[] inputs)
+        {
+            return;
+        }
+
+        public void Update(float dt)
+        {
+            return;
+        }
+
+        public void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
+        {
+            string newClassName = tree.GetString("class");
+            //if(className != null && newClassName != className)
+            this.Pos = new Vec3i(0, 0, 0);
+            Pos.X = tree.GetInt("posX", 0);
+            Pos.Y = tree.GetInt("posY", 0);
+            Pos.Z = tree.GetInt("posZ", 0);
+        }
+
+        public void ToTreeAttributes(ITreeAttribute tree)
+        {
+            tree.SetString("class", this.className);
+            tree.SetInt("posX", Pos.X);
+            tree.SetInt("posY", Pos.Y);
+            tree.SetInt("posZ", Pos.Z);
+        }
+
+        #endregion
     }
 }

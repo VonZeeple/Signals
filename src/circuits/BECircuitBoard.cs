@@ -12,7 +12,7 @@ namespace signals.src
 {
 
     //The block entity
-    public class BEBreadboard : BlockEntity, IBlockEntityRotatable
+    public class BECircuitBoard : BlockEntity
     {
 
         public VoxelCircuit Circuit = new VoxelCircuit();
@@ -30,7 +30,11 @@ namespace signals.src
             listenerId = RegisterGameTickListener(Update, 100);
             facing = BlockFacing.FromCode(this.Block?.LastCodePart(0)?.ToString());
             orientation = BlockFacing.FromCode(this.Block?.LastCodePart(1)?.ToString());
-            
+
+            if(this.Block.Id == 0) { api.World.BlockAccessor.RemoveBlockEntity(this.Pos);
+                return;
+            }
+
             if (api.Side == EnumAppSide.Client)
             {
                 ICoreClientAPI capi = (ICoreClientAPI)api;
@@ -60,8 +64,13 @@ namespace signals.src
             }
         }
 
+        //Called ClientSide
         public void OnUseOver(IPlayer byPlayer, BlockSelection blockSel, bool mouseBreakMode)
         {
+            Cuboidf[] boxes = Circuit.GetCurrentSelectionBoxes();
+            //If true, something is wrong with selection boxes or the board was selected.
+            if (blockSel.SelectionBoxIndex >= boxes.Length) return;
+            
             //From the hit position and the face we can infere a voxel position without using selection box index
             //It works but could be refined
 
@@ -80,32 +89,140 @@ namespace signals.src
             SignalsUtils.RotateVector(ref hitPos2, 0, -rotation.Y, 0, new Vec3f(8, 8, 8));
             SignalsUtils.RotateVector(ref hitPos2, 0, 0, -rotation.Z, new Vec3f(8, 8, 8));
 
-            
-            
-
             Vec3i voxelPos = new Vec3i((int)Math.Floor(hitPos2.X), (int)Math.Floor(hitPos2.Y), (int)Math.Floor(hitPos2.Z));
-            OnUseOver(byPlayer, voxelPos, selectionFacing, mouseBreakMode);
+
+            Cuboidf box = boxes[blockSel.SelectionBoxIndex];
+            Vec3i voxelBoxPos = new Vec3i((int)Math.Floor(box.MinX*16), (int)Math.Floor(box.MinY*16), (int)Math.Floor(box.MinZ*16));
+            OnUseOver(byPlayer, voxelPos, voxelBoxPos, selectionFacing, mouseBreakMode);
 
         }
 
-        public void OnUseOver(IPlayer byPlayer, Vec3i voxelPos, BlockFacing facing, bool mouseBreakMode)
+        public void OnUseOver(IPlayer byPlayer, Vec3i voxelHitPos, Vec3i voxelBoxPos, BlockFacing facing, bool mouseBreakMode)
         {
             // Send a custom network packet for server side, because
             // serverside blockselection index is inaccurate
+
+
             if (Api.Side == EnumAppSide.Client)
             {
-                SendUseOverPacket(byPlayer, voxelPos, facing, mouseBreakMode);
+                SendUseOverPacket(byPlayer, voxelHitPos, voxelBoxPos, facing, mouseBreakMode);
                 return;
             }
 
-            Circuit.OnUseOver(byPlayer, voxelPos, facing, mouseBreakMode);
-            //Api.World.PlaySoundAt(new AssetLocation("signals:buzz_short"), Pos.X, Pos.Y, Pos.Z);
+            ItemStack itemStack = byPlayer?.InventoryManager?.ActiveHotbarSlot?.Itemstack;
+
+            Circuit.OnUseOver(byPlayer, voxelHitPos, voxelBoxPos, facing,itemStack, mouseBreakMode);
             Api.World.PlaySoundAt(new AssetLocation("signals:sounds/buzz_short"), Pos.X, Pos.Y, Pos.Z);
             MarkDirty();
 
         }
 
+        public override void OnBlockRemoved()
+        {
+            if (renderer != null)
+            {
+                renderer.Dispose();
+                renderer = null;
+            }
+            base.OnBlockRemoved();
+        }
 
+        public override void OnBlockUnloaded()
+        {
+            base.OnBlockUnloaded();
+            renderer?.Dispose();
+        }
+
+
+
+
+
+        internal Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, ItemStack holdingItemStack = null)
+        {
+            ICoreClientAPI capi = Api as ICoreClientAPI;
+            if (capi == null) return null;
+            VoxelCircuit.EnumCircuitSelectionType selType;
+
+            
+            Item heldItem = holdingItemStack?.Item;
+            Vec3i compSize = SignalsUtils.GetCircuitComponentSizeFromItem(capi, heldItem);
+
+            if(heldItem?.Code?.ToString() == "signals:el_wire")
+            {
+                selType = VoxelCircuit.EnumCircuitSelectionType.PlaceWire;
+            }else if(compSize != null)
+            {
+                selType = VoxelCircuit.EnumCircuitSelectionType.PlaceComponent;
+            }
+            else
+            {
+                selType = VoxelCircuit.EnumCircuitSelectionType.PlaceNothing;
+            }
+            
+
+            
+            Cuboidf[] boxes = Circuit?.GetSelectionBoxes(compSize, selType);
+
+            if(selType == VoxelCircuit.EnumCircuitSelectionType.PlaceNothing)
+            {
+                Array.Resize(ref boxes, boxes.Length + 1);
+                boxes[boxes.Length - 1] = new Cuboidf(0, 0, 0, 1, 1f / 16, 1);
+            }
+
+            //-----------
+            Cuboidf[] rotatedBoxes = new Cuboidf[boxes.Length];
+            Vec3f rotation = SignalsUtils.FacingToRotation(orientation, facing);
+            for(int i=0;i<boxes.Length;i++)
+            {
+                rotatedBoxes[i] = boxes[i].RotatedCopy(rotation.X, rotation.Y, rotation.Z, new Vec3d(0.5d, 0.5, 0.5));
+            }
+            return rotatedBoxes;
+        }
+
+        internal Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
+        {
+            return new Cuboidf[] { };
+        }
+
+        public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
+        {
+            //dsc.AppendLine(Lang.Get("Available Wiring Voxels: {0}", 42));
+            //Todo maybe test if the player is aiming at the right block
+            int index = forPlayer.CurrentBlockSelection.SelectionBoxIndex;
+            BlockPos pos = forPlayer.CurrentBlockSelection.Position;
+            Cuboidf[] boxes = Block.GetSelectionBoxes(this.Api.World.GetBlockAccessor(false, false, false), pos);
+            if (index >= boxes.Length) return;
+            Vec3i voxelPos = new Vec3i((int)(16 * boxes[index].X1), (int)(16 * boxes[index].Y1), (int)(16 * boxes[index].Z1));
+            Circuit.GetBlockInfo(voxelPos, dsc);
+        }
+
+        #region data
+
+        public override void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
+        {
+            base.FromTreeAtributes(tree, worldForResolving);
+            Circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), worldForResolving);
+            MarkDirty(true);
+
+            if (Api == null) return;
+            if (Api.Side == EnumAppSide.Client)
+            {
+                renderer.RegenCircuitMesh(this.Circuit);
+
+            }
+        }
+
+        public override void ToTreeAttributes(ITreeAttribute tree)
+        {
+            base.ToTreeAttributes(tree);
+            ITreeAttribute circuittree = new TreeAttribute();
+            Circuit.ToTreeAttributes(circuittree);
+            tree["circuit"] = circuittree;
+        }
+
+
+        #endregion
+        #region network
 
         private void SendUpdatedNetworksPacket(List<Tuple<int, bool>> updatedNetworks)
         {
@@ -135,9 +252,8 @@ namespace signals.src
 
         }
 
-
         //Notifies the server that the block have been interacted with
-        public void SendUseOverPacket(IPlayer byPlayer, Vec3i voxelPos, BlockFacing facing, bool mouseMode)
+        public void SendUseOverPacket(IPlayer byPlayer, Vec3i voxelPos, Vec3i voxelBoxPos, BlockFacing facing, bool mouseMode)
         {
             byte[] data;
 
@@ -147,6 +263,10 @@ namespace signals.src
                 writer.Write(voxelPos.X);
                 writer.Write(voxelPos.Y);
                 writer.Write(voxelPos.Z);
+                writer.Write(voxelBoxPos.X);
+                writer.Write(voxelBoxPos.Y);
+                writer.Write(voxelBoxPos.Z);
+
                 writer.Write(mouseMode);
                 writer.Write((ushort)facing.Index);
                 data = ms.ToArray();
@@ -158,7 +278,6 @@ namespace signals.src
                 data
             );
         }
-
 
         public override void OnReceivedServerPacket(int packetid, byte[] data)
         {
@@ -198,109 +317,32 @@ namespace signals.src
             }
         }
 
-
-
         //When the server recieve a packet from a client
         public override void OnReceivedClientPacket(IPlayer player, int packetid, byte[] data)
         {
             if (packetid == (int)EnumBECircuitPacket.OnUserOver)
             {
                 Vec3i voxelPos;
+                Vec3i voxelBoxPos;
                 bool mouseMode;
                 BlockFacing facing;
+
                 using (MemoryStream ms = new MemoryStream(data))
                 {
                     BinaryReader reader = new BinaryReader(ms);
                     voxelPos = new Vec3i(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+                    voxelBoxPos = new Vec3i(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
                     mouseMode = reader.ReadBoolean();
                     facing = BlockFacing.ALLFACES[reader.ReadInt16()];
 
                 }
 
                 Api.World.Logger.Notification("ok got use over packet from {0} at pos {1}", player.PlayerName, voxelPos);
-                OnUseOver(player, voxelPos, facing, mouseMode);
+                OnUseOver(player, voxelPos, voxelBoxPos, facing, mouseMode);
             }
 
 
         }
-
-
-        public override void OnBlockRemoved()
-        {
-            if (renderer != null)
-            {
-                renderer.Dispose();
-                renderer = null;
-            }
-            base.OnBlockRemoved();
-        }
-
-        public override void OnBlockUnloaded()
-        {
-            base.OnBlockUnloaded();
-            renderer?.Dispose();
-        }
-
-        public override void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
-        {
-            base.FromTreeAtributes(tree, worldForResolving);
-            Circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), worldForResolving);
-            MarkDirty(true);
-
-            if (Api == null) return;
-            if (Api.Side == EnumAppSide.Client)
-            {
-                renderer.RegenCircuitMesh(this.Circuit);
-            }
-        }
-
-        public override void ToTreeAttributes(ITreeAttribute tree)
-        {
-            base.ToTreeAttributes(tree);
-            ITreeAttribute circuittree = new TreeAttribute();
-            Circuit.ToTreeAttributes(circuittree);
-            tree["circuit"] = circuittree;
-        }
-
-        //Rotatable entity
-        public void OnTransformed(ITreeAttribute tree, int degreeRotation, EnumAxis? flipAxis)
-        {
-            return;
-        }
-
-
-
-        internal Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
-        {
-            ICoreClientAPI capi = Api as ICoreClientAPI;
-            Item held_item = capi?.World?.Player?.InventoryManager?.ActiveHotbarSlot?.Itemstack?.Item;
-            Cuboidf[] boxes = Circuit?.GetSelectionBoxes();
-            Cuboidf[] rotatedBoxes = new Cuboidf[boxes.Length];
-            Vec3f rotation = SignalsUtils.FacingToRotation(orientation, facing);
-            for(int i=0;i<boxes.Length;i++)
-            {
-                rotatedBoxes[i] = boxes[i].RotatedCopy(rotation.X, rotation.Y, rotation.Z, new Vec3d(0.5d, 0.5, 0.5));
-            }
-            return rotatedBoxes;
-        }
-
-        internal Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
-        {
-            return new Cuboidf[] { };
-        }
-
-        public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
-        {
-            //dsc.AppendLine(Lang.Get("Available Wiring Voxels: {0}", 42));
-            //Todo maybe test if the player is aiming at the right block
-            int index = forPlayer.CurrentBlockSelection.SelectionBoxIndex;
-            BlockPos pos = forPlayer.CurrentBlockSelection.Position;
-            Cuboidf[] boxes = Block.GetSelectionBoxes(this.Api.World.GetBlockAccessor(false, false, false), pos);
-            if (index >= boxes.Length) return;
-            Vec3i voxelPos = new Vec3i((int)(16 * boxes[index].X1), (int)(16 * boxes[index].Y1), (int)(16 * boxes[index].Z1));
-            Circuit.GetBlockInfo(voxelPos, dsc);
-        }
-
 
         public enum EnumBECircuitPacket
         {
@@ -308,5 +350,10 @@ namespace signals.src
             OnUserOver = 1002,
             networkModification = 1003
         }
+
+        #endregion
+        #region Rendering
+
+        #endregion
     }
 }

@@ -1,6 +1,6 @@
 ﻿{
     "code": "el_wire",
-    "texture": { "base": "game:item/resource/rope" },
+    "texture": { "base": "signals:item/el_wire" },
     "creativeinventory": {
         "general": [ "*" ],
         "items": [ "*" ]

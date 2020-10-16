@@ -1,10 +1,11 @@
-﻿using System;
+﻿using signals.src.circuits;
+using System;
 using System.Collections.Generic;
 using Vintagestory.API.Common;
 
 namespace signals.src
 {
-    class SignalsMod : ModSystem
+    public class SignalsMod : ModSystem
     {
         static string MODID = "signals";
         ICoreAPI api;
@@ -15,14 +16,22 @@ namespace signals.src
         {
             this.api = api;
             base.Start(api);
-            api.RegisterBlockClass("BlockBreadboard", typeof(BlockBreadboard));
-            api.RegisterBlockEntityClass("BlockEntityBreadboard", typeof(BEBreadboard));
-            
+            api.RegisterBlockClass("BlockBreadboard", typeof(BlockCircuitBoard));
+            api.RegisterBlockEntityClass("BlockEntityBreadboard", typeof(BECircuitBoard));
+
+            RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
+
+
         }
 
-        public void RegisterCircuitComponent(string code, Type type)
+        public Type GetCircuitComponentClass(string key)
         {
-            if (type.IsAssignableFrom(typeof(CircuitComponent)))
+            if (!CircuitComponentsRegistry.ContainsKey(key)) return null;
+            return CircuitComponentsRegistry[key];
+        }
+        public void RegisterCircuitComponentClass(string code, Type type)
+        {
+            if (typeof(CircuitComponent).IsAssignableFrom(type))
             {
                 CircuitComponentsRegistry.Add(code, type);
             }
@@ -31,6 +40,13 @@ namespace signals.src
                 api.World.Logger.Warning("Tried to register class {0} with name {1}, but it doesn't inherit from CircuitComponent", type, code);
             }
             
+        }
+
+        public Type getCircuitComponentType(string code)
+        {
+            if (!CircuitComponentsRegistry.ContainsKey(code)) return null;
+            return CircuitComponentsRegistry[code];
+
         }
     }
 }

@@ -7,9 +7,8 @@ using Vintagestory.API.Util;
 
 namespace signals.src
 {
-    class BlockBreadboard : Block
+    class BlockCircuitBoard : Block
     {
-
         public override void OnLoaded(ICoreAPI api)
         {
             base.OnLoaded(api);
@@ -19,7 +18,6 @@ namespace signals.src
             ICoreClientAPI capi = api as ICoreClientAPI;
 
             //init of interactions
-
         }
 
 
@@ -78,7 +76,7 @@ namespace signals.src
         public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack)
         {
             base.OnBlockPlaced(world, blockPos, byItemStack);
-            BEBreadboard be = world.BlockAccessor.GetBlockEntity(blockPos) as BEBreadboard;
+            BECircuitBoard be = world.BlockAccessor.GetBlockEntity(blockPos) as BECircuitBoard;
             if (be != null && byItemStack != null)
             {
                 byItemStack.Attributes.SetInt("posx", blockPos.X);
@@ -99,7 +97,7 @@ namespace signals.src
         public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
             Block block = world.BlockAccessor.GetBlock(CodeWithParts("north","down"));
-            BEBreadboard bec = world.BlockAccessor.GetBlockEntity(pos) as BEBreadboard;
+            BECircuitBoard bec = world.BlockAccessor.GetBlockEntity(pos) as BECircuitBoard;
             if (bec == null)
             {
                 return null;
@@ -130,7 +128,7 @@ namespace signals.src
             base.OnBlockInteractStart(world, byPlayer, blockSel);
             if (api.Side == EnumAppSide.Client)
             {
-                BEBreadboard entity = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEBreadboard;
+                BECircuitBoard entity = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BECircuitBoard;
                 entity?.OnUseOver(byPlayer, blockSel, false);
             }
             return true;
@@ -140,7 +138,7 @@ namespace signals.src
         //Detects when the player interacts with left click, usually to remove a component
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
         {
-            BEBreadboard entity = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BEBreadboard;
+            BECircuitBoard entity = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BECircuitBoard;
             entity?.OnUseOver(player, blockSel, true);
             return base.OnGettingBroken(player, blockSel, itemslot, remainingResistance, dt, counter);
         }
@@ -154,8 +152,9 @@ namespace signals.src
         public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
         {
 
-            BEBreadboard bec = blockAccessor.GetBlockEntity(pos) as BEBreadboard;
-            Cuboidf[] entitySB = bec?.GetSelectionBoxes(blockAccessor, pos);
+            ItemStack holdingItemStack = (api as ICoreClientAPI)?.World?.Player.Entity.RightHandItemSlot.Itemstack?.Clone();
+            BECircuitBoard bec = blockAccessor.GetBlockEntity(pos) as BECircuitBoard;
+            Cuboidf[] entitySB = bec?.GetSelectionBoxes(blockAccessor, pos, holdingItemStack);
             if (entitySB == null || entitySB.Length == 0)
             {
 
@@ -168,7 +167,7 @@ namespace signals.src
 
         public override Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
         {
-            BEBreadboard bec = blockAccessor.GetBlockEntity(pos) as BEBreadboard;
+            BECircuitBoard bec = blockAccessor.GetBlockEntity(pos) as BECircuitBoard;
 
             if (bec != null)
             {

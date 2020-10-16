@@ -1,5 +1,6 @@
 ﻿{
     "code": "el_valve",
+    "class": "ItemCircuitComponent",
     "maxstacksize": 16,
     "creativeinventory": {
         "general": [ "*" ],
@@ -7,6 +8,30 @@
     },
     "shape": { "base": "signals:item/el_valve_shape" },
     "attributes": {
+        "circuitComponent": {
+            "class": "valve",
+            "size": {
+                "x": 3,
+                "y": 6,
+                "z": 3
+            },
+            "anode": {
+                "x": 3,
+                "y": 0,
+                "z": 1
+            },
+            "cathode": {
+                "x": -1,
+                "y": 0,
+                "z": 1
+            },
+            "gate": {
+                "x": 1,
+                "y": 7,
+                "z": 1
+            }
+
+        },
         "displaycaseable": true,
         "shelvable": true,
         "onDisplayTransform": {

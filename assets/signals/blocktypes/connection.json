@@ -1,0 +1,48 @@
+﻿{
+    "code": "connection",
+    "class": "BlockSimpleCoating",
+    "variantgroups": [
+        {
+            "code": "side",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        }
+    ],
+    "creativeinventory": {
+        "general": [ "*-north" ]
+    },
+
+    "shapebytype": {
+        "*-down": { "base": "game:block/clay/pot-closed" },
+        "*-up": {
+            "base": "game:block/clay/pot-closed",
+            "rotateX": 180
+        },
+        "*-north": {
+            "base": "game:block/clay/pot-closed",
+            "rotateX": 90
+        },
+        "*-east": {
+            "base": "game:block/clay/pot-closed",
+            "rotateX": 90,
+            "rotateY": 180,
+            "rotateZ": 270
+        },
+        "*-west": {
+            "base": "game:block/clay/pot-closed",
+            "rotateX": 90,
+            "rotateY": 0,
+            "rotateZ": 270
+        },
+        "*-south": {
+            "base": "game:block/clay/pot-closed",
+            "rotateX": 270
+        }
+    },
+    "sidesolid": { "all": false },
+    "sideopaque": { "all": false },
+    "blockmaterial": "Metal",
+    "drawtype": "json",
+    "textures": {
+        "all": { "base": "game:block/metal/plate/lead" }
+    }
+}

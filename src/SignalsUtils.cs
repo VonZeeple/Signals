@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vintagestory.API;
+using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
 namespace signals.src
 {
-    class SignalsUtils
+    public class SignalsUtils
     {
         private static Dictionary<string, Vec3f> rotations = new Dictionary<string, Vec3f>() {
             { "*-north-down", new Vec3f(0,0,0) },
@@ -72,6 +75,26 @@ namespace signals.src
             vector.Z = vec[2] + origin.Z;
         }
 
-        
+
+        public static CircuitComponent GetCircuitComponentFromItem(ICoreAPI api, Item item)
+        {
+            SignalsMod mod = api.ModLoader.GetModSystem<SignalsMod>();
+            JsonObject jsonObj = item.Attributes?["circuitComponent"];
+            if (jsonObj == null) return null;
+            string className = jsonObj["class"]?.AsString();
+            Type type = mod.getCircuitComponentType(className);
+            return (CircuitComponent)Activator.CreateInstance(type);
+
+        }
+        public static Vec3i GetCircuitComponentSizeFromItem(ICoreAPI api, Item item)
+        {
+            if (item == null) return null;
+            SignalsMod mod = api.ModLoader.GetModSystem<SignalsMod>();
+            JsonObject jsonObj = item.Attributes?["circuitComponent"];
+            if (jsonObj == null) return null;
+            Vec3i size = jsonObj["size"]?.AsObject<Vec3i>() ;
+
+            return size;
+        }
     }
 }

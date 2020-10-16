@@ -11,30 +11,13 @@ using Vintagestory.API.MathTools;
 namespace signals.src
 {
 
-
-    //Represent an element (diode, resistor...)
-    class CircuitElement
-    {
-
-        //CircuitComponent component
-        Vec3i position;
-        bool hasbeenupdated = false;
-        public CircuitElement(Vec3i pos)
-        {
-            this.position = pos;
-        }
-
-
-
-
-    }
     //The circuit contains all electrical components and wires
     public class VoxelCircuit
     {
 
         public MeshData Mesh;
         public int AvailableWireVoxels = 0;
-        public CircuitComponent[] components = new CircuitComponent[] { new CircuitComponent(new Vec3i(3,6,3),new Vec3i(5, 1, 5)) };
+        public List<CircuitComponent> components = new List<CircuitComponent>();
         public VoxelWire wiring;
 
         
@@ -42,6 +25,9 @@ namespace signals.src
         //Plus selection boxes of placed components
         Cuboidf[] selectionBoxesVoxels = new Cuboidf[0];
 
+        Vec3i currentSelectionSize = new Vec3i(1,1,1);
+        EnumCircuitSelectionType currentSelectionType;
+        bool selectionBoxesDidChanged = true;
 
         ICoreAPI api;
 
@@ -53,11 +39,9 @@ namespace signals.src
         public void Initialize(ICoreAPI api)
         {
             this.api = api;
-            
             if (api.Side == EnumAppSide.Client)
             {
 
-                GenerateSelectionVoxelBoxes();
             }
         }
 
@@ -88,12 +72,13 @@ namespace signals.src
 
             foreach(CircuitComponent comp in components)
             {
-                foreach(Vec3i outPutPos in comp.outputPos())
+                Vec3i[] outPos = comp.GetOutputPositions();
+                for (int i=0;i<outPos.Length;i++)
                 {
-                    int? netId = wiring.GetNetworkAtPos(outPutPos)?.id;
+                    int? netId = wiring.GetNetworkAtPos(outPos[i])?.id;
                     if (netId.GetValueOrDefault(-1) >= 0)
                     {
-                        wiring.networks[netId.GetValueOrDefault(-1)].nextState = comp.getOutput();
+                        wiring.networks[netId.GetValueOrDefault(-1)].nextState = comp.GetOutputs()[i];
                     }
                     
                 }
@@ -117,42 +102,52 @@ namespace signals.src
 
         #region voxel modification
 
-        public void OnUseOver(IPlayer byPlayer, Vec3i voxelPos, BlockFacing facing, bool mouseBreakMode)
+        public void OnUseOver(IPlayer byPlayer, Vec3i voxelHitPos, Vec3i voxelBoxPos, BlockFacing facing, ItemStack itemStack, bool mouseBreakMode)
         {
 
-            ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
-            if(slot.Itemstack?.Item?.Code.ToString() == "signals:el_wire")
-            {
 
-                if (mouseBreakMode)
-                {
-                    if(wiring.OnRemove(voxelPos))
+            Item heldItem = itemStack?.Item;
+            if (heldItem?.Code?.ToString() == "signals:el_wire")
                     {
-                        AvailableWireVoxels++;
-                        if (AvailableWireVoxels >= 25)
+                        if (mouseBreakMode)
                         {
-                            byPlayer.InventoryManager.TryGiveItemstack(new ItemStack(slot.Itemstack.Item));
-                            AvailableWireVoxels = 0;
+                            if (wiring.OnRemove(voxelHitPos))
+                            {
+                                AvailableWireVoxels++;
+                                if (AvailableWireVoxels >= 25)
+                                {
+                                    byPlayer.InventoryManager.TryGiveItemstack(new ItemStack(heldItem));
+                                    AvailableWireVoxels = 0;
+                                }
+                            }
+                            return;
                         }
-                    }
-                        return;
-                }
 
 
-                if (canPlaceWireAt(voxelPos.AddCopy(facing)))
-                {
+                        if (canPlaceWireAt(voxelHitPos.AddCopy(facing)))
+                        {
 
-                    if(AvailableWireVoxels == 0)
-                    {
-                        AvailableWireVoxels = 25;
-                        slot.TakeOut(1);
-                        slot.MarkDirty();
-                    }
-                    wiring.OnAdd(voxelPos.AddCopy(facing));
-                    AvailableWireVoxels--; 
-                }
-                    
+                            if (AvailableWireVoxels == 0)
+                            {
+                                AvailableWireVoxels = 25;
+                                //slot.TakeOut(1);
+                                //slot.MarkDirty();
+                            }
+                            wiring.OnAdd(voxelHitPos.AddCopy(facing));
+                            AvailableWireVoxels--;     
+                        }
+                return;
             }
+
+
+                        CircuitComponent comp = SignalsUtils.GetCircuitComponentFromItem(api, heldItem);
+                        if (comp != null)
+                        {
+                            comp.Pos = voxelBoxPos.Clone();
+                            components.Add(comp);
+
+                       }
+                    
             
         }
 
@@ -174,62 +169,133 @@ namespace signals.src
 
         #region selection box:
 
-        internal Cuboidf[] GetSelectionBoxes(IPlayer forPlayer = null)
+        public enum EnumCircuitSelectionType
         {
+            PlaceWire,
+            PlaceComponent,
+            PlaceNothing
+        }
+
+        public Cuboidf[] GetCurrentSelectionBoxes()
+        {
+            return this.selectionBoxesVoxels;
+        }
+
+        internal Cuboidf[] GetSelectionBoxes(Vec3i forSize, EnumCircuitSelectionType selType, IPlayer forPlayer = null)
+        {
+            if(currentSelectionType == selType && ((forSize?.Equals(currentSelectionSize)).GetValueOrDefault(false) || (forSize == null && currentSelectionSize == null)) && !selectionBoxesDidChanged)
+            {
+                return selectionBoxesVoxels;
+            }
+            
+            switch(selType)
+            {
+                case EnumCircuitSelectionType.PlaceWire:
+                    GenerateSelectionVoxelBoxes(new Vec3i(1, 1, 1), true, true, true, false);
+                    break;
+                case EnumCircuitSelectionType.PlaceComponent:
+                    GenerateSelectionVoxelBoxes(forSize, false, false, true, true);
+                    break;
+                case EnumCircuitSelectionType.PlaceNothing:
+                    GenerateSelectionVoxelBoxes(new Vec3i(1, 1, 1), false, true, true, false);
+                    break;
+            }
+
+            currentSelectionSize = forSize;
+            currentSelectionType = selType;
+            selectionBoxesDidChanged = false;
             return selectionBoxesVoxels;
         }
 
 
-        public void GenerateSelectionVoxelBoxes()
+        //For a wire, should be either boxes at y = 0 with no wire above or boxes at placed wires and components
+
+        public void GenerateSelectionVoxelBoxes(Vec3i size, bool board = false, bool placedWires = false, bool placedComponents = false, bool freeCompPlaces = false)
         {
             HashSet<Cuboidf> boxes = new HashSet<Cuboidf>();
 
 
-            float sx = 1f / 16f;
-            float sy = 1f / 16f;
-            float sz = 1f / 16f;
+            float sx = (float)size.X / 16f;
+            float sy = (float)size.Y / 16f;
+            float sz = (float)size.Z / 16f;
+
+            Vec3i obstaclePos;
 
             //We first generate selectionboxes on the board (to add components where there is nothing)
-            for (int i = 0; i < 16; i++)
+            if (board || freeCompPlaces)
             {
-                for (int j = 0; j < 16; j++)
+                for (int i = 0; i <= 16-size.X; i++)
                 {
-                    //We check if there is already a wire above
-                    if (wiring.gotWireAtPos(i, j, 1)) continue;
+                    for (int j = 0; j <= 16-size.Z; j++)
+                    {
+                        obstaclePos = GotElementInVolume(i, 1, j, size);
+                        if ( obstaclePos == null) 
+                        {
 
-                    float px = (float)i / 16;
-                    float py = (float)0 / 16;
-                    float pz = (float)j / 16;
+                            float px = (float)i / 16;
+                            float pz = (float)j / 16;
 
-                    boxes.Add(new Cuboidf(px, py, pz, px + sx, py + sy, pz + sz));
+                            if (board) boxes.Add(new Cuboidf(px, 0, pz, px + sx, 1f / 16, pz + sz));
+                            if (freeCompPlaces) boxes.Add(new Cuboidf(px, 1f/16, pz, px + sx, 1f / 16+sy, pz + sz));
+
+                            continue;
+                        };
+
+                        i += (obstaclePos.X-i);
+                        j += (obstaclePos.Z-j);
+                    }
                 }
             }
 
             //We now add add a selection box of components and where there is a wire voxel
-            for (int i  = 0; i < 16; i++)
+            if (placedWires)
             {
-                for (int j = 1; j < 16; j++)
+                for (int i = 0; i < 16; i++)
                 {
-                    for (int k = 0; k < 16; k++)
+                    for (int j = 1; j < 16; j++)
                     {
-                        if (!wiring.gotWireAtPos(i, j, k)) continue;
-                        
-                        float px = (float)i / 16;
-                        float py = (float)j / 16;
-                        float pz = (float)k / 16;
+                        for (int k = 0; k < 16; k++)
+                        {
+                            if (!wiring.gotWireAtPos(i, j, k)) continue;
 
-                        boxes.Add(new Cuboidf(px, py, pz, px + sx, py + sy, pz + sz));
+                            float px = (float)i / 16;
+                            float py = (float)j / 16;
+                            float pz = (float)k / 16;
+
+                            boxes.Add(new Cuboidf(px, py, pz, px + sx, py + sy, pz + sz));
+                        }
                     }
-                }
 
+                }
             }
             //We now add the selection boxes of the other components
+            if (placedComponents)
+            {
                 foreach (CircuitComponent comp in components)
                 {
                     boxes.Add(comp.GetSelectionBox());
                 }
-
+            }
             selectionBoxesVoxels = boxes.ToArray();
+        }
+
+
+        /// <summary>
+        /// Find any wire or component in the volume, returns its position. Returns null of no element was found
+        /// </summary>
+        private Vec3i GotElementInVolume(int x,int y, int z, Vec3i size)
+        {
+            for(int i = x; i < x + size.X; i++)
+            {
+                for(int j = y; j < y + size.Y; j++){
+                    for (int k = z; k < z + size.Z; k++)
+                    {
+                        if (wiring.gotWireAtPos(i, j, k)) return new Vec3i(i,j,k);
+
+                    }
+                }
+            }
+            return null;
         }
 
         public void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
@@ -241,10 +307,8 @@ namespace signals.src
                 wiring = VoxelWire.deserialize(bytes);
             }
             AvailableWireVoxels = tree.TryGetInt("availableWireVoxels").GetValueOrDefault(0);
-
-
-            GenerateSelectionVoxelBoxes();
-            
+            ComponentsFromTree(ref components, tree.GetTreeAttribute("components"), worldForResolving);
+            selectionBoxesDidChanged = true;
         }
 
         public void ToTreeAttributes(ITreeAttribute tree)
@@ -254,9 +318,40 @@ namespace signals.src
                 tree.SetBytes("wiring", wiring.serialize());
             }
             tree.SetInt("availableWireVoxels", AvailableWireVoxels);
+
+            ITreeAttribute comps = new TreeAttribute();
+            ComponentsToTree(components, comps);
+            tree["components"] = comps;
             
         }
 
+        private void ComponentsFromTree(ref List<CircuitComponent> comps, ITreeAttribute tree, IWorldAccessor world)
+        {
+            ICoreAPI api = world.Api;
+            if (tree == null || api == null) return;
+            SignalsMod mod = api.ModLoader.GetModSystem<SignalsMod>();
+
+            foreach (ITreeAttribute compTree in tree.Values)
+            {
+                string className = compTree.GetString("class", null);
+                Type type = mod.getCircuitComponentType(className);
+                if (type == null) continue;
+                CircuitComponent newComponent = (CircuitComponent)Activator.CreateInstance(type);
+                newComponent.FromTreeAtributes(compTree, api.World);
+                comps.Add(newComponent);
+            }
+
+        }
+        private void ComponentsToTree(List<CircuitComponent> comps, ITreeAttribute tree)
+        {
+            for(int i = 0; i < comps.Count; i++)
+            {
+                ITreeAttribute compTree = new TreeAttribute();
+                comps[i].ToTreeAttributes(compTree);
+                tree[i.ToString()] = compTree;
+            }
+            
+        }
    
 
 
