@@ -65,16 +65,17 @@ namespace signals.src
 
         private byte getStateAtPos(Vec3i pos)
         {
-            VoxelWire net = wiring.GetNetworkAtPos(pos);
-            if (net == null) return 0;
-            return net.state;
+            int id = wiring.GetNetworkIdAtPos(pos);
+            if (id == -1) return 0;
+            return wiring.networks[id].state;
         }
+
+
+        
         public List<Tuple<int, byte>> updateSimulation(float dt)
         {
-
-            if (api.Side == EnumAppSide.Client) return null;
-
             List<Tuple<int, byte>> updatedNetworks = new List<Tuple<int, byte>>();
+            if (api.Side == EnumAppSide.Client) return null;
 
             foreach(CircuitComponent comp in components)
             {
@@ -88,12 +89,12 @@ namespace signals.src
                 Vec3i[] outPos = comp.GetOutputPositions();
                 for (int i=0;i<outPos.Length;i++)
                 {
-                    int? netId = wiring.GetNetworkAtPos(outPos[i])?.id;
-                    if (netId.GetValueOrDefault(-1) >= 0)
+                    int netId = wiring.GetNetworkIdAtPos(outPos[i]);
+                    if (netId >= 0)
                     {
-                        if (wiring.networks[netId.GetValueOrDefault(-1)].nextState < comp.GetOutputs()[i])
+                        if (wiring.networks[netId].nextState < comp.GetOutputs()[i])
                         {
-                            wiring.networks[netId.GetValueOrDefault(-1)].nextState = comp.GetOutputs()[i];
+                            wiring.networks[netId].nextState = comp.GetOutputs()[i];
                         }
                     }
                     
@@ -384,12 +385,12 @@ namespace signals.src
         }
         public void GetBlockInfo(Vec3i pos, StringBuilder dsc)
         {
-            int? networkId = wiring?.GetNetworkAtPos(pos)?.id;
-            byte? networkState = wiring?.GetNetworkAtPos(pos)?.state;
+            int? networkId = wiring?.GetNetworkIdAtPos(pos);
+            //byte? networkState = wiring?.networks[networkId]?.state;
             dsc.AppendLine(Lang.Get("Available Wire voxels: {0}", AvailableWireVoxels));
             dsc.AppendLine(Lang.Get("Number of wires: {0}", wiring?.networks.Count));
             if(networkId != null) dsc.AppendLine(Lang.Get("Wire id: {0}", networkId));
-            if (networkId != null) dsc.AppendLine(Lang.Get("Wire state: {0}", networkState));
+            //if (networkId != null) dsc.AppendLine(Lang.Get("Wire state: {0}", networkState));
 
         }
 

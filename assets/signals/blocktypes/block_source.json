@@ -1,0 +1,12 @@
+﻿{
+    "code": "blocksource",
+    "class":  "BlockSignalSource",
+    "creativeinventory": {
+        "general": [ "*" ]
+    },
+    "shape": { "base": "game:block/basic/cube" },
+    "drawtype": "cube",
+    "textures": {
+        "all": { "base": "game:block/tech/tech-powergeneratormain" }
+    }
+}

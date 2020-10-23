@@ -14,12 +14,13 @@ namespace signals.src
 {
 
     //Concept
-    // This is inspired by the implementation of the mechanical network by Tyron.
-    // A network is a set of connected blocks and is materialised in game by "hanging wires"
+    // A Network is a set of connected nodes, and are indexed by sources NodePos. Network is created upon activation of a source
+    // A node is indexed by a NodePos, wich is a BlockPos + an integer index.
+    // A node can be in several networks simultanously
+   //Because diodes and vacuum tubes are implemented, node A being connected with node B doesn't mean that node B is connected with node A
+   //Connections can be lossy, the conveyed signal can be decreased by an interger number until 0.
 
-    //Nodes in a network are indexed by a SignalNodePos, wich contains a BlockPos and an index. This allows multiple connections within a block, for circuits by example.
-    //Since it is necessary to render wires, networks are created upon the first link between two isolated blocks.
-
+    //Hanging wires connects two different NodePos. In some cases the two nodePos can be in the same BlockPos    
     //for now, hanging wires only convey an 16 levels signal. Maybe in the futur they will convey electrical power.
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]

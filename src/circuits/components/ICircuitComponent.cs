@@ -17,6 +17,7 @@ namespace signals.src.circuits
 
         bool DoesInstantUpdate();
 
+        bool IsSource();
         Vec3i[] GetOutputPositions();
         Vec3i[] GetInputPositions();
         byte[] GetOutputs();

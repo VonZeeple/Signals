@@ -10,16 +10,94 @@ namespace signals.src.transmission
 {
 
     [ProtoContract()]
-    public class SignalNodePos : IEquatable<SignalNodePos>
+    public class Connection:IEquatable<Connection>
+    {
+        [ProtoMember(1)]
+        public NodePos pos1;
+        [ProtoMember(2)]
+        public NodePos pos2;
+
+        public Connection() { }
+        public Connection(NodePos pos1, NodePos pos2)
+        {
+            this.pos1 = pos1;
+            this.pos2 = pos2;
+        }
+        public bool Equals(Connection otherPos)
+        {
+            if (otherPos == null) return false;
+            return (pos1 == otherPos.pos1 &&  pos2 == otherPos.pos2) || (pos1 == otherPos.pos2 && pos2 == otherPos.pos1);
+        }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Connection);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.pos1.GetHashCode() ^ this.pos2.GetHashCode();
+        }
+
+        public static bool operator ==(Connection left, Connection right)
+        {
+            if (object.ReferenceEquals(left, null))
+            {
+                return object.ReferenceEquals(right, null);
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Connection left, Connection right)
+        {
+            return !(left == right);
+        }
+    }
+    [ProtoContract()]
+    public class NodePos : IEquatable<NodePos>
     {
         [ProtoMember(1)]
         public BlockPos blockPos;
         [ProtoMember(2)]
         public int index;
 
-        public bool Equals(SignalNodePos other)
+        public NodePos() { }
+        public NodePos(BlockPos pos, int index)
         {
-            return (blockPos == other.blockPos && index == other.index);
+            this.index = index;
+            this.blockPos = pos;
+        }
+
+        public override int GetHashCode()
+        {
+            return blockPos.GetHashCode()*23+index;
+        }
+
+        public override bool Equals(object other)
+        {
+            NodePos otherPos = other as NodePos;
+            return otherPos == null? false:Equals(otherPos);
+        }
+
+        public bool Equals(NodePos otherPos)
+        {
+            if (otherPos == null) return false;
+            return (blockPos.Equals(otherPos.blockPos) && index == otherPos.index);
+        }
+
+        public static bool operator ==(NodePos left, NodePos right)
+        {
+            if (object.ReferenceEquals(left, null))
+            {
+                return object.ReferenceEquals(right, null);
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(NodePos left, NodePos right)
+        {
+            return !(left == right);
         }
     }
 
@@ -31,7 +109,7 @@ namespace signals.src.transmission
     [ProtoContract]
     public class SignalNetwork
     {
-        public Dictionary<SignalNodePos, ISignalNode> nodes = new Dictionary<SignalNodePos, ISignalNode>(); 
+        public Dictionary<NodePos, ISignalNode> nodes = new Dictionary<NodePos, ISignalNode>(); 
 
         internal SignalNetworkMod mod;
 

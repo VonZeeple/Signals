@@ -159,6 +159,10 @@ namespace signals.src
             return false;
         }
 
+        virtual public bool IsSource() {
+            return false;
+        }
+
         #endregion
     }
 }

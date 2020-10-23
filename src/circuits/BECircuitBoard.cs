@@ -1,4 +1,5 @@
-﻿using System;
+﻿using signals.src.transmission;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -43,13 +44,7 @@ namespace signals.src
             }
         }
 
-        private void UpdateNetworkStateInRenderer(int id, byte value)
-        {
-            if (renderer == null) return;
-            renderer.UpdateNetworkState(id, value);
-        }
 
-       
         public void Update(float dt)
         {
             if (Api.Side == EnumAppSide.Client) return;
@@ -97,6 +92,7 @@ namespace signals.src
 
         }
 
+
         public void OnUseOver(IPlayer byPlayer, Vec3i voxelHitPos, Vec3i voxelBoxPos, BlockFacing facing, bool mouseBreakMode)
         {
             // Send a custom network packet for server side, because
@@ -134,7 +130,44 @@ namespace signals.src
         }
 
 
+        public bool CanAttachWire(NodePos pos)
+        {
+            if (pos.blockPos != this.Pos) return false;
 
+            if (pos.index > ushort.MaxValue) { return false; }
+            //There is probablyt a smarter way to do that
+            int z = (int)Math.Floor((decimal)pos.index / (16 * 16));
+            int y = (int)Math.Floor((decimal)(pos.index - z * 16 * 16) / 16);
+            int x = pos.index - (z * 16 * 16) - (y * 16);
+            
+            Vec3i voxelPos = new Vec3i(x, y, z);
+            return (Circuit?.wiring?.gotWireAtPos(voxelPos)).GetValueOrDefault(false);
+        }
+        public NodePos GetNodePos(BlockSelection blockSel)
+        {
+            //TODO: modify this to allow some components to connect
+            Cuboidf[] boxes = Circuit.GetCurrentSelectionBoxes();
+            Cuboidf box = boxes[blockSel.SelectionBoxIndex];
+            Vec3i voxelPos = new Vec3i((int)Math.Floor(box.MinX * 16), (int)Math.Floor(box.MinY * 16), (int)Math.Floor(box.MinZ * 16));
+
+
+            if ((Circuit?.wiring?.gotWireAtPos(voxelPos)).GetValueOrDefault(false)) { 
+
+                int index = (voxelPos.X + voxelPos.Y * 16 + voxelPos.Z * 16 * 16);
+                return new NodePos(this.Pos, index);
+            }
+            
+            return null;
+        }
+
+        internal Vec3f GetNodePosInBlock(NodePos pos)
+        {
+            int z = (int)Math.Floor((decimal)pos.index / (16 * 16));
+            int y = (int)Math.Floor((decimal)(pos.index - z * 16 * 16) / 16);
+            int x = pos.index - (z * 16 * 16) - (y * 16);
+            Vec3i voxelPos = new Vec3i(x, y, z);
+            return new Vec3f((float)voxelPos.X/16, (float)voxelPos.Y/16, (float)voxelPos.Z / 16);
+        }
 
 
         internal Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, ItemStack holdingItemStack = null)
@@ -251,6 +284,8 @@ namespace signals.src
             }
 
         }
+
+
 
         //Notifies the server that the block have been interacted with
         public void SendUseOverPacket(IPlayer byPlayer, Vec3i voxelPos, Vec3i voxelBoxPos, BlockFacing facing, bool mouseMode)

@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using signals.src.hangingwires;
+using signals.src.transmission;
+using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
@@ -7,7 +9,7 @@ using Vintagestory.API.Util;
 
 namespace signals.src
 {
-    class BlockCircuitBoard : Block
+    class BlockCircuitBoard : Block, IHangingWireAnchor
     {
         public override void OnLoaded(ICoreAPI api)
         {
@@ -20,6 +22,12 @@ namespace signals.src
             //init of interactions
         }
 
+        public override void OnBlockRemoved(IWorldAccessor world, BlockPos pos)
+        {
+            base.OnBlockRemoved(world, pos);
+            HangingWiresMod mod = api.ModLoader.GetModSystem<HangingWiresMod>();
+            mod.RemoveAllNodesAtBlockPos(pos);
+        }
 
         #region Block orientation and placement
 
@@ -125,12 +133,21 @@ namespace signals.src
         //Detects when the player interacts with right click, usually to place a component
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
+
+            HangingWiresMod mod = api.ModLoader.GetModSystem<HangingWiresMod>();
+            if (mod != null && api.Side == EnumAppSide.Client)
+            {
+                NodePos pos = GetNodePosForWire(world, blockSel);
+                if (pos != null) mod.SetPendingNode(GetNodePosForWire(world, blockSel));
+            }
+
             base.OnBlockInteractStart(world, byPlayer, blockSel);
             if (api.Side == EnumAppSide.Client)
             {
                 BECircuitBoard entity = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BECircuitBoard;
                 entity?.OnUseOver(byPlayer, blockSel, false);
             }
+
             return true;
 
         }
@@ -215,6 +232,31 @@ namespace signals.src
             CircuitBlockModelCache cache = capi.ModLoader.GetModSystem<CircuitBlockModelCache>();
             renderinfo.ModelRef = cache.GetOrCreateMeshRef(itemstack);
         }
+
         #endregion
+
+
+        #region WireAnchor
+        public Vec3f GetAnchorPosInBlock(IWorldAccessor world, NodePos pos)
+        {
+            BECircuitBoard entity = world?.BlockAccessor?.GetBlockEntity(pos.blockPos) as BECircuitBoard;
+            Vec3f posOut = entity?.GetNodePosInBlock(pos);
+            return posOut != null ? posOut : new Vec3f(0, 0, 0);
+        }
+
+        public NodePos GetNodePosForWire(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null)
+        {
+            BECircuitBoard entity = world?.BlockAccessor?.GetBlockEntity(blockSel.Position) as BECircuitBoard;
+            return entity?.GetNodePos(blockSel);
+        }
+
+        public bool CanAttachWire(IWorldAccessor world, NodePos pos, NodePos posInit = null)
+        {
+
+            if (posInit != null && posInit == pos) return false;
+            return pos != null;
+        }
+        #endregion
+
     }
 }

@@ -144,7 +144,19 @@ namespace signals.src
             return gotWireAtPos(pos.X, pos.Y, pos.Z);
         }
 
-        public VoxelWire GetNetworkAtPos(Vec3i voxelPos)
+        public int GetNetworkIdAtPos(Vec3i voxelPos)
+        {
+            foreach (VoxelWire net in networks.Values)
+            {
+                if (net.GotVoxelAtPos(voxelPos))
+                {
+                    return net.id;
+                }
+            }
+            return -1;
+        }
+
+        private VoxelWire GetNetworkAtPos(Vec3i voxelPos)
         {
             foreach (VoxelWire net in networks.Values)
             {

@@ -50,5 +50,10 @@ namespace signals.src.circuits.components
         {
            return new Vec3i[] { };
         }
+
+        public override bool IsSource()
+        {
+            return true;
+        }
     }
 }

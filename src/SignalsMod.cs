@@ -1,5 +1,6 @@
 ﻿using signals.src.circuits;
 using signals.src.circuits.components;
+using signals.src.transmission;
 using System;
 using System.Collections.Generic;
 using Vintagestory.API.Common;
@@ -19,6 +20,8 @@ namespace signals.src
             base.Start(api);
             api.RegisterBlockClass("BlockBreadboard", typeof(BlockCircuitBoard));
             api.RegisterBlockEntityClass("BlockEntityBreadboard", typeof(BECircuitBoard));
+            api.RegisterBlockClass("BlockSignalConnection", typeof(BlockConnection));
+            api.RegisterBlockClass("BlockSignalSource", typeof(BlockSource));
 
             RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
             RegisterCircuitComponentClass("source", typeof(CircuitComponentSource));

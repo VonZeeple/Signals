@@ -1,0 +1,88 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"oak-dark": "game:block/wood/oak-dark",
+		"bluetop": "game:block/clay/brickslab/bluetop",
+		"aged-ceramic2": "game:block/clay/aged-ceramic2"
+	},
+	"elements": [
+		{
+			"name": "base",
+			"from": [ 6.0, 0.0, 6.0 ], 
+			"to": [ 10.0, 1.0, 10.0 ], 
+			"rotationOrigin": [ 6.0, 0.0, 6.0 ],
+			"faces": {
+				"north": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 1.0, 4.0 ], "rotation": 90 },
+				"east": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 1.0, 4.0 ], "rotation": 90 },
+				"south": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 1.0, 4.0 ], "rotation": 90 },
+				"west": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 1.0, 4.0 ], "rotation": 90 },
+				"up": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 4.0, 4.0 ], "rotation": 90 },
+				"down": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 12.0, 4.0 ], "rotation": 90, "autoUv": false }
+			}
+		},
+		{
+			"name": "insulator1",
+			"from": [ 7.5, 1.0, 7.5 ], 
+			"to": [ 8.5, 5.5, 8.5 ], 
+			"rotationOrigin": [ 8.0, 1.0, 7.5 ],
+			"faces": {
+				"north": { "texture": "#aged-ceramic2", "uv": [ 0.0, 0.0, 1.0, 4.5 ] },
+				"east": { "texture": "#aged-ceramic2", "uv": [ 0.0, 0.0, 1.0, 4.5 ] },
+				"south": { "texture": "#aged-ceramic2", "uv": [ 0.0, 0.0, 1.0, 4.5 ] },
+				"west": { "texture": "#aged-ceramic2", "uv": [ 0.0, 0.0, 1.0, 4.5 ] },
+				"up": { "texture": "#aged-ceramic2", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"down": { "texture": "#aged-ceramic2", "uv": [ 0.0, 0.0, 1.0, 1.0 ] }
+			},
+			"children": [
+				{
+					"name": "bottom",
+					"from": [ -1.0, 1.0, -1.0 ], 
+					"to": [ 2.0, 2.0, 2.0 ], 
+					"rotationOrigin": [ -1.0, 1.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+						"east": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+						"south": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+						"west": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+						"up": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 3.0 ] },
+						"down": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 3.0 ] }
+					}
+				},
+				{
+					"name": "top",
+					"from": [ -1.0, 3.0, -1.0 ], 
+					"to": [ 2.0, 4.0, 2.0 ], 
+					"rotationOrigin": [ -1.0, 3.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+						"east": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+						"south": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+						"west": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+						"up": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 3.0 ] },
+						"down": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 3.0, 3.0 ] }
+					}
+				},
+				{
+					"name": "middle",
+					"from": [ -0.5, 2.0, -0.5 ], 
+					"to": [ 1.5, 3.0, 1.5 ], 
+					"rotationOrigin": [ -1.0, 2.0, 0.0 ],
+					"faces": {
+						"north": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+						"east": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+						"south": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+						"west": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
+						"up": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+						"down": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
+					}
+				}
+			]
+		}
+	]}
