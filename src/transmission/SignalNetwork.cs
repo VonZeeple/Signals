@@ -101,10 +101,7 @@ namespace signals.src.transmission
         }
     }
 
-    public interface ISignalNode
-    {
 
-    }
 
     [ProtoContract]
     public class SignalNetwork

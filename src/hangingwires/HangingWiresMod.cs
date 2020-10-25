@@ -107,6 +107,10 @@ namespace signals.src.hangingwires
 
         }
 
+        public Connection[] GetAllConnectionsFrom(NodePos nodePos)
+        {
+            return data.connections.Where(x => (x.pos1 == nodePos || x.pos2 == nodePos)).ToArray();
+        }
         public void RemoveAllNodesAtBlockPos(BlockPos pos)
         {
             if (api.Side == EnumAppSide.Client) return;

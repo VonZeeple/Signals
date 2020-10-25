@@ -15,6 +15,9 @@ namespace signals.src
     public class VoxelCircuit
     {
 
+        private int SIZEX;
+        private int SIZEY;
+
         public MeshData Mesh;
         public int AvailableWireVoxels = 0;
         public List<CircuitComponent> components = new List<CircuitComponent>();
@@ -31,9 +34,11 @@ namespace signals.src
 
         ICoreAPI api;
 
-        public VoxelCircuit()
+        public VoxelCircuit(int sizex, int sizey)
         {
-            wiring = new VoxelWiring();
+            SIZEX = sizex;
+            SIZEY = sizey;
+            wiring = new VoxelWiring(sizex,sizey);
         }
 
         public void Initialize(ICoreAPI api)

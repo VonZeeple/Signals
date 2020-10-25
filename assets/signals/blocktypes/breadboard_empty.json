@@ -1,7 +1,10 @@
 ﻿{
     "code": "breadboard",
     "class": "BlockBreadboard",
-    "entityclass": "BlockEntityBreadboard",
+    "entityclass": "Generic",
+    "entityBehaviors": [ { "name": "BEBehaviorCircuitHolder",
+        "properties": {}
+                         } ],
     "variantgroups": [
         {
             "code": "orientation",
@@ -12,7 +15,7 @@
             "states": [ "north", "east", "south", "west", "up", "down" ]
         }
     ],
-    "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south","*-east-east", "*-east-west","*-west-east","*-west-west" ],
+    "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south", "*-east-east", "*-east-west", "*-west-east", "*-west-west" ],
     "shapebytype": {
         "*-north-down": { "base": "block/breadboard_empty" },
         "*-south-down": {
@@ -90,13 +93,20 @@
             "rotateZ": 90
         },
 
-        "*-up-north": { "base": "block/breadboard_empty" ,"rotateX": 90},
+        "*-up-north": {
+            "base": "block/breadboard_empty",
+            "rotateX": 90
+        },
         "*-down-north": {
             "base": "block/breadboard_empty",
             "rotateX": 90,
             "rotateY": 180
         },
-        "*-east-north": { "base": "block/breadboard_empty", "rotateX": 90, "rotateY": 270 },
+        "*-east-north": {
+            "base": "block/breadboard_empty",
+            "rotateX": 90,
+            "rotateY": 270
+        },
         "*-west-north": {
             "base": "block/breadboard_empty",
             "rotateX": 90,

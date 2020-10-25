@@ -14,13 +14,12 @@ namespace signals.src
 {
 
     //Concept
-    // A Network is a set of connected nodes, and are indexed by sources NodePos. Network is created upon activation of a source
+    // A Network is a set of connected nodes, and are indexed by an int. Network is created upon activation of a source
     // A node is indexed by a NodePos, wich is a BlockPos + an integer index.
-    // A node can be in several networks simultanously
    //Because diodes and vacuum tubes are implemented, node A being connected with node B doesn't mean that node B is connected with node A
    //Connections can be lossy, the conveyed signal can be decreased by an interger number until 0.
 
-    //Hanging wires connects two different NodePos. In some cases the two nodePos can be in the same BlockPos    
+    //Hanging wires connects two different NodePos. In some cases the two nodePos can be in the same BlockPos  
     //for now, hanging wires only convey an 16 levels signal. Maybe in the futur they will convey electrical power.
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
@@ -28,7 +27,6 @@ namespace signals.src
     {
         public Dictionary<long, SignalNetwork> networksById = new Dictionary<long, SignalNetwork>();
         public long nextNetworkId = 1;
-        public long tickNumber = 0;
     }
 
     
@@ -79,19 +77,13 @@ namespace signals.src
 
         protected void OnServerGameTick(float dt)
         {
-            data.tickNumber++;
 
-            List<SignalNetwork> clone = data.networksById.Values.ToList();
-            foreach (SignalNetwork network in clone)
-            {
-                if (network.fullyLoaded)
-                {
-                    network.ServerTick(dt, data.tickNumber);
-                }
-            }
         }
 
+        public void OnSignalSourceAdded(ISignalNode node)
+        {
 
+        }
         public SignalNetwork CreateNetwork(ISignalNode node)
         {
             SignalNetwork sn = new SignalNetwork(this, data.nextNetworkId);

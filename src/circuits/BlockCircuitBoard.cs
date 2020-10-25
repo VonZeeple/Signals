@@ -1,4 +1,5 @@
-﻿using signals.src.hangingwires;
+﻿using signals.src.circuits.components;
+using signals.src.hangingwires;
 using signals.src.transmission;
 using System.Text;
 using Vintagestory.API.Client;
@@ -84,7 +85,7 @@ namespace signals.src
         public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack)
         {
             base.OnBlockPlaced(world, blockPos, byItemStack);
-            BECircuitBoard be = world.BlockAccessor.GetBlockEntity(blockPos) as BECircuitBoard;
+            BlockEntity be = world.BlockAccessor.GetBlockEntity(blockPos);
             if (be != null && byItemStack != null)
             {
                 byItemStack.Attributes.SetInt("posx", blockPos.X);
@@ -105,7 +106,7 @@ namespace signals.src
         public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
             Block block = world.BlockAccessor.GetBlock(CodeWithParts("north","down"));
-            BECircuitBoard bec = world.BlockAccessor.GetBlockEntity(pos) as BECircuitBoard;
+            BlockEntity bec = world.BlockAccessor.GetBlockEntity(pos);
             if (bec == null)
             {
                 return null;
@@ -144,8 +145,8 @@ namespace signals.src
             base.OnBlockInteractStart(world, byPlayer, blockSel);
             if (api.Side == EnumAppSide.Client)
             {
-                BECircuitBoard entity = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BECircuitBoard;
-                entity?.OnUseOver(byPlayer, blockSel, false);
+                BlockEntity entity = world.BlockAccessor.GetBlockEntity(blockSel.Position);
+                entity?.GetBehavior<BEBehaviorCircuitHolder>()?.OnUseOver(byPlayer, blockSel, false);
             }
 
             return true;
@@ -155,8 +156,8 @@ namespace signals.src
         //Detects when the player interacts with left click, usually to remove a component
         public override float OnGettingBroken(IPlayer player, BlockSelection blockSel, ItemSlot itemslot, float remainingResistance, float dt, int counter)
         {
-            BECircuitBoard entity = api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BECircuitBoard;
-            entity?.OnUseOver(player, blockSel, true);
+            BlockEntity entity = api.World.BlockAccessor.GetBlockEntity(blockSel.Position);
+            entity?.GetBehavior<BEBehaviorCircuitHolder>()?.OnUseOver(player, blockSel, true);
             return base.OnGettingBroken(player, blockSel, itemslot, remainingResistance, dt, counter);
         }
 
@@ -170,8 +171,9 @@ namespace signals.src
         {
 
             ItemStack holdingItemStack = (api as ICoreClientAPI)?.World?.Player.Entity.RightHandItemSlot.Itemstack?.Clone();
-            BECircuitBoard bec = blockAccessor.GetBlockEntity(pos) as BECircuitBoard;
-            Cuboidf[] entitySB = bec?.GetSelectionBoxes(blockAccessor, pos, holdingItemStack);
+            BlockEntity bec = blockAccessor.GetBlockEntity(pos);
+
+            Cuboidf[] entitySB = bec?.GetBehavior<BEBehaviorCircuitHolder>()?.GetSelectionBoxes(blockAccessor, pos, holdingItemStack);
             if (entitySB == null || entitySB.Length == 0)
             {
 
@@ -184,11 +186,11 @@ namespace signals.src
 
         public override Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos)
         {
-            BECircuitBoard bec = blockAccessor.GetBlockEntity(pos) as BECircuitBoard;
+            BlockEntity bec = blockAccessor.GetBlockEntity(pos);
 
             if (bec != null)
             {
-                Cuboidf[] selectionBoxes = bec.GetCollisionBoxes(blockAccessor, pos);
+                Cuboidf[] selectionBoxes = bec?.GetBehavior<BEBehaviorCircuitHolder>()?.GetCollisionBoxes(blockAccessor, pos);
 
                 return selectionBoxes;
             }
@@ -239,15 +241,15 @@ namespace signals.src
         #region WireAnchor
         public Vec3f GetAnchorPosInBlock(IWorldAccessor world, NodePos pos)
         {
-            BECircuitBoard entity = world?.BlockAccessor?.GetBlockEntity(pos.blockPos) as BECircuitBoard;
-            Vec3f posOut = entity?.GetNodePosInBlock(pos);
+            BlockEntity entity = world?.BlockAccessor?.GetBlockEntity(pos.blockPos);
+            Vec3f posOut = null;// entity?.GetBehavior<BEBehaviorCircuitHolder>()?.GetNodePosInBlock(pos);
             return posOut != null ? posOut : new Vec3f(0, 0, 0);
         }
 
         public NodePos GetNodePosForWire(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null)
         {
-            BECircuitBoard entity = world?.BlockAccessor?.GetBlockEntity(blockSel.Position) as BECircuitBoard;
-            return entity?.GetNodePos(blockSel);
+            BlockEntity entity = world?.BlockAccessor?.GetBlockEntity(blockSel.Position);
+            return null;// entity?.GetNodePos(blockSel);
         }
 
         public bool CanAttachWire(IWorldAccessor world, NodePos pos, NodePos posInit = null)
@@ -255,6 +257,11 @@ namespace signals.src
 
             if (posInit != null && posInit == pos) return false;
             return pos != null;
+        }
+
+        public NodePos[] GetWireAnchors(IWorldAccessor world, BlockPos pos)
+        {
+            throw new System.NotImplementedException();
         }
         #endregion
 

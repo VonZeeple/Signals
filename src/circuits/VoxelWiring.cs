@@ -121,9 +121,11 @@ namespace signals.src
     public class VoxelWiring
     {
         bool hasChanged;
-        public Dictionary<int, VoxelWire> networks;  
+        public Dictionary<int, VoxelWire> networks;
+        private int SIZEX;
+        private int SIZEY;
 
-        public VoxelWiring()
+        public VoxelWiring(int sizex, int sizey)
         {
             networks = new Dictionary<int, VoxelWire>();
             hasChanged = true;
@@ -359,7 +361,7 @@ namespace signals.src
             using (MemoryStream ms = new MemoryStream(data))
             {
                 BinaryReader reader = new BinaryReader(ms);
-                VoxelWiring wire = new VoxelWiring();
+                VoxelWiring wire = new VoxelWiring(16,16);
                 try
                 {
                     

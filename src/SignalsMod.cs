@@ -20,6 +20,9 @@ namespace signals.src
             base.Start(api);
             api.RegisterBlockClass("BlockBreadboard", typeof(BlockCircuitBoard));
             api.RegisterBlockEntityClass("BlockEntityBreadboard", typeof(BECircuitBoard));
+            api.RegisterBlockEntityClass("BESignalSource", typeof(BESignalSource));
+
+            api.RegisterBlockEntityBehaviorClass("BEBehaviorCircuitHolder", typeof(BEBehaviorCircuitHolder));
             api.RegisterBlockClass("BlockSignalConnection", typeof(BlockConnection));
             api.RegisterBlockClass("BlockSignalSource", typeof(BlockSource));
 

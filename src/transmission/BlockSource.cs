@@ -4,40 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vintagestory.API;
 using Vintagestory.API.Common;
 
 namespace signals.src.transmission
 {
-    class BlockSource : BlockConnection
+    class BlockSource : BlockConnection, ISignalSource
     {
-        public bool CanAttachWire(IWorldAccessor world, BlockSelection blockSel)
+
+        public override void OnLoaded(ICoreAPI api)
         {
-            return false;
+            base.OnLoaded(api);
+
+            WireAnchor nb = new WireAnchor() { index = 0, x1 = 0, x2 = 1, y1 = 0, y2 = 1, z1 = 0, z2 = 1};
+            wireAnchors = new WireAnchor[1] { nb };
+
         }
 
-        public bool CanAttachWire(IWorldAccessor world, NodePos pos)
-        {
-            return false;
-        }
-
-        public NodePos GetNodePos(IWorldAccessor world, BlockSelection blockSel)
-        {
-            return new NodePos(blockSel.Position, 0);
-        }
-
-        //Called on client and server
-        public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
-        {
-            HangingWiresMod mod = api.ModLoader.GetModSystem<HangingWiresMod>();
-            if (mod == null)
-            {
-                api.Logger.Error("HangingWiresMod mod system not found");
-                return base.OnBlockInteractStart(world, byPlayer, blockSel);
-            }
-
-            mod.SetPendingNode(GetNodePos(world, blockSel));
-            return true;
-        }
 
     }
 }

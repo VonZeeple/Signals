@@ -16,7 +16,7 @@ namespace signals.src
     public class BECircuitBoard : BlockEntity
     {
 
-        public VoxelCircuit Circuit = new VoxelCircuit();
+        public VoxelCircuit Circuit = new VoxelCircuit(16,16);
 
         long listenerId;
         CircuitBoardRenderer renderer;

@@ -11,7 +11,7 @@ using Vintagestory.API.MathTools;
 namespace signals.src.transmission
 {
 
-    public class NodeBox
+    public class WireAnchor
     {
         public int index;
         public float x1;
@@ -21,10 +21,11 @@ namespace signals.src.transmission
         public float z1;
         public float z2;
     }
+
     class BlockConnection : Block, IHangingWireAnchor
     {
 
-        NodeBox[] nodeBoxes = new NodeBox[0];
+        protected WireAnchor[] wireAnchors;
 
         public BlockConnection(): base()
         {
@@ -40,25 +41,28 @@ namespace signals.src.transmission
             {
                 try
                 {
-                    nodeBoxes = new NodeBox[jsonObj.Length];
+                    wireAnchors = new WireAnchor[jsonObj.Length];
 
                     for(int i=0;i<jsonObj.Length;i++)
                     {
-                        nodeBoxes[i] = jsonObj[i].AsObject<NodeBox>();
+                        wireAnchors[i] = jsonObj[i].AsObject<WireAnchor>();
                     }
                 }
                 catch (Exception e)
                 {
                     api.World.Logger.Error("Failed loading SignalNodes for item/block {0}. Will ignore. Exception: {1}", Code, e);
-                    nodeBoxes = new NodeBox[0];
+                    wireAnchors = new WireAnchor[0];
                 }
             }
+
+
         }
+
 
         public override Cuboidf[] GetSelectionBoxes(IBlockAccessor world, BlockPos pos)
         {
             List<Cuboidf> boxes = new List<Cuboidf>();
-            foreach(NodeBox nb in nodeBoxes)
+            foreach(WireAnchor nb in wireAnchors)
             {
                 boxes.Add(new Cuboidf(nb.x1, nb.y1, nb.z1, nb.x2, nb.y2, nb.z2));
             }
@@ -98,19 +102,10 @@ namespace signals.src.transmission
         }
 
 
-        public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
-        {
-            return base.GetPlacedBlockInfo(world, pos, forPlayer);
-            foreach(NodeBox nb in nodeBoxes)
-            {
-
-            }
-        }
-
         #region Wire anchor
         public Vec3f GetAnchorPosInBlock(IWorldAccessor world, NodePos pos)
         {
-            foreach (NodeBox box in nodeBoxes)
+            foreach (WireAnchor box in wireAnchors)
             {
                 if (box.index == pos.index) return new Vec3f((box.x1 + box.x2) / 2, (box.y1 + box.y2) / 2, (box.z1 + box.z2) / 2);
             }
@@ -119,7 +114,7 @@ namespace signals.src.transmission
 
         public NodePos GetNodePosForWire(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null)
         {
-            foreach (NodeBox box in nodeBoxes)
+            foreach (WireAnchor box in wireAnchors)
             {
                 if (box.index == blockSel.SelectionBoxIndex) return new NodePos(blockSel.Position, blockSel.SelectionBoxIndex);
             }
@@ -130,6 +125,16 @@ namespace signals.src.transmission
         {
             if (posInit != null && posInit.blockPos == pos.blockPos) return false;
             return pos != null;
+        }
+
+        public NodePos[] GetWireAnchors(IWorldAccessor world, BlockPos pos)
+        {
+            NodePos[] nodes = new NodePos[wireAnchors.Length];
+            for(int i=0;i<wireAnchors.Length;i++)
+            {
+                nodes[i] = new NodePos(pos, wireAnchors[i].index);
+            }
+            return nodes;
         }
         #endregion
     }

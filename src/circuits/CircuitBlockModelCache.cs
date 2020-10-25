@@ -75,7 +75,7 @@ namespace signals.src
 
         internal static MeshData CreateMeshForItem(ICoreClientAPI capi, ITreeAttribute tree)
         {
-            VoxelCircuit circuit = new VoxelCircuit();
+            VoxelCircuit circuit = new VoxelCircuit(16,16);
             circuit.FromTreeAttributes(tree.GetTreeAttribute("circuit"), capi.World);
             CircuitBoardRenderer renderer = new CircuitBoardRenderer(null, BlockFacing.DOWN, BlockFacing.NORTH, capi);
             renderer.RegenCircuitMesh(circuit);

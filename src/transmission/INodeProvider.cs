@@ -11,15 +11,8 @@ namespace signals.src.transmission
     public interface INodeProvider
     {
 
-        NodePos GetNodePos(IWorldAccessor world, BlockSelection blockSel);
-
-        Vec3f GetNodePosInBlock(IWorldAccessor world, NodePos pos);
-
-        bool CanAttachWire(IWorldAccessor world, BlockSelection blockSel);
-
-        bool CanAttachWire(IWorldAccessor world, NodePos pos);
-
-        bool CanAttachWire(IWorldAccessor world, NodePos posInit, NodePos pos);
-
+        ISignalNode GetSignalNodeAt(IWorldAccessor world, NodePos pos);
+        int GetSignalNetworkId(IWorldAccessor world, NodePos pos);
+       
     }
 }

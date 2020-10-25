@@ -9,13 +9,13 @@ using Vintagestory.API.MathTools;
 
 namespace signals.src.hangingwires
 {
-    interface IHangingWireAnchor
+    public interface IHangingWireAnchor
     {
         Vec3f GetAnchorPosInBlock(IWorldAccessor world, NodePos pos);
 
         NodePos GetNodePosForWire(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null);
         bool CanAttachWire(IWorldAccessor world, NodePos pos, NodePos posInit = null);
 
-
+        NodePos[] GetWireAnchors(IWorldAccessor world, BlockPos pos);
     }
 }
