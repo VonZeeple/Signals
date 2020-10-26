@@ -23,65 +23,9 @@ namespace signals.src
             //init of interactions
         }
 
-        public override void OnBlockRemoved(IWorldAccessor world, BlockPos pos)
-        {
-            base.OnBlockRemoved(world, pos);
-            HangingWiresMod mod = api.ModLoader.GetModSystem<HangingWiresMod>();
-            mod.RemoveAllNodesAtBlockPos(pos);
-        }
-
-        #region Block orientation and placement
-
-        public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
-        {
-            if (!CanPlaceBlock(world, byPlayer, blockSel, ref failureCode))
-            {
-                return false;
-            }
-
-            // Prefer selected block face
-            if (CanAttachTo(world, blockSel.Position, blockSel.Face,itemstack)) return PlaceWithOrientation(world, blockSel.Position, blockSel.Face, blockSel.HitPosition, itemstack) ;
-            
-
-            failureCode = "requireattachable";
-
-            return false;
-        }
-
-        private bool PlaceWithOrientation(IWorldAccessor world, BlockPos blockpos, BlockFacing onBlockFace, Vec3d hitPosition , ItemStack itemstack)
-        {
-
-            //hitPosition projected on the onBlockFace to determine block orientation
-            Vec3d normal = onBlockFace.Normalf.NormalizedCopy().ToVec3d();
-            normal.Mul((float)hitPosition.SubCopy(0.5,0.5,0.5).Dot(normal));
-            Vec3d projVector = hitPosition.SubCopy(normal).Sub(0.5,0.5,0.5);
-
-            BlockFacing orientation = BlockFacing.FromVector(projVector.X,projVector.Y,projVector.Z);
-            BlockFacing oppositeFace = onBlockFace.GetOpposite();
-            int blockId = world.BlockAccessor.GetBlock(CodeWithParts(orientation.Code,oppositeFace.Code)).BlockId;
-            world.BlockAccessor.SetBlock(blockId, blockpos, itemstack);
-            return true;
-        }
-
-        bool CanAttachTo(IWorldAccessor world, BlockPos blockpos, BlockFacing onBlockFace, ItemStack itemstack)
-        {
-            BlockFacing oppositeFace = onBlockFace.GetOpposite();
-
-            BlockPos attachingBlockPos = blockpos.AddCopy(oppositeFace);
-            Block block = world.BlockAccessor.GetBlock(world.BlockAccessor.GetBlockId(attachingBlockPos));
-
-            if (block.CanAttachBlockAt(world.BlockAccessor, this, attachingBlockPos, onBlockFace))
-            {
-                //int blockId = world.BlockAccessor.GetBlock(CodeWithParts(oppositeFace.Code)).BlockId;
-                //PlaceWithOrientation(world, blockpos, onBlockFace, itemstack);
-                return true;
-            }
-
-            return false;
-        }
 
 
-
+        #region Block placement
         public override void OnBlockPlaced(IWorldAccessor world, BlockPos blockPos, ItemStack byItemStack)
         {
             base.OnBlockPlaced(world, blockPos, byItemStack);
@@ -96,6 +40,13 @@ namespace signals.src
                 be.MarkDirty(true);
 
             }
+        }
+
+        public override void OnBlockRemoved(IWorldAccessor world, BlockPos pos)
+        {
+            base.OnBlockRemoved(world, pos);
+            HangingWiresMod mod = api.ModLoader.GetModSystem<HangingWiresMod>();
+            mod.RemoveAllNodesAtBlockPos(pos);
         }
 
         #endregion

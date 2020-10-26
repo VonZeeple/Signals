@@ -3,7 +3,9 @@ using signals.src.circuits.components;
 using signals.src.transmission;
 using System;
 using System.Collections.Generic;
+using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Server;
 
 namespace signals.src
 {
@@ -12,24 +14,30 @@ namespace signals.src
         static string MODID = "signals";
         ICoreAPI api;
 
+        IServerNetworkChannel serverChannel;
+        IClientNetworkChannel clientChannel;
 
         private IDictionary<string, Type> CircuitComponentsRegistry = new Dictionary<string, Type>();
         public override void Start(ICoreAPI api)
         {
             this.api = api;
             base.Start(api);
+
             api.RegisterBlockClass("BlockBreadboard", typeof(BlockCircuitBoard));
+            api.RegisterBlockClass("BlockSignalConnection", typeof(BlockConnection));
+            api.RegisterBlockClass("BlockSignalSource", typeof(BlockSource));
+
             api.RegisterBlockEntityClass("BlockEntityBreadboard", typeof(BECircuitBoard));
             api.RegisterBlockEntityClass("BESignalSource", typeof(BESignalSource));
 
+
+            api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
+
             api.RegisterBlockEntityBehaviorClass("BEBehaviorCircuitHolder", typeof(BEBehaviorCircuitHolder));
-            api.RegisterBlockClass("BlockSignalConnection", typeof(BlockConnection));
-            api.RegisterBlockClass("BlockSignalSource", typeof(BlockSource));
 
             RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
             RegisterCircuitComponentClass("source", typeof(CircuitComponentSource));
             RegisterCircuitComponentClass("resistor", typeof(CircuitComponentResistor));
-
 
         }
 

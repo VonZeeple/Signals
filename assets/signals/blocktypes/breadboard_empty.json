@@ -2,9 +2,16 @@
     "code": "breadboard",
     "class": "BlockBreadboard",
     "entityclass": "Generic",
-    "entityBehaviors": [ { "name": "BEBehaviorCircuitHolder",
-        "properties": {}
-                         } ],
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorCircuitHolder",
+            "properties": {
+                "orientation": "{orientation}",
+                "side": "{side}"
+            }
+        }
+    ],
+    "behaviors": [ { "name": "BlockBehaviorCoverWithDirection" } ],
     "variantgroups": [
         {
             "code": "orientation",

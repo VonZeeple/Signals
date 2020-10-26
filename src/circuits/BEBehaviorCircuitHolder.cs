@@ -37,10 +37,11 @@ namespace signals.src.circuits.components
             listenerId = Blockentity.RegisterGameTickListener(Update, 50);
             block = Blockentity.Block;
             Pos = this.Blockentity.Pos;
-            facing = BlockFacing.FromCode(block?.LastCodePart(0)?.ToString());
-            orientation = BlockFacing.FromCode(block?.LastCodePart(1)?.ToString());
-            
-            
+            //facing = BlockFacing.FromCode(block?.LastCodePart(0)?.ToString());
+            //orientation = BlockFacing.FromCode(block?.LastCodePart(1)?.ToString());
+            facing = BlockFacing.FromCode(properties["side"]?.AsString("down"));
+            orientation = BlockFacing.FromCode(properties["orientation"]?.AsString("north"));
+
             if (api.Side == EnumAppSide.Client)
             {
                 ICoreClientAPI capi = (ICoreClientAPI)api;
@@ -323,6 +324,7 @@ namespace signals.src.circuits.components
         //When the server recieve a packet from a client
         public override void OnReceivedClientPacket(IPlayer player, int packetid, byte[] data)
         {
+            base.OnReceivedClientPacket(player, packetid, data);
             if (packetid == (int)EnumBECircuitPacket.OnUserOver)
             {
                 Vec3i voxelPos;
