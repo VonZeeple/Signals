@@ -26,6 +26,8 @@ namespace signals.src.hangingwires
         ICoreAPI api;
         ICoreServerAPI sapi;
         ICoreClientAPI capi;
+
+        #region ModSystem
         public override void Start(ICoreAPI api)
         {
             base.Start(api);
@@ -65,7 +67,7 @@ namespace signals.src.hangingwires
         private void onDataFromServer(HangingWiresData data)
         {
             this.data = data;
-            Renderer.UpdateWiresMesh(data.connections);
+            Renderer.UpdateWiresMesh(data);
         }
 
 
@@ -107,17 +109,17 @@ namespace signals.src.hangingwires
 
         }
 
-        public Connection[] GetAllConnectionsFrom(NodePos nodePos)
-        {
-            return data.connections.Where(x => (x.pos1 == nodePos || x.pos2 == nodePos)).ToArray();
-        }
+        #endregion
+
+        #region interactions
+
         public void RemoveAllNodesAtBlockPos(BlockPos pos)
         {
             if (api.Side == EnumAppSide.Client) return;
-            int removedlinks = data.connections.RemoveWhere((Connection con) => {
-                return con.pos1.blockPos == pos || con.pos2.blockPos == pos;
-            });
-            serverChannel.BroadcastPacket(data);
+            //int removedlinks = data.connections.RemoveWhere((Connection con) => {
+             //   return con.pos1.blockPos == pos || con.pos2.blockPos == pos;
+            //});
+            //serverChannel.BroadcastPacket(data);
         }
 
         public void OnAddConnectionFromClient(IServerPlayer fromPlayer, AddConnectionPacket networkMessage)
@@ -125,10 +127,10 @@ namespace signals.src.hangingwires
             var connection = networkMessage.connection as Connection;
             if (connection == null) return;
 
-            //TODO: add checks to be sure that their is a node provider at the position
+            //TODO: add checks to be sure that their is a node provider at the position (never trust the client)
 
-            data.TryToAdd(connection);
-            //sapi.SendMessage(fromPlayer, 0, "Connection added on server", EnumChatType.Notification);
+            CreateConnection(connection, fromPlayer);
+
             serverChannel.BroadcastPacket(data);
         }
 
@@ -148,13 +150,109 @@ namespace signals.src.hangingwires
             }
             else
             {
-
+                capi?.ShowChatMessage(String.Format("trying to attach {0}:{1}", pos.blockPos, pos.index));
                 Connection connection = new Connection(pendingNode, pos);
                 clientChannel.SendPacket(new AddConnectionPacket() { connection = connection});
                 pendingNode = null;
             }
         }
+        #endregion
 
+        #region Networks
+
+        public bool CreateConnection(Connection connection, IServerPlayer fromPlayer)
+        {
+            if (connection.pos1 == connection.pos2) return false;
+
+            HangingWiresNetwork net = FindNetworkOf(connection.pos1);
+            HangingWiresNetwork net2 = FindNetworkOf(connection.pos2);
+            
+            if (net == null && net2 == null)
+            {
+                
+                HangingWiresNetwork newNet = CreateNetwork(connection);
+                sapi.SendMessage(fromPlayer, 0, String.Format("creating new net {0}", newNet.NetworkId), EnumChatType.Notification);
+                return true;
+            }
+
+            if(net == net2)
+            {
+                if (net.Connections.Contains(connection)) { return false; }
+
+                sapi.SendMessage(fromPlayer, 0, String.Format("adding connection to net {0}", net.NetworkId), EnumChatType.Notification);
+                net.Connections.Add(connection);
+                return true;
+            }
+            
+
+            if (net != null)
+            {
+                if(net2 != null)
+                {
+                    net.Connections.Add(connection);
+                    MergeNetworks(net.NetworkId, net2.NetworkId);
+                    sapi.SendMessage(fromPlayer, 0, String.Format("Merging networks {0} and {1}", net.NetworkId, net2.NetworkId), EnumChatType.Notification);
+                    return true;
+                }
+                else
+                {
+                    net.Connections.Add(connection);
+                    sapi.SendMessage(fromPlayer, 0, String.Format("adding connection to networks {0}", net.NetworkId), EnumChatType.Notification);
+                    return true;
+                }
+
+            }
+            if(net2 != null)
+            {
+                if (net != null)
+                {
+                    net2.Connections.Add(connection);
+                    MergeNetworks(net.NetworkId, net2.NetworkId);
+                    sapi.SendMessage(fromPlayer, 0, String.Format("Merging networks {0} and {1}", net.NetworkId, net2.NetworkId), EnumChatType.Notification);
+                    return true;
+                }
+                else
+                {
+                    net2.Connections.Add(connection);
+                    sapi.SendMessage(fromPlayer, 0, String.Format("adding connection to networks {0}", net2.NetworkId), EnumChatType.Notification);
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
+
+        public void MergeNetworks(long netId1, long netId2)
+        {
+            if (!data.HangingWiresNetworks.ContainsKey(netId1) || !data.HangingWiresNetworks.ContainsKey(netId2)) return;
+
+            data.HangingWiresNetworks[netId1].Connections.AddRange(data.HangingWiresNetworks[netId2].Connections);
+            data.HangingWiresNetworks.Remove(netId2);
+        }
+
+        HangingWiresNetwork CreateNetwork(Connection connection)
+        {
+            HangingWiresNetwork newNet = new HangingWiresNetwork(data.nextNetworkId);
+            newNet.Connections.Add(connection);
+            data.HangingWiresNetworks[data.nextNetworkId] = newNet;
+            data.nextNetworkId++;
+            return newNet;
+        }
+        HangingWiresNetwork FindNetworkOf(NodePos pos)
+        {
+            foreach (HangingWiresNetwork net in data.HangingWiresNetworks.Values)
+            {
+                if (net.Connections.FirstOrDefault(x => (x.pos1 == pos || x.pos2 == pos)) != null)
+                {
+                    return net;
+                }
+            }
+            return null;
+        }
+
+
+        #endregion
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
@@ -168,31 +266,23 @@ namespace signals.src.hangingwires
     }
 
 
+    [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
+    public class HangingWiresNetwork
+    {
+        public long NetworkId;
+        public HashSet<Connection> Connections = new HashSet<Connection>();
+
+        public HangingWiresNetwork() { }
+        public HangingWiresNetwork(long netId)
+        {
+            NetworkId = netId;
+        }
+    }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public class HangingWiresData
     {
-        public HashSet<Connection> connections = new HashSet<Connection>();
-
-        public bool TryToAdd(Connection connection)
-        {
-            if (connections.Contains(connection))
-            {
-                return false;
-            }
-            connections.Add(connection);
-            return true;
-        }
-        public bool TryToAdd(NodePos pos1, NodePos pos2)
-        {
-
-            if (connections.Contains(new Connection(pos1, pos2)) )
-            {
-                return false;
-            }
-            connections.Add(new Connection(pos1, pos2));
-            return true;
-        }
-
+       public Dictionary<long, HangingWiresNetwork> HangingWiresNetworks = new Dictionary<long, HangingWiresNetwork>();
+        public long nextNetworkId = 1;
     }
 }

@@ -8,6 +8,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Util;
 
 namespace signals.src.hangingwires
 {
@@ -24,16 +25,18 @@ namespace signals.src.hangingwires
 
         MeshRef[] quadModelRefs;
         MeshRef singleWireRef;
-
-        HashSet<Connection> local_connections;
+        int chunksize;
+        HashSet<BlockPos> ConPos;
         public Matrixf ModelMat = new Matrixf();
+
+        Dictionary<Vec3i, MeshRef> MeshRefPerChunk;
 
 
         public HangingWiresRenderer(ICoreClientAPI capi, HangingWiresMod mod)
         {
             this.mod = mod;
             this.capi = capi;
-
+            chunksize = capi.World.BlockAccessor.ChunkSize;
             capi.Event.RegisterRenderer(this, EnumRenderStage.Opaque, "hangingwiresnetwork");
 
             capi.Event.ReloadShader += LoadShader;
@@ -68,69 +71,121 @@ namespace signals.src.hangingwires
         {
             return a*((float)Math.Cosh((x-(d/2))/a) - (float)Math.Cosh((d / 2) / a));  
         }
-        public void UpdateWiresMesh(HashSet<Connection> connections)
+
+        private int[] debugColors = new int[]
+        {
+            (255 << 24) | (0 << 16) | (255 << 8) | (0),
+            (255 << 24) | (255 << 16) | (0 << 8) | (0),
+            (255 << 24) | (0 << 16) | (0 << 8) | (255),
+            (255 << 24) | (255 << 16) | (255 << 8) | (0),
+            (255 << 24) | (0 << 16) | (255 << 8) | (255),
+            (255 << 24) | (255 << 16) | (0 << 8) | (255),
+            (255 << 24) | (255 << 16) | (255 << 8) | (255)
+        };
+        public void UpdateWiresMesh(HangingWiresData data)
         {
 
             IBlockAccessor accessor = capi?.World?.BlockAccessor;
             IClientWorldAccessor world = capi?.World;
-            if (connections == null || accessor == null) return;
+            if (data == null || accessor == null) return;
 
-            if (quadModelRefs != null)
+            
+
+            Dictionary<Vec3i, MeshData> MeshPerChunk = new Dictionary<Vec3i, MeshData>();
+
+            if (MeshRefPerChunk != null)
             {
-                foreach (MeshRef meshRef in quadModelRefs)
+                foreach (MeshRef meshRef in MeshRefPerChunk.Values)
                 {
                     meshRef?.Dispose();
                 }
             }
-            quadModelRefs = new MeshRef[connections.Count];
+            MeshRefPerChunk = new Dictionary<Vec3i, MeshRef>();
 
-            local_connections = connections;
-            int greenCol = (156 << 24) | (100 << 16) | (200 << 8) | (100);
 
-            int i = 0;
-            foreach (Connection con in connections)
+            foreach (long netId in data.HangingWiresNetworks.Keys)
             {
-                IHangingWireAnchor block1 = accessor.GetBlock(con.pos1.blockPos) as IHangingWireAnchor;
-                IHangingWireAnchor block2 = accessor.GetBlock(con.pos2.blockPos) as IHangingWireAnchor;
 
-                MeshData mesh = new MeshData(24, 36, false, false, true, false);
-                mesh.SetMode(EnumDrawMode.LineStrip);
-
-                int startVertex = mesh.GetVerticesCount();
-                Vec3f pos1 = block1.GetAnchorPosInBlock(world, con.pos1);
-                Vec3f pos2 = con.pos2.blockPos.ToVec3f()
-                    + block2.GetAnchorPosInBlock(world, con.pos2)
-                    - con.pos1.blockPos.ToVec3f();
-
-                Vec3f dPos = pos2 - pos1;
-
-                float dist = pos2.Distance(pos1);
-                int nv = 10;
-                for(int j = 0; j < nv; j++)
+                foreach (Connection con in data.HangingWiresNetworks[netId].Connections)
                 {
-                    float x = dPos.X / (nv - 1) * j;
-                    float y = dPos.Y / (nv - 1) * j;
-                    float z = dPos.Z / (nv - 1) * j;
-                    float t = (float)Math.Sqrt(x*x + y*y + z*z);
+                    IHangingWireAnchor block1 = accessor.GetBlock(con.pos1.blockPos) as IHangingWireAnchor;
+                    IHangingWireAnchor block2 = accessor.GetBlock(con.pos2.blockPos) as IHangingWireAnchor;
+                    if (block1 == null || block2 == null) continue;
 
-                    float dy = Catenary(t / dist, 1, 0.5f);
-                    LineMeshUtil.AddVertex(mesh, pos1.X+x, pos1.Y+y+ dy, pos1.Z+z, greenCol);
 
-                    mesh.Indices[mesh.IndicesCount++] = startVertex + j;
+                    BlockPos blockPos1 = con.pos1.blockPos;
+                    Vec3i chunkpos = new Vec3i(blockPos1.X / chunksize, blockPos1.Y / chunksize, blockPos1.Z / chunksize);
+
+                    Vec3f pos1 = con.pos1.blockPos.ToVec3f().AddCopy(-chunkpos.X*chunksize,-chunkpos.Y*chunksize,-chunkpos.Z*chunksize) + block1.GetAnchorPosInBlock(world, con.pos1);
+                    Vec3f pos2 = con.pos2.blockPos.ToVec3f().AddCopy(-chunkpos.X * chunksize, -chunkpos.Y * chunksize, -chunkpos.Z * chunksize) + block2.GetAnchorPosInBlock(world, con.pos2);
+
+                    if (MeshPerChunk.ContainsKey(chunkpos))
+                    {
+                        MeshPerChunk[chunkpos].AddMeshData(MakeWireMesh(pos1, pos2, netId));
+
+                    }
+                    else
+                    {
+                        MeshPerChunk[chunkpos] = MakeWireMesh(pos1, pos2, netId);
+                    }
+
+                  
+                }
+            }
+
+            foreach(KeyValuePair<Vec3i, MeshData> mesh in MeshPerChunk)
+            {
+                mesh.Value.SetMode(EnumDrawMode.Lines);
+                MeshRefPerChunk[mesh.Key] = capi.Render.UploadMesh(mesh.Value);
+            }
+            MeshPerChunk.Clear();
+
+        }
+        
+        private MeshData MakeWireMesh(Vec3f pos1, Vec3f pos2, long netId=0)
+        {
+            
+            
+
+            Vec3f dPos = pos2 - pos1;
+
+            float dist = pos2.Distance(pos1);
+            int nv = 10;
+
+            MeshData mesh = new MeshData(nv,(nv-1)*2,false,false,true,false);
+            mesh.xyz = new float[3 * nv];
+            mesh.Rgba = new byte[4 * nv].Fill((byte)0);
+            mesh.Indices = new int[(nv-1)*2];
+
+            
+            for (int j = 0; j < nv; j++)
+            {
+                int startVertex = mesh.GetVerticesCount();
+                float x = dPos.X / (nv - 1) * j;
+                float y = dPos.Y / (nv - 1) * j;
+                float z = dPos.Z / (nv - 1) * j;
+                float t = (float)Math.Sqrt(x * x + y * y + z * z);
+
+                float dy = Catenary(t / dist, 1, 0.5f);
+                LineMeshUtil.AddVertex(mesh, pos1.X + x, pos1.Y + y + dy, pos1.Z + z, debugColors[netId % debugColors.Length]);
+
+                if (j < nv - 1)
+                {
+                    mesh.Indices[mesh.IndicesCount++] = startVertex + 0;
+                    mesh.Indices[mesh.IndicesCount++] = startVertex + 1;
                 }
 
 
-                quadModelRefs[i] = capi.Render.UploadMesh(mesh);
-                i++;
             }
 
-
+            return mesh;
         }
+
 
         Vec4f outLineColorMul = new Vec4f(1, 1, 1, 1);
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
-            if (quadModelRefs == null) return;
+            if (MeshRefPerChunk == null) return;
             capi.Render.GlDisableCullFace();
             if (stage != EnumRenderStage.Opaque) return;
 
@@ -149,15 +204,15 @@ namespace signals.src.hangingwires
             prog.UniformMatrix("modelViewMatrix", ModelMat.Values);
             prog.Uniform("colorIn", outLineColorMul);
             //rpi.RenderMesh(quadModelRefs);
-            int i = 0;
-            foreach(Connection con in local_connections)
-            {
-                Vec3d pos1 = con.pos1.blockPos.ToVec3d();
 
-                ModelMat.Set(rpi.CameraMatrixOriginf).Translate(pos1.X-camPos.X, pos1.Y-camPos.Y, pos1.Z-camPos.Z);
+
+            foreach(KeyValuePair<Vec3i,MeshRef> mesh in MeshRefPerChunk)
+            {
+                Vec3d offset = new Vec3d(mesh.Key.X*chunksize, mesh.Key.Y * chunksize, mesh.Key.Z * chunksize);
+
+                ModelMat.Set(rpi.CameraMatrixOriginf).Translate(offset.X-camPos.X, offset.Y-camPos.Y, offset.Z-camPos.Z);
                 prog.UniformMatrix("modelViewMatrix", ModelMat.Values);
-                rpi.RenderMesh(quadModelRefs[i]);
-                i++;
+                rpi.RenderMesh(mesh.Value);
             }
 
 

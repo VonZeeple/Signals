@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
 namespace signals.src.transmission
@@ -121,6 +122,8 @@ namespace signals.src.transmission
         int chunksize;
         public bool fullyLoaded;
         private bool firstTick = true;
+        public bool isValid = true;
+
 
         /// <summary>
         /// Set to false when a block with more than one connection in the network has been broken
@@ -129,6 +132,11 @@ namespace signals.src.transmission
         {
             get; set;
         } = true;
+
+        public SignalNetwork()
+        {
+
+        }
 
 
         public SignalNetwork(SignalNetworkMod mod, long networkId)
@@ -145,62 +153,56 @@ namespace signals.src.transmission
 
         public void Join(ISignalNode node)
         {
-            //BlockPos pos = node.GetPosition();
-            //nodes[pos] = node;
+            NodePos pos = node.Pos;
+            nodes[pos] = node;
 
-            //Vec3i chunkpos = new Vec3i(pos.X / chunksize, pos.Y / chunksize, pos.Z / chunksize);
-            //int q;
-            //inChunks.TryGetValue(chunkpos, out q);
-            //inChunks[chunkpos] = q + 1;
+            Vec3i chunkpos = new Vec3i(pos.blockPos.X / chunksize, pos.blockPos.Y / chunksize, pos.blockPos.Z / chunksize);
+            int q;
+            inChunks.TryGetValue(chunkpos, out q);
+            inChunks[chunkpos] = q + 1;
         }
-
-        public void DidUnload(ISignalNode node)
-        {
-            fullyLoaded = false;
-        }
-
         public void Leave(ISignalNode node)
         {
-            //BlockPos pos = node.GetPosition();
-            //nodes.Remove(pos);
+            NodePos pos = node.Pos;
+            nodes.Remove(pos);
 
-            //Vec3i chunkpos = new Vec3i(pos.X / chunksize, pos.Y / chunksize, pos.Z / chunksize);
-            //int q;
-            //inChunks.TryGetValue(chunkpos, out q);
-            //if (q <= 1)
-            //{
-            //    inChunks.Remove(chunkpos);
-            //}
-            //else
-            //{
-            //    inChunks[chunkpos] = q - 1;
-           //}
+            Vec3i chunkpos = new Vec3i(pos.blockPos.X / chunksize, pos.blockPos.Y / chunksize, pos.blockPos.Z / chunksize);
+            int q;
+            inChunks.TryGetValue(chunkpos, out q);
+            if (q <= 1)
+            {
+                inChunks.Remove(chunkpos);
+            }
+            else
+            {
+                inChunks[chunkpos] = q - 1;
+            }
         }
 
-
-
-        public void ServerTick(float dt, long tickNumber)
+        internal void broadcastData()
         {
-            if (tickNumber % 5 == 0)
-            {
-                updateNetwork(tickNumber);
-            }
-
-            if (tickNumber % 40 == 0)
-            {
-                //broadcastData();
-            }
+            throw new NotImplementedException();
         }
 
         public void updateNetwork(long tick)
         { 
-            foreach (ISignalNode node in nodes.Values)
+        
+            foreach(ISignalNode node in nodes.Values)
             {
-                //update
+
             }
+        
+        }
+
+        public void ReadFromTreeAttribute(ITreeAttribute tree)
+        {
+            networkId = tree.GetLong("networkId");
+        }
+        public void WriteToTreeAttribute(ITreeAttribute tree)
+        {
+            tree.SetLong("networkId", networkId);
 
         }
-    
-    
-    }
+
+        }
 }

@@ -9,7 +9,7 @@ using Vintagestory.API.Common;
 
 namespace signals.src.transmission
 {
-    class BlockSource : BlockConnection, ISignalSource
+    class BlockSource : BlockConnection
     {
 
         public override void OnLoaded(ICoreAPI api)

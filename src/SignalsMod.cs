@@ -27,13 +27,10 @@ namespace signals.src
             api.RegisterBlockClass("BlockSignalConnection", typeof(BlockConnection));
             api.RegisterBlockClass("BlockSignalSource", typeof(BlockSource));
 
-            api.RegisterBlockEntityClass("BlockEntityBreadboard", typeof(BECircuitBoard));
-            api.RegisterBlockEntityClass("BESignalSource", typeof(BESignalSource));
-
-
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
 
             api.RegisterBlockEntityBehaviorClass("BEBehaviorCircuitHolder", typeof(BEBehaviorCircuitHolder));
+            //api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalSource", typeof(BEBehaviorSource));
 
             RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
             RegisterCircuitComponentClass("source", typeof(CircuitComponentSource));
