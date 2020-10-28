@@ -23,10 +23,7 @@ namespace signals.src.hangingwires
         IShaderProgram prog;
 
 
-        MeshRef[] quadModelRefs;
-        MeshRef singleWireRef;
         int chunksize;
-        HashSet<BlockPos> ConPos;
         public Matrixf ModelMat = new Matrixf();
 
         Dictionary<Vec3i, MeshRef> MeshRefPerChunk;
@@ -58,8 +55,8 @@ namespace signals.src.hangingwires
         public void Dispose()
         {
             capi.Event.UnregisterRenderer(this, EnumRenderStage.Opaque);
-            if (quadModelRefs == null) return;
-            foreach(MeshRef meshRef in quadModelRefs)
+            if (MeshRefPerChunk == null) return;
+            foreach(MeshRef meshRef in MeshRefPerChunk.Values)
             {
                 meshRef?.Dispose();
             }
@@ -144,9 +141,6 @@ namespace signals.src.hangingwires
         
         private MeshData MakeWireMesh(Vec3f pos1, Vec3f pos2, long netId=0)
         {
-            
-            
-
             Vec3f dPos = pos2 - pos1;
 
             float dist = pos2.Distance(pos1);
@@ -192,8 +186,6 @@ namespace signals.src.hangingwires
             IRenderAPI rpi = capi.Render;
             IClientWorldAccessor worldAccess = capi.World;
             Vec3d camPos = worldAccess.Player.Entity.CameraPos;
-
-            //ModelMat.Set(rpi.CameraMatrixOriginf).Translate(- camPos.X, - camPos.Y, - camPos.Z);
             
             rpi.GLEnableDepthTest();
             rpi.GlToggleBlend(true);
@@ -203,8 +195,6 @@ namespace signals.src.hangingwires
             prog.UniformMatrix("projectionMatrix", rpi.CurrentProjectionMatrix);
             prog.UniformMatrix("modelViewMatrix", ModelMat.Values);
             prog.Uniform("colorIn", outLineColorMul);
-            //rpi.RenderMesh(quadModelRefs);
-
 
             foreach(KeyValuePair<Vec3i,MeshRef> mesh in MeshRefPerChunk)
             {
@@ -214,7 +204,6 @@ namespace signals.src.hangingwires
                 prog.UniformMatrix("modelViewMatrix", ModelMat.Values);
                 rpi.RenderMesh(mesh.Value);
             }
-
 
             prog.Stop();
 
