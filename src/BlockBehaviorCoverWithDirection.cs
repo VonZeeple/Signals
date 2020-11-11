@@ -16,7 +16,6 @@ namespace signals.src
 
         }
 
-
         public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref EnumHandling handling, ref string failureCode)
         {
             handling = EnumHandling.PreventDefault;
@@ -51,7 +50,6 @@ namespace signals.src
             return false;
         }
 
-        
 
         private Block GetOrientedBlock(IWorldAccessor world, BlockSelection blockSel)
         {

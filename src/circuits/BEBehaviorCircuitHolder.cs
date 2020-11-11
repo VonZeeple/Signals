@@ -1,4 +1,6 @@
-﻿using System;
+﻿using signals.src.signalNetwork;
+using signals.src.transmission;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace signals.src.circuits.components
 {
     class BEBehaviorCircuitHolder : BlockEntityBehavior
     {
-        public VoxelCircuit Circuit = new VoxelCircuit(16,16);
+        public VoxelCircuit Circuit;
 
         long listenerId;
         CircuitBoardRenderer renderer;
@@ -26,13 +28,13 @@ namespace signals.src.circuits.components
 
         public BEBehaviorCircuitHolder(BlockEntity entity) : base(entity)
         {
+            Circuit = new VoxelCircuit(16, 16, 16, this.Blockentity);
         }
 
-        #region Block Behavior
+        #region Block Entity Behavior
         public override void Initialize(ICoreAPI api, JsonObject properties)
         {
             base.Initialize(api, properties);
-
             Circuit.Initialize(api);
             listenerId = Blockentity.RegisterGameTickListener(Update, 50);
             block = Blockentity.Block;
@@ -58,6 +60,7 @@ namespace signals.src.circuits.components
                 renderer.Dispose();
                 renderer = null;
             }
+            Circuit?.Remove();
             base.OnBlockRemoved();
         }
 
@@ -187,12 +190,7 @@ namespace signals.src.circuits.components
             Vec3f hitPos2 = hitPos.AddCopy(selectionFacing.Normalf.NormalizedCopy().Mul(-0.5f));
 
             //We need to apply rotation now
-            selectionFacing = selectionFacing.FaceWhenRotatedBy(-rotation.X * GameMath.DEG2RAD, 0, 0);
-            selectionFacing = selectionFacing.FaceWhenRotatedBy(0, -rotation.Y * GameMath.DEG2RAD, 0);
-            selectionFacing = selectionFacing.FaceWhenRotatedBy(0, 0, -rotation.Z * GameMath.DEG2RAD);
-            SignalsUtils.RotateVector(ref hitPos2, -rotation.X, 0, 0, new Vec3f(8, 8, 8));
-            SignalsUtils.RotateVector(ref hitPos2, 0, -rotation.Y, 0, new Vec3f(8, 8, 8));
-            SignalsUtils.RotateVector(ref hitPos2, 0, 0, -rotation.Z, new Vec3f(8, 8, 8));
+            RotateFromBEtoCircuit(ref hitPos2, ref selectionFacing, new Vec3f(8, 8, 8));
 
             Vec3i voxelPos = new Vec3i((int)Math.Floor(hitPos2.X), (int)Math.Floor(hitPos2.Y), (int)Math.Floor(hitPos2.Z));
 
@@ -202,6 +200,39 @@ namespace signals.src.circuits.components
 
         }
 
+        private void RotateFromBEtoCircuit(ref Vec3f vector, ref BlockFacing facing, Vec3f center)
+        {
+            Vec3f rotation = SignalsUtils.FacingToRotation(this.orientation, this.facing);
+            if (vector != null)
+            {
+                SignalsUtils.RotateVector(ref vector, -rotation.X, 0, 0, center);
+                SignalsUtils.RotateVector(ref vector, 0, -rotation.Y, 0, center);
+                SignalsUtils.RotateVector(ref vector, 0, 0, -rotation.Z, center);
+            }
+            if(facing != null)
+            {
+                facing = facing.FaceWhenRotatedBy(-rotation.X * GameMath.DEG2RAD, 0, 0);
+                facing = facing.FaceWhenRotatedBy(0, -rotation.Y * GameMath.DEG2RAD, 0);
+                facing = facing.FaceWhenRotatedBy(0, 0, -rotation.Z * GameMath.DEG2RAD);
+            }
+
+        }
+        private void RotateFromCircuittoBE(ref Vec3f vector, ref BlockFacing facing, Vec3f center)
+        {
+            Vec3f rotation = SignalsUtils.FacingToRotation(this.orientation, this.facing);
+            if (vector != null)
+            {
+                SignalsUtils.RotateVector(ref vector, 0, 0, rotation.Z, center);
+                SignalsUtils.RotateVector(ref vector, 0, rotation.Y, 0, center);
+                SignalsUtils.RotateVector(ref vector, rotation.X, 0, 0, center);
+            }
+            if (facing != null)
+            {
+                facing = facing.FaceWhenRotatedBy(0, 0, rotation.Z * GameMath.DEG2RAD);
+                facing = facing.FaceWhenRotatedBy(0, rotation.Y * GameMath.DEG2RAD, 0);
+                facing = facing.FaceWhenRotatedBy(rotation.X * GameMath.DEG2RAD, 0, 0);
+            }
+        }
 
         public void OnUseOver(IPlayer byPlayer, Vec3i voxelHitPos, Vec3i voxelBoxPos, BlockFacing facing, bool mouseBreakMode)
         {
@@ -347,6 +378,24 @@ namespace signals.src.circuits.components
             }
 
 
+        }
+
+        public ISignalNode GetNodeAt(NodePos pos)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Vec3f GetNodePosinBlock(NodePos pos)
+        {
+            Vec3f vec = Circuit.getNodePosinBlock(pos);
+            BlockFacing dummy = null;
+            RotateFromCircuittoBE(ref vec, ref dummy, new Vec3f(0.5f, 0.5f, 0.5f));
+            return vec;
+        }
+
+        public Dictionary<NodePos, ISignalNode> GetNodes()
+        {
+            throw new NotImplementedException();
         }
 
         public enum EnumBECircuitPacket

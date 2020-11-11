@@ -3,7 +3,21 @@
     "class": "BlockSignalSource",
     "entityclass": "Generic",
     "entityBehaviors": [
-        { "name": "BEBehaviorSignalSource" }
+        {
+            "name": "BEBehaviorSignalConnector",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": true
+
+                    }
+                ]
+            }
+
+
+
+        }
     ],
             "creativeinventory": {
                 "general": [ "*" ]

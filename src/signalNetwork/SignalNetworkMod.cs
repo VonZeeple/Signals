@@ -1,4 +1,6 @@
 ﻿using ProtoBuf;
+using signals.src.hangingwires;
+using signals.src.signalNetwork;
 using signals.src.transmission;
 using System;
 using System.Collections.Generic;
@@ -9,21 +11,20 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.GameContent.Mechanics;
+
 
 namespace signals.src
 {
 
     //Concept
-    // A Network is a set of connected nodes, all nodes in the same network have the same state
+    // A Network is a set of connected nodes
     // A node is indexed by a NodePos, wich is a BlockPos + an integer index. A block can contain several nodes
+    //A connection is a link between two nodes
    //Because diodes and vacuum tubes are implemented, node A being connected with node B doesn't mean that node B is connected with node A
    //Connections can be lossy, the conveyed signal can be decreased by an interger number until 0.
    
-   //BlockEntities forget their associated network ids upon unloading
-   //Whenever a block entity got unloaded, it is removed from the network. network is updated according to the following
-   //-Get signal sources from the original network
-   //-Delete the network
-   //Get/create new network for any producer
+    //Networks are created when a signal source is placed/loaded/activated
 
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
@@ -36,7 +37,8 @@ namespace signals.src
     
     public class SignalNetworkMod : ModSystem
     {
-        //public MechNetworkRenderer Renderer;
+
+        public SignalNetworkDebugRenderer Renderer;
 
         ICoreClientAPI capi;
         ICoreServerAPI sapi;
@@ -45,7 +47,9 @@ namespace signals.src
         IServerNetworkChannel serverNetworkChannel;
 
         SignalNetworksData data = new SignalNetworksData();
+        HangingWiresMod wireMod;
 
+        #region Mod stuff
         public override bool ShouldLoad(EnumAppSide side)
         {
             return true;
@@ -55,6 +59,7 @@ namespace signals.src
         {
             base.Start(api);
             this.Api = api;
+            this.wireMod = api.ModLoader.GetModSystem<HangingWiresMod>();
 
             if (api.World is IClientWorldAccessor)
             {
@@ -69,7 +74,7 @@ namespace signals.src
             }
             else
             {
-                //api.World.RegisterGameTickListener(OnServerGameTick, 20);
+                api.World.RegisterGameTickListener(OnServerGameTick, 20);
                 serverNetworkChannel =
                 ((ICoreServerAPI)api).Network.RegisterChannel("signalnetwork");
                 //.RegisterMessageType(typeof(MechNetworkPacket))
@@ -77,87 +82,229 @@ namespace signals.src
                 //.RegisterMessageType(typeof(MechClientRequestPacket))
                 //.SetMessageHandler<MechClientRequestPacket>(OnClientRequestPacket);
             }
+
+            
+            
         }
 
-        internal void OnNodeRemoved(ISignalDevice signalNode)
+
+        public override void StartClientSide(ICoreClientAPI api)
         {
-            if(signalNode.Network != null)
+            base.StartClientSide(api);
+            capi = api;
+
+            Renderer = new SignalNetworkDebugRenderer(capi, this);
+            api.Event.LeaveWorld += () =>
             {
-                RebuildNetwork(signalNode.Network, signalNode);
-            }
+                Renderer?.Dispose();
+            };
+
         }
 
-        //Rebuilds networks upon supression of a node
-        private void RebuildNetwork(SignalNetwork network, ISignalDevice removedNode)
+        public void broadcastNetwork(SignalNetworkPacket packet)
         {
-           network.isValid = false;
+            serverNetworkChannel.BroadcastPacket(packet);
+        }
 
-            if (Api.Side == EnumAppSide.Server) DeleteNetwork(network);
+        #endregion
 
-            if (network.nodes.Values.Count == 0)
+        #region network stuff
+
+
+        
+        List<ISignalNodeProvider> devicesToLoad = new List<ISignalNodeProvider>();
+
+
+
+        //TODO change this to be loaded with savegame
+        HashSet<WireConnection> wireConnections = new HashSet<WireConnection>();
+        Dictionary<BlockPos, SNDeviceProxy> proxies = new Dictionary<BlockPos, SNDeviceProxy>();
+
+
+
+        public void OnServerGameTick(float dt)
+        {
+            LoadDevices();
+
+            foreach(SignalNetwork net in data.networksById.Values)
             {
-                if (Api.Side == EnumAppSide.Server) Api.Logger.Notification("Signal Network with id " + network.networkId + " had zero nodes?");
-                return;
-            }
-
-            var nnodes = network.nodes.Values.ToArray();
-
-            foreach (var nnode in nnodes)
-            {
-                nnode.LeaveNetwork();
-            }
-
-            foreach(var nnode in nnodes)
-            {
-                if (!(nnode is ISignalDevice)) continue;
-                //TODO
-                ISignalDevice newNode = GetSignalNodeAt(nnode.Pos);
-                if (newNode == null) continue;
-                if (newNode.canStartsNetworkDiscovery && (removedNode != null || newNode.Pos != removedNode.Pos))
+                if (!net.isValid)
                 {
-                    SignalNetwork newNetwork = newNode.CreateJoinAndDiscoverNetwork();
-                    //Maybe se network states here?
-                    if (Api.Side == EnumAppSide.Server) newNetwork.broadcastData();
+                    net.Simulate();
+                }
+            }
+        }
+        //devices that have been initialized, can be after block placement, or chunk loading
+        public void LoadDevices()
+        {
+            if (devicesToLoad.Count == 0) return;
+            foreach (ISignalNodeProvider device in devicesToLoad)
+            {
+                Api.Logger.Debug("Loading device at pos");
+
+
+                //If the device is not in proxies, create a network if the device contains a source node
+                foreach (ISignalNode node in device.GetNodes().Values)
+                {
+                    
+                    //ISignalNode node = kv.Value;
+                    NodePos pos = node.Pos;
+                    if (pos == null) continue;
+                    Api.Logger.Debug("node found, at {0}", pos);
+                    if (!node.isSource) continue;
+                    Api.Logger.Debug("node is source, creating a network");
+                    SignalNetwork net = GetNetworkAt(pos, true);
+                    net.AddNode(pos, node);
+                }
+             
+            }
+            devicesToLoad.Clear();
+            
+        }
+
+
+        public void OnWireAdded(WireConnection con)
+        {
+            ISignalNodeProvider dev1 = GetDeviceAt(con.pos1.blockPos);
+            ISignalNodeProvider dev2 = GetDeviceAt(con.pos2.blockPos);
+            if (dev1 == null || dev2 == null) return;
+            wireConnections.Add(con);
+            GetDeviceAt(con.pos1.blockPos)?.GetNodeAt(con.pos1)?.Connections.Add(con);
+            GetDeviceAt(con.pos2.blockPos)?.GetNodeAt(con.pos2)?.Connections.Add(con.GetReversed());
+            TryToAddConnection(con);
+            TryToAddConnection(con.GetReversed());
+        }
+
+        public void TryToAddConnection(Connection con)
+        {
+            NodePos pos1 = con.pos1;
+            NodePos pos2 = con.pos2;            
+            SignalNetwork net1 = GetNetworkAt(pos1, false);
+            SignalNetwork net2 = GetNetworkAt(pos2, false);
+            if (net1 == null && net2 == null) return;
+            if(net1 == null)
+            {
+                ISignalNode node = GetDeviceAt(pos1.blockPos)?.GetNodeAt(pos1);
+                if (node == null) return;
+                net2.AddNodesFoundFrom(pos1, node);
+            }
+            else if(net2 == null)
+            {
+                ISignalNode node = GetDeviceAt(pos2.blockPos)?.GetNodeAt(pos2);
+                if (node == null) return;
+                net1.AddNodesFoundFrom(pos2, node);
+            }
+            AddConnection(con);
+        }
+
+
+
+        public void AddConnection(Connection con)
+        {
+            NodePos pos1 = con.pos1;
+            NodePos pos2 = con.pos2;
+            SignalNetwork net1 = GetNetworkAt(pos1, false);
+            SignalNetwork net2 = GetNetworkAt(pos2, false);
+            if (net1 == null || net2 == null) return;
+            SignalNetwork mergedNetwork;
+            if(net1 != net2)
+            {
+                mergedNetwork = net1.Merge(net2);
+                Api.Logger.Debug("Merging signal networks {0} and {1}, into net {2}",net1.networkId, net2.networkId, mergedNetwork.networkId);
+                foreach (ISignalNode node in mergedNetwork.nodes.Values)
+                {
+                    SetNodeNetwork(node, mergedNetwork);
+                }
+            }
+            else
+            {
+                mergedNetwork = net1;
+            }
+
+            Api.Logger.Debug("Adding connection into net {0}",mergedNetwork.networkId);
+            mergedNetwork.AddConnection(con);
+
+            //Notify handler and sync ect...
+        }
+
+
+        private void AddConnectionToNode(ISignalNode node, Connection con)
+        {
+            if (node.Pos != con.pos1) return;
+            node.Connections.Add(con);
+        }
+
+        private void SetNodeNetwork(ISignalNode node, SignalNetwork net)
+        {
+
+        }
+
+        private SignalNetwork CreateNetwork()
+        {
+            Api.Logger.Debug("Creating signal network with Id: {0}", data.nextNetworkId);
+            SignalNetwork net = new SignalNetwork(this, data.nextNetworkId);
+            data.networksById[data.nextNetworkId] = net;
+            data.nextNetworkId++;
+            return net;
+        }
+
+
+        public ISignalNodeProvider GetDeviceAt(BlockPos pos)
+        {
+            BlockEntity be = Api.World.BlockAccessor.GetBlockEntity(pos);
+            if (be == null) return null;
+            ISignalNodeProvider device = be as ISignalNodeProvider;
+            if (device != null) return device;
+            return be.GetBehavior<BEBehaviorSignalNodeProvider>() as ISignalNodeProvider;
+        }
+
+
+        private SignalNetwork GetNetworkAt(NodePos pos, bool createIfnull)
+        {
+            foreach(SignalNetwork net in data.networksById.Values)
+            {
+                if (net.nodes.ContainsKey(pos))
+                {
+                    return net;
                 }
             }
 
+            if (!createIfnull) return null;
 
+            SignalNetwork newNet = CreateNetwork();
+            return newNet;
         }
 
-        private ISignalDevice GetSignalNodeAt(NodePos pos)
+        internal void OnDeviceRemoved(ISignalNodeProvider device)
         {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteNetwork(SignalNetwork network)
-        {
-            data.networksById.Remove(network.networkId);
-            //serverNetworkChannel.BroadcastPacket<NetworkRemovedPacket>(new NetworkRemovedPacket() { networkId = network.networkId });
-        }
-
-        internal SignalNetwork GetOrCreateNetwork(long networkId)
-        {
-            SignalNetwork mw;
-
-            if (!data.networksById.TryGetValue(networkId, out mw))
+            Dictionary<NodePos,ISignalNode> nodes = device.GetNodes();
+            foreach(ISignalNode node in nodes.Values)
             {
-                data.networksById[networkId] = mw = new SignalNetwork(this, networkId);
+                SignalNetwork net = GetNetworkAt(node.Pos, false);
+                if (net == null) return;
+                net.RemoveNode(node.Pos);
             }
-
-            return mw;
         }
 
-        public SignalNetwork CreateNetwork(ISignalDevice deviceNode)
+        internal void OnDeviceUnloaded(ISignalNodeProvider device)
         {
-            SignalNetwork nw = new SignalNetwork(this, data.nextNetworkId);
-            data.networksById[data.nextNetworkId] = nw;
-            data.nextNetworkId++;
-            return nw;
+            
         }
 
-        internal SignalNetwork GetNetworkAt(NodePos pos)
+        internal void OnDeviceInitialized(ISignalNodeProvider device)
         {
-            throw new NotImplementedException();
+
+            devicesToLoad.Add(device);
         }
+    }
+
+
+    #endregion
+    [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
+    public class SignalNetworkPacket
+    {
+        public long networkId;
+        public byte state;
+
     }
 }

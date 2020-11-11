@@ -36,6 +36,7 @@ namespace signals.src
         public void Dispose()
         {
             capi.Event.UnregisterRenderer(this, EnumRenderStage.Opaque);
+            circuitMeshRef.Dispose();
         }
 
 

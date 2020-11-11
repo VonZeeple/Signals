@@ -1,6 +1,27 @@
 ﻿{
     "code": "connection2",
     "class": "BlockSignalConnection",
+    "entityclass": "Generic",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalConnector",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    },
+                    {
+                        "index": 1,
+                        "isSource": false
+                    }
+                ]
+            }
+
+
+
+        }
+    ],
     "variantgroups": [
         {
             "code": "side",
@@ -11,22 +32,22 @@
         "signalNodes": [
             {
                 "index": 0,
-                    "x1": 0.12,
-                    "y1": 0.37,
-                    "z1": 0.1,
-                    "x2": 0.4,
-                    "y2": 0.63,
-                    "z2": 0.3
+                "x1": 0.12,
+                "y1": 0.37,
+                "z1": 0.1,
+                "x2": 0.4,
+                "y2": 0.63,
+                "z2": 0.3
 
             },
             {
                 "index": 1,
-                    "x1": 0.6,
-                    "y1": 0.37,
-                    "z1": 0.1,
-                    "x2": 0.83,
-                    "y2": 0.63,
-                    "z2": 0.3
+                "x1": 0.6,
+                "y1": 0.37,
+                "z1": 0.1,
+                "x2": 0.83,
+                "y2": 0.63,
+                "z2": 0.3
             }
         ]
     },

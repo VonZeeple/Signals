@@ -1,5 +1,6 @@
 ﻿using signals.src.circuits;
 using signals.src.circuits.components;
+using signals.src.signalNetwork;
 using signals.src.transmission;
 using System;
 using System.Collections.Generic;
@@ -27,15 +28,28 @@ namespace signals.src
             api.RegisterBlockClass("BlockSignalConnection", typeof(BlockConnection));
             api.RegisterBlockClass("BlockSignalSource", typeof(BlockSource));
 
+            api.RegisterBlockEntityClass("BlockEntityLightBulb", typeof(BlockEntityLightBulb));
+
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
 
             api.RegisterBlockEntityBehaviorClass("BEBehaviorCircuitHolder", typeof(BEBehaviorCircuitHolder));
-            //api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalSource", typeof(BEBehaviorSource));
+            api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalConnector", typeof(BEBehaviorSignalNodeProvider));
 
             RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
             RegisterCircuitComponentClass("source", typeof(CircuitComponentSource));
             RegisterCircuitComponentClass("resistor", typeof(CircuitComponentResistor));
 
+        }
+
+        public override void StartClientSide(ICoreClientAPI api)
+        {
+            api.World.Logger.EntryAdded += OnClientLogEntry;
+        }
+
+        private void OnClientLogEntry(EnumLogType logType, string message, params object[] args)
+        {
+            if (logType == EnumLogType.VerboseDebug) return;
+            System.Diagnostics.Debug.WriteLine("[Client " + logType + "] " + message, args);
         }
 
         public Type GetCircuitComponentClass(string key)

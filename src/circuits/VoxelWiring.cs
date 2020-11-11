@@ -146,7 +146,7 @@ namespace signals.src
             return gotWireAtPos(pos.X, pos.Y, pos.Z);
         }
 
-        public int GetNetworkIdAtPos(Vec3i voxelPos)
+        public int GetWireIdAtPos(Vec3i voxelPos)
         {
             foreach (VoxelWire net in networks.Values)
             {
@@ -158,7 +158,7 @@ namespace signals.src
             return -1;
         }
 
-        private VoxelWire GetNetworkAtPos(Vec3i voxelPos)
+        private VoxelWire GetWireAtPos(Vec3i voxelPos)
         {
             foreach (VoxelWire net in networks.Values)
             {
@@ -191,7 +191,7 @@ namespace signals.src
             foreach (BlockFacing face in BlockFacing.ALLFACES)
             {
                 Vec3i pos2 = voxelPos.AddCopy(face);
-                VoxelWire net = GetNetworkAtPos(pos2);
+                VoxelWire net = GetWireAtPos(pos2);
                 if (net!=null)
                 {
                     if(current_net == null)

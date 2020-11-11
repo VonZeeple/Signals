@@ -1,4 +1,5 @@
-﻿using signals.src.transmission;
+﻿using signals.src.signalNetwork;
+using signals.src.transmission;
 using System;
 using System.Collections.Generic;
 using System.Linq;

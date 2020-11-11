@@ -1,23 +1,66 @@
-﻿using System;
+﻿using signals.src.signalNetwork;
+using signals.src.transmission;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
 namespace signals.src.circuits.components
 {
     class CircuitComponentSource : CircuitComponent
     {
+
         public CircuitComponentSource() : base()
         {
             this.className = "source";
             this.Size = new Vec3i(3, 3, 3);
+            inputs = new Vec3i[] { new Vec3i(0, 0, 1), new Vec3i(1, 0, 0), new Vec3i(2, 0, 1), new Vec3i(1, 0, 2) };
+            //Vec3i[] input_dir = new Vec3i[] { new Vec3i(-1,0,0), new Vec3i(0,0,-1), new Vec3i(1,0,0), new Vec3i(0,0,1) };
+
+            //outputNodes = new SignalNodeBase[inputs.Length];
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                //outputNodes[i] = new SignalNodeBase()
+                //{
+                //    canStartsNetworkDiscovery = true
+                //};
+
+            }
+        }
+        
+
+        override public void FromTreeAtributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
+        {
+            base.FromTreeAtributes(tree, worldForResolving);
+
+
         }
 
-        Vec3i[] inputs = new Vec3i[] { new Vec3i(-1, 0, 1), new Vec3i(1, 0, -1), new Vec3i(3, 0, 1), new Vec3i(1, 0, 3) };
+        public override void Remove()
+        {
+            //foreach (SignalNodeBase node in outputNodes)
+           // {
+            //    node.OnRemove();
+           // }
+        }
+
+        override public void ToTreeAttributes(ITreeAttribute tree)
+        {
+            base.ToTreeAttributes(tree);
+
+        }
+
+        public override ISignalNode GetNodeAt(NodePos pos)
+        {
+            return base.GetNodeAt(pos);
+        }
+
+
         override public MeshData getMesh(ICoreClientAPI inCapi)
         {
             this.capi = inCapi;
@@ -28,6 +71,11 @@ namespace signals.src.circuits.components
             mesh.Translate(new Vec3f(Pos.X / 16f, Pos.Y / 16f, Pos.Z / 16f));
 
             return mesh;
+        }
+
+        public override Vec3f GetNodePosinBlock(NodePos pos)
+        {
+            return null;
         }
 
         override public Vec3i[] GetOutputPositions()

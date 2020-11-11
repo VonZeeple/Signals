@@ -1,4 +1,6 @@
-﻿using System;
+﻿using signals.src.signalNetwork;
+using signals.src.transmission;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +17,15 @@ namespace signals.src
     public class VoxelCircuit
     {
 
-        private int SIZEX;
-        private int SIZEY;
+        public int SIZEX;
+        public int SIZEY;
+        public int SIZEZ;
 
         public MeshData Mesh;
         public int AvailableWireVoxels = 0;
         public List<CircuitComponent> components = new List<CircuitComponent>();
         public VoxelWiring wiring;//Contains list of wires
-
+        public BlockEntity myBE;
         
         //All the selection boxes avalaible for a given component
         //Plus selection boxes of placed components
@@ -34,23 +37,54 @@ namespace signals.src
 
         ICoreAPI api;
 
-        public VoxelCircuit(int sizex, int sizey)
+        public VoxelCircuit(int sizex, int sizey, int sizez, BlockEntity blockEntity)
         {
             SIZEX = sizex;
             SIZEY = sizey;
+            SIZEZ = sizez;
+            myBE = blockEntity;
             wiring = new VoxelWiring(sizex,sizey);
         }
 
         public void Initialize(ICoreAPI api)
         {
             this.api = api;
+            foreach(CircuitComponent comp in components)
+            {
+                comp.Initialize(api, this);
+            }
             if (api.Side == EnumAppSide.Client)
             {
 
             }
         }
 
+        public Vec3i getVectorFromIndex(ushort index)
+        {
+            //There is probablyt a smarter way to do that
+            int z = (int)Math.Floor((decimal)index / (SIZEX * SIZEY));
+            int y = (int)Math.Floor((decimal)(index - z * SIZEX * SIZEY) / SIZEX);
+            int x = index - (z * SIZEX * SIZEY) - (y * SIZEX);
+            return new Vec3i(x, y, z);
+        }
+        public ushort? getIndexFromVector(Vec3i vec)
+        {
+            if (!isValidPosition(vec)) return null;
+            return (ushort)(vec.X + vec.Y * SIZEX + vec.Z * SIZEX * SIZEY);
+        }
 
+        internal void Remove()
+        {
+            foreach (CircuitComponent comp in components) {
+
+                comp.Remove();
+            }
+        }
+
+        private bool isValidPosition(Vec3i pos)
+        {
+            return pos.X < SIZEX && pos.Y < SIZEY && pos.Z < SIZEZ;
+        }
 
         #region Circuit simulation
 
@@ -70,7 +104,7 @@ namespace signals.src
 
         private byte getStateAtPos(Vec3i pos)
         {
-            int id = wiring.GetNetworkIdAtPos(pos);
+            int id = wiring.GetWireIdAtPos(pos);
             if (id == -1) return 0;
             return wiring.networks[id].state;
         }
@@ -94,7 +128,7 @@ namespace signals.src
                 Vec3i[] outPos = comp.GetOutputPositions();
                 for (int i=0;i<outPos.Length;i++)
                 {
-                    int netId = wiring.GetNetworkIdAtPos(outPos[i]);
+                    int netId = wiring.GetWireIdAtPos(outPos[i]);
                     if (netId >= 0)
                     {
                         if (wiring.networks[netId].nextState < comp.GetOutputs()[i])
@@ -166,12 +200,14 @@ namespace signals.src
                         if (comp != null)
                         {
                             comp.Pos = voxelBoxPos.Clone();
+                            comp.myCircuit = this;
+                            comp.Initialize(api, this);
                             components.Add(comp);
-
                        }
                     
             
         }
+
 
         public bool canPlaceWireAt(Vec3i voxelPos)
         {
@@ -320,6 +356,8 @@ namespace signals.src
             return null;
         }
 
+        #endregion
+        #region data
         public void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
             if (tree == null) return;
@@ -329,6 +367,7 @@ namespace signals.src
                 wiring = VoxelWiring.deserialize(bytes);
             }
             AvailableWireVoxels = tree.TryGetInt("availableWireVoxels").GetValueOrDefault(0);
+
             ComponentsFromTree(ref components, tree.GetTreeAttribute("components"), worldForResolving);
             selectionBoxesDidChanged = true;
         }
@@ -353,17 +392,42 @@ namespace signals.src
             if (tree == null || api == null) return;
             SignalsMod mod = api.ModLoader.GetModSystem<SignalsMod>();
 
-            foreach (ITreeAttribute compTree in tree.Values)
+            foreach(KeyValuePair<string, IAttribute> kv in tree)
             {
+
+                ITreeAttribute compTree = kv.Value as ITreeAttribute;
+                if (compTree == null) continue;
+
                 string className = compTree.GetString("class", null);
+                int index = int.Parse(kv.Key);
+
+                if(index < comps.Count)
+                {
+                    if(comps[index].className == className)
+                    {
+                        comps[index].FromTreeAtributes(compTree, api.World);
+                        continue;
+                    }
+                    else
+                    {
+                        comps[index].Remove();
+                        comps.RemoveAt(index);
+                    }
+                }
+
                 Type type = mod.getCircuitComponentType(className);
                 if (type == null) continue;
-                CircuitComponent newComponent = (CircuitComponent)Activator.CreateInstance(type);
+                CircuitComponent newComponent = (CircuitComponent)Activator.CreateInstance(type, this);
                 newComponent.FromTreeAtributes(compTree, api.World);
+                newComponent.Initialize(api, this);
                 comps.Add(newComponent);
+
             }
 
         }
+
+
+
         private void ComponentsToTree(List<CircuitComponent> comps, ITreeAttribute tree)
         {
             for(int i = 0; i < comps.Count; i++)
@@ -374,11 +438,21 @@ namespace signals.src
             }
             
         }
-   
+
 
 
         #endregion
 
+        public Vec3f getNodePosinBlock(NodePos pos)
+        {
+
+            BlockPos blockPos = myBE.Pos;
+            if (blockPos == null || blockPos != pos.blockPos) return null;
+
+            Vec3i voxelpos = getVectorFromIndex((ushort)pos.index);
+
+            return new Vec3f((voxelpos.X+0.5f) * 1f/SIZEX, (voxelpos.Y+0.5f) *1f / SIZEY, (voxelpos.Z+0.5f) * 1f / SIZEZ);
+        }
 
         //Get info for the itemblock
         public static void GetCircuitInfo(StringBuilder dsc, ITreeAttribute tree)
@@ -390,7 +464,7 @@ namespace signals.src
         }
         public void GetBlockInfo(Vec3i pos, StringBuilder dsc)
         {
-            int? networkId = wiring?.GetNetworkIdAtPos(pos);
+            int? networkId = wiring?.GetWireIdAtPos(pos);
             //byte? networkState = wiring?.networks[networkId]?.state;
             dsc.AppendLine(Lang.Get("Available Wire voxels: {0}", AvailableWireVoxels));
             dsc.AppendLine(Lang.Get("Number of wires: {0}", wiring?.networks.Count));

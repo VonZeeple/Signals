@@ -1,6 +1,84 @@
 ﻿{
     "code": "connection",
     "class": "BlockSignalConnection",
+    "behaviors": [
+        {
+            "name": "OmniAttachable",
+            "properties": {
+                "facingCode": "side",
+                "attachmentAreas": {
+                    "up": {
+                        "x1": 7,
+                        "y1": 15,
+                        "z1": 7,
+                        "x2": 8,
+                        "y2": 15,
+                        "z2": 8
+                    },
+                    "down": {
+                        "x1": 4,
+                        "y1": 0,
+                        "z1": 4,
+                        "x2": 11,
+                        "y2": 0,
+                        "z2": 11
+                    },
+                    "south": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1
+                    },
+                    "west": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 90
+                    },
+                    "north": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 180
+                    },
+                    "east": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 270
+                    }
+                }
+            }
+        }
+    ],
+    "entityclass": "Generic",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalConnector",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    }
+                ]
+            }
+
+
+
+        }
+    ],
     "variantgroups": [
         {
             "code": "side",
@@ -12,11 +90,25 @@
             {
                 "index": 0,
                 "x1": 0.37,
-                 "y1": 0.37,
-                    "z1": 0.1,
-                    "x2": 0.63,
-                    "y2": 0.63,
-                    "z2": 0.3
+                "y1": 0.37,
+                "z1": 0.1,
+                "x2": 0.63,
+                "y2": 0.63,
+                "z2": 0.3,
+                "rotateXbytype": {
+                    "*-down": 180,
+                    "*-south": 90,
+                    "*-east": 90,
+                    "*-west": 90,
+                    "*-north": 90
+                },
+                "rotateYbytype": {
+                    "*-west": 180
+                },
+                "rotateZbytype": {
+                    "*-west": 270,
+                    "*-east": 270
+                }
             }
         ]
     },
@@ -25,28 +117,27 @@
     },
 
     "shapebytype": {
-        "*-down": { "base": "signals:block/connections1" },
-        "*-up": {
+        "*-up": { "base": "signals:block/connections1" },
+        "*-down": {
             "base": "signals:block/connections1",
             "rotateX": 180
         },
-        "*-north": {
+        "*-south": {
             "base": "signals:block/connections1",
             "rotateX": 90
         },
-        "*-east": {
+        "*-west": {
             "base": "signals:block/connections1",
             "rotateX": 90,
             "rotateY": 180,
             "rotateZ": 270
         },
-        "*-west": {
+        "*-east": {
             "base": "signals:block/connections1",
             "rotateX": 90,
-            "rotateY": 0,
             "rotateZ": 270
         },
-        "*-south": {
+        "*-north": {
             "base": "signals:block/connections1",
             "rotateX": 270
         }
@@ -61,14 +152,42 @@
         "z1": 0,
         "x2": 0.63,
         "y2": 0.63,
-        "z2": 0.07
+        "z2": 0.07,
+        "rotateXbytype": {
+            "*-down": 180,
+            "*-south": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-north": 90
+        },
+        "rotateYbytype": {
+            "*-west": 180
+        },
+        "rotateZbytype": {
+            "*-west": 270,
+            "*-east": 270
+        }
     },
     "selectionBox": {
-        "x1": 0.37,
-        "y1": 0.37,
-        "z1": 0,
-        "x2": 0.63,
-        "y2": 0.63,
-        "z2": 0.07
+            "x1": 0.36,
+            "y1": 0,
+            "z1": 0.36,
+            "x2": 0.64,
+            "y2": 0.07,
+            "z2": 0.64,
+        "rotateXbytype": {
+            "*-down": 180,
+            "*-south": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-north": 90
+        },
+        "rotateYbytype": {
+            "*-west": 180
+        },
+        "rotateZbytype": {
+            "*-west": 270,
+            "*-east": 270
+        }
     }
 }

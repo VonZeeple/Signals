@@ -1,4 +1,5 @@
 ﻿using signals.src.hangingwires;
+using signals.src.signalNetwork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -123,6 +124,7 @@ namespace signals.src.transmission
 
         public bool CanAttachWire(IWorldAccessor world, NodePos pos, NodePos posInit = null)
         {
+            if (pos == null) return false;
             if (posInit != null && posInit.blockPos == pos.blockPos) return false;
             return pos != null;
         }

@@ -1,5 +1,6 @@
 ﻿using signals.src.circuits.components;
 using signals.src.hangingwires;
+using signals.src.signalNetwork;
 using signals.src.transmission;
 using System.Text;
 using Vintagestory.API.Client;
@@ -10,7 +11,7 @@ using Vintagestory.API.Util;
 
 namespace signals.src
 {
-    class BlockCircuitBoard : Block, IHangingWireAnchor
+    class BlockCircuitBoard : Block
     {
         public override void OnLoaded(ICoreAPI api)
         {
@@ -36,7 +37,7 @@ namespace signals.src
                 byItemStack.Attributes.SetInt("posy", blockPos.Y);
                 byItemStack.Attributes.SetInt("posz", blockPos.Z);
 
-                be.FromTreeAttributes(byItemStack.Attributes, world);
+                be.FromTreeAtributes(byItemStack.Attributes, world);
                 be.MarkDirty(true);
 
             }

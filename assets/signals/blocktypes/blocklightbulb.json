@@ -1,0 +1,222 @@
+﻿{
+    "code": "blocklightbulb",
+    "class": "BlockSignalSource",
+    "entityclass": "BlockEntityLightBulb",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalConnector",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    }
+                ]
+            }
+
+
+
+        }
+    ],
+    "behaviors": [ { "name": "BlockBehaviorCoverWithDirection" } ],
+    "variantgroups": [
+
+        {
+            "code": "powered",
+            "states": [ "on", "off" ]
+        },
+        {
+            "code": "orientation",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        },
+        {
+            "code": "side",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        }
+    ],
+    "lightHsvbytype": {
+
+        "*-on-*": [ 7, 4, 18 ],
+        "*-off-*": [ 0, 0, 0 ]
+    },
+    "lightAbsorption": 0,
+    "drawtype": "json",
+    "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south", "*-east-east", "*-east-west", "*-west-east", "*-west-west" ],
+    "shapebytype": {
+        "*-north-down": { "base": "block/lightbulb_{powered}" },
+        "*-south-down": {
+            "base": "block/lightbulb_{powered}",
+            "rotateY": 180
+        },
+        "*-east-down": {
+            "base": "block/lightbulb_{powered}",
+            "rotateY": 270
+        },
+        "*-west-down": {
+            "base": "block/lightbulb_{powered}",
+            "rotateY": 90
+        },
+        "*-south-up": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 180
+        },
+        "*-north-up": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 180,
+            "rotateY": 180
+        },
+        "*-west-up": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 180,
+            "rotateY": 90
+        },
+        "*-east-up": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 180,
+            "rotateY": 270,
+            "rotateZ": 0
+        },
+        "*-north-west": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 180,
+            "rotateY": 180,
+            "rotateZ": 90
+        },
+        "*-south-west": {
+            "base": "block/lightbulb_{powered}",
+            "rotateY": 180,
+            "rotateZ": 90
+        },
+        "*-up-west": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 270,
+            "rotateY": 180,
+            "rotateZ": 90
+        },
+        "*-down-west": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 90,
+            "rotateY": 180,
+            "rotateZ": 90
+        },
+        "*-up-east": {
+            "base": "block/lightbulb_{powered}",
+            "rotateZ": 90
+        },
+        "*-down-east": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 270,
+            "rotateZ": 90
+        },
+        "*-north-east": {
+            "base": "block/lightbulb_{powered}",
+            "rotateZ": 90
+        },
+        "*-south-east": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 180,
+            "rotateZ": 90
+        },
+
+        "*-up-north": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 90
+        },
+        "*-down-north": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 90,
+            "rotateY": 180
+        },
+        "*-east-north": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 90,
+            "rotateY": 270
+        },
+        "*-west-north": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 90,
+            "rotateY": 90
+        },
+
+        "*-up-south": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 270,
+            "rotateY": 180
+        },
+        "*-down-south": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 270
+        },
+        "*-east-south": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 270,
+            "rotateY": 270
+        },
+        "*-west-south": {
+            "base": "block/lightbulb_{powered}",
+            "rotateX": 270,
+            "rotateY": 90
+        }
+
+    },
+    "sidesolidByType": {
+        "*-down": {
+            "all": false,
+            "down": true
+        },
+        "*-up": {
+            "all": false,
+            "up": true
+        },
+        "*-north": {
+            "all": false,
+            "north": true
+        },
+        "*-east": {
+            "all": false,
+            "east": true
+        },
+        "*-west": {
+            "all": false,
+            "west": true
+        },
+        "*-south": {
+            "all": false,
+            "south": true
+        }
+    },
+    "sideopaque": {
+        "all": false
+    },
+    "blockmaterial": "Metal",
+    "creativeinventory": {
+        "general": [ "*-off--north-down" ],
+        "decorative": [ "*-off-north-down" ]
+    },
+    "replaceable": 300,
+    "resistance": 2,
+    "selectionbox": {
+        "x1": 0,
+        "y1": 0,
+        "z1": 0,
+        "x2": 1,
+        "y2": 0.0625,
+        "z2": 1
+    },
+    "collisionbox": {
+        "x1": 0,
+        "y1": 0,
+        "z1": 0,
+        "x2": 1,
+        "y2": 0.0625,
+        "z2": 1
+    },
+    "guiTransform": {
+        "origin": {
+            "x": 0.5,
+            "y": 0.0625,
+            "z": 0.5
+        }
+    }
+
+}

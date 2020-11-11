@@ -1,4 +1,5 @@
 ﻿using ProtoBuf;
+using signals.src.signalNetwork;
 using signals.src.transmission;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,12 @@ namespace signals.src.hangingwires
         ICoreClientAPI capi;
 
         #region ModSystem
+
+        public override bool ShouldLoad(EnumAppSide forSide)
+        {
+            return true;
+        }
+
         public override void Start(ICoreAPI api)
         {
             base.Start(api);
@@ -116,6 +123,7 @@ namespace signals.src.hangingwires
         public void RemoveAllNodesAtBlockPos(BlockPos pos)
         {
             if (api.Side == EnumAppSide.Client) return;
+            //TODO
             //int removedlinks = data.connections.RemoveWhere((Connection con) => {
              //   return con.pos1.blockPos == pos || con.pos2.blockPos == pos;
             //});
@@ -124,14 +132,20 @@ namespace signals.src.hangingwires
 
         public void OnAddConnectionFromClient(IServerPlayer fromPlayer, AddConnectionPacket networkMessage)
         {
-            var connection = networkMessage.connection as Connection;
+            var connection = networkMessage.connection as WireConnection;
             if (connection == null) return;
 
             //TODO: add checks to be sure that their is a node provider at the position (never trust the client)
 
             CreateConnection(connection, fromPlayer);
+            api.ModLoader.GetModSystem<SignalNetworkMod>()?.OnWireAdded(connection);
 
             serverChannel.BroadcastPacket(data);
+        }
+
+        internal HangingWiresNetwork GetWireNetAt(NodePos pos)
+        {
+            throw new NotImplementedException();
         }
 
         NodePos pendingNode = null;
@@ -151,7 +165,7 @@ namespace signals.src.hangingwires
             else
             {
                 capi?.ShowChatMessage(String.Format("trying to attach {0}:{1}", pos.blockPos, pos.index));
-                Connection connection = new Connection(pendingNode, pos);
+                WireConnection connection = new WireConnection(pendingNode, pos);
                 clientChannel.SendPacket(new AddConnectionPacket() { connection = connection});
                 pendingNode = null;
             }
@@ -160,7 +174,7 @@ namespace signals.src.hangingwires
 
         #region Networks
 
-        public bool CreateConnection(Connection connection, IServerPlayer fromPlayer)
+        public bool CreateConnection(WireConnection connection, IServerPlayer fromPlayer)
         {
             if (connection.pos1 == connection.pos2) return false;
 
@@ -231,7 +245,7 @@ namespace signals.src.hangingwires
             data.HangingWiresNetworks.Remove(netId2);
         }
 
-        HangingWiresNetwork CreateNetwork(Connection connection)
+        HangingWiresNetwork CreateNetwork(WireConnection connection)
         {
             HangingWiresNetwork newNet = new HangingWiresNetwork(data.nextNetworkId);
             newNet.Connections.Add(connection);
@@ -258,7 +272,7 @@ namespace signals.src.hangingwires
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public class AddConnectionPacket
     {
-        public Connection connection;
+        public WireConnection connection;
 
         public AddConnectionPacket()
         {
@@ -270,7 +284,7 @@ namespace signals.src.hangingwires
     public class HangingWiresNetwork
     {
         public long NetworkId;
-        public HashSet<Connection> Connections = new HashSet<Connection>();
+        public HashSet<WireConnection> Connections = new HashSet<WireConnection>();
 
         public HangingWiresNetwork() { }
         public HangingWiresNetwork(long netId)

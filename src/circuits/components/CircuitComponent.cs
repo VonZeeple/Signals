@@ -1,4 +1,7 @@
 ﻿using signals.src.circuits;
+using signals.src.signalNetwork;
+using signals.src.transmission;
+using System;
 using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -10,10 +13,6 @@ namespace signals.src
     public abstract class CircuitComponent: ICircuitComponent, ITexPositionSource
     {
 
-        public CircuitComponent()
-        {
-
-        }
 
         public Vec3i Size;
         public int rotation;
@@ -25,7 +24,7 @@ namespace signals.src
         protected Item nowTesselatingItem;
         protected Shape nowTesselatingShape;
         protected ICoreClientAPI capi;
-
+        public VoxelCircuit myCircuit;
         public Size2i AtlasSize => capi.BlockTextureAtlas.Size;
 
         public ItemStack ItemStack { get =>  (itemStack == null)?new ItemStack():itemStack ; set{ itemStack = value; } }
@@ -74,6 +73,37 @@ namespace signals.src
         }
 
 
+        protected Vec3i[] inputs = new Vec3i[] { };
+        protected ISignalNode[] outputNodes;
+
+
+        public CircuitComponent(){
+
+        }
+
+
+        public virtual void Initialize(ICoreAPI api, VoxelCircuit circuit)
+        {
+
+            if (circuit == null) return;
+            myCircuit = circuit;
+            BlockPos blockPos = myCircuit?.myBE?.Pos;
+
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                ushort? index = myCircuit?.getIndexFromVector(this.Pos.AddCopy(inputs[i].X, inputs[i].Y, inputs[i].Z));
+                if (blockPos == null || index == null) continue;
+                outputNodes[i].Pos = new NodePos(blockPos, index.Value);
+                //outputNodes[i].myBlockEntity = myCircuit?.myBE;
+                //outputNodes[i].Initialize(api);
+            }
+
+        }
+
+        public virtual void Remove()
+        {
+
+        }
 
         public virtual bool doesIntersect(Cuboidi box)
         {
@@ -138,6 +168,18 @@ namespace signals.src
             Pos.Y = tree.GetInt("posY", 0);
             Pos.Z = tree.GetInt("posZ", 0);
             this.ItemStack = tree.GetItemstack("itemStack", new ItemStack());
+
+            ITreeAttribute nodesTree = tree["nodes"] as ITreeAttribute;
+            if (nodesTree == null) return;
+            foreach (KeyValuePair<string, IAttribute> kv in nodesTree)
+            {
+                ITreeAttribute nodeTree = kv.Value as ITreeAttribute;
+                if (nodeTree == null) continue;
+                //if (outputNodes.Length <= int.Parse(kv.Key)) continue;
+                //outputNodes[int.Parse(kv.Key)].myBlockEntity = myCircuit?.myBE;
+                //add position
+                //outputNodes[int.Parse(kv.Key)].FromTreeAtributes(nodeTree, worldForResolving);
+            }
         }
 
         virtual public void ToTreeAttributes(ITreeAttribute tree)
@@ -147,6 +189,15 @@ namespace signals.src
             tree.SetInt("posY", Pos.Y);
             tree.SetInt("posZ", Pos.Z);
             tree.SetItemstack("itemStack", this.ItemStack);
+
+            TreeAttribute nodesTree = new TreeAttribute();
+            for (int i = 0; i < outputNodes.Length; i++)
+            {
+                ITreeAttribute nodeTree = new TreeAttribute();
+                //outputNodes[i].ToTreeAttributes(nodeTree);
+                nodesTree[i.ToString()] = nodeTree;
+            }
+            tree["nodes"] = nodesTree;
         }
 
         virtual public ItemStack GetItemStackOnRemove()
@@ -163,6 +214,20 @@ namespace signals.src
             return false;
         }
 
+        public virtual ISignalNode GetNodeAt(NodePos pos)
+        {
+            return null;
+        }
+
+        public virtual Vec3f GetNodePosinBlock(NodePos pos)
+        {
+            return null;
+        }
+
+        public Dictionary<NodePos, ISignalNode> GetNodes()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }
