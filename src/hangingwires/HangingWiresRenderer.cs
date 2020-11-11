@@ -132,24 +132,28 @@ namespace signals.src.hangingwires
         private MeshData MakeWireMesh(Vec3f pos1, Vec3f pos2, long netId)
         {
 
-            float t = 0.05f;//thickness
+            float t = 0.015f;//thickness
             Vec3f dPos = pos2 - pos1;
             float dist = pos2.Distance(pos1);
 
             int nSec = (int)Math.Floor(dist*2);//number of section
+            nSec = nSec > 5 ? nSec : 5;
 
-            //int nSec = 3;
-            //Start with a simple strip:
-            //number of triangles: nsec*2
-            //number of vertices (nsec+1)*2
-            //number of indices: nsec*6
-            MeshData mesh = new MeshData((nSec + 1) * 2 * 2, nSec *3* 6, false, true, true, false);
+            MeshData mesh = new MeshData(4, 6, false, true, true, false);
             mesh.SetMode(EnumDrawMode.Triangles);
-            //mesh.Flags = new int[(nSec + 1) * 2].Fill(0);
 
-            mesh.SetVerticesCount((nSec + 1) * 4);
-            mesh.SetIndicesCount(nSec * 6*3);
 
+            MeshData mesh_top = new MeshData(4, 6, false, true, true, false);
+            mesh_top.SetMode(EnumDrawMode.Triangles);
+
+            MeshData mesh_bot = new MeshData(4, 6, false, true, true, false);
+            mesh_bot.SetMode(EnumDrawMode.Triangles);
+
+            MeshData mesh_side = new MeshData(4, 6, false, true, true, false);
+            mesh_side.SetMode(EnumDrawMode.Triangles);
+
+            MeshData mesh_side2 = new MeshData(4, 6, false, true, true, false);
+            mesh_side2.SetMode(EnumDrawMode.Triangles);
 
             //out of plane translation vector:
             Vec3f b = new Vec3f(-dPos.Z, 0, dPos.X).Normalize();
@@ -158,9 +162,9 @@ namespace signals.src.hangingwires
                 b = new Vec3f(1, 0, 0);
             }
             int color = debugColors[netId % debugColors.Length];
-
-            mesh.Rgba.Fill((byte)255);
             Vec3f pos;
+
+
             //Add vertices
             for(int j=0; j <= nSec; j++)
             {
@@ -172,63 +176,19 @@ namespace signals.src.hangingwires
                 pos = new Vec3f(x, y + dy, z);
 
 
-                //upper strip, contains (nSec+1)*2 vertices
-                //mesh.AddVertex(pos1.X + pos.X - b.X * t, pos1.Y + pos.Y+t, pos1.Z + pos.Z - b.Z * t, color);
-                //mesh.AddVertex(pos1.X + pos.X + b.X * t, pos1.Y + pos.Y+t, pos1.Z + pos.Z + b.Z * t, color);
-                mesh.xyz[j * 6] = pos1.X + pos.X - b.X * t;
-                mesh.xyz[j * 6 + 1] = pos1.Y + pos.Y + t;
-                mesh.xyz[j * 6 + 2] = pos1.Z + pos.Z - b.Z * t;
+                float du = dist/2/t/nSec;
 
-                mesh.xyz[j * 6 + 3] = pos1.X + pos.X + b.X * t;
-                mesh.xyz[j * 6 + 4] = pos1.Y + pos.Y + t;
-                mesh.xyz[j * 6 + 5] = pos1.Z + pos.Z + b.Z * t;
+                mesh_top.AddVertex(pos1.X + pos.X - b.X * t, pos1.Y + pos.Y+t, pos1.Z + pos.Z - b.Z * t,j*du,0, color);
+                mesh_top.AddVertex(pos1.X + pos.X + b.X * t, pos1.Y + pos.Y+t, pos1.Z + pos.Z + b.Z * t,j*du,1, color);
 
+                mesh_bot.AddVertex(pos1.X + pos.X - b.X * t, pos1.Y + pos.Y - t, pos1.Z + pos.Z - b.Z * t, j * du, 0, color);
+                mesh_bot.AddVertex(pos1.X + pos.X + b.X * t, pos1.Y + pos.Y - t, pos1.Z + pos.Z + b.Z * t, j * du, 1, color);
 
-                if(j%2 == 0)
-                {
-                    mesh.Uv[j * 4] = 0;
-                    mesh.Uv[j * 4 + 1] = 0;
-                    mesh.Uv[j * 4 + 2] = 1;
-                    mesh.Uv[j * 4 + 3] = 0;
-                }
-                else
-                {
-                    mesh.Uv[j * 4] = 0;
-                    mesh.Uv[j * 4 + 1] = 1;
-                    mesh.Uv[j * 4 + 2] = 1;
-                    mesh.Uv[j * 4 + 3] = 1;
-                }
+                mesh_side.AddVertex(pos1.X + pos.X - b.X * t, pos1.Y + pos.Y + t, pos1.Z + pos.Z - b.Z * t, j * du, 1, color);
+                mesh_side.AddVertex(pos1.X + pos.X - b.X * t, pos1.Y + pos.Y - t, pos1.Z + pos.Z - b.Z * t, j * du, 0, color);
 
-
-                //lower strip
-
-                //mesh.AddVertex(pos1.X + pos.X - b.X * t, pos1.Y + pos.Y - t, pos1.Z + pos.Z - b.Z * t, color);
-                //mesh.AddVertex(pos1.X + pos.X + b.X * t, pos1.Y + pos.Y - t, pos1.Z + pos.Z + b.Z * t, color);
-                int offset = ((nSec + 1) * 2 * 3) + (j * 6);
-                mesh.xyz[offset] = pos1.X + pos.X - b.X * t;
-                mesh.xyz[offset+1] = pos1.Y + pos.Y - t;
-                mesh.xyz[offset+2] = pos1.Z + pos.Z - b.Z * t;
-
-                mesh.xyz[offset+3] = pos1.X + pos.X + b.X * t;
-                mesh.xyz[offset+4] = pos1.Y + pos.Y - t;
-                mesh.xyz[offset+5] = pos1.Z + pos.Z + b.Z * t;
-
-
-                offset = ((nSec + 1) * 2 * 2) + (j * 4);
-                if (j % 2 == 0)
-                {
-                    mesh.Uv[offset] = 0;
-                    mesh.Uv[offset + 1] = 0;
-                    mesh.Uv[offset + 2] = 1;
-                    mesh.Uv[offset + 3] = 0;
-                }
-                else
-                {
-                    mesh.Uv[offset] = 0;
-                    mesh.Uv[offset + 1] = 1;
-                    mesh.Uv[offset + 2] = 1;
-                    mesh.Uv[offset + 3] = 1;
-                }
+                mesh_side2.AddVertex(pos1.X + pos.X + b.X * t, pos1.Y + pos.Y + t, pos1.Z + pos.Z + b.Z * t, j * du, 1, color);
+                mesh_side2.AddVertex(pos1.X + pos.X + b.X * t, pos1.Y + pos.Y - t, pos1.Z + pos.Z + b.Z * t, j * du, 0, color);
 
             }
             //add indices
@@ -236,40 +196,44 @@ namespace signals.src.hangingwires
             {
                 //upper stripe
                 int offset = 2 * j;
-                mesh.AddIndex(offset);
-                mesh.AddIndex(offset+3);
-                mesh.AddIndex(offset+2);
-                mesh.AddIndex(offset);
-                mesh.AddIndex(offset+1);
-                mesh.AddIndex(offset+3);
+                mesh_top.AddIndex(offset);
+                mesh_top.AddIndex(offset+3);
+                mesh_top.AddIndex(offset+2);
+                mesh_top.AddIndex(offset);
+                mesh_top.AddIndex(offset+1);
+                mesh_top.AddIndex(offset+3);
 
                 //lower stripe
-                offset = (nSec+1)*2+(2 * j);
-                mesh.AddIndex(offset);
-                mesh.AddIndex(offset + 3);
-                mesh.AddIndex(offset + 1);
-                mesh.AddIndex(offset);
-                mesh.AddIndex(offset + 2);
-                mesh.AddIndex(offset + 3);
+                mesh_bot.AddIndex(offset);
+                mesh_bot.AddIndex(offset + 3);
+                mesh_bot.AddIndex(offset + 1);
+                mesh_bot.AddIndex(offset);
+                mesh_bot.AddIndex(offset + 2);
+                mesh_bot.AddIndex(offset + 3);
 
-                //side stripes
-                offset = j * 2;
 
-                mesh.AddIndex(offset + 1);
-                mesh.AddIndex(offset + 3 + (nSec + 1) * 2);
-                mesh.AddIndex(offset + 1 + (nSec + 1) * 2);
+                mesh_side.AddIndex(offset);
+                mesh_side.AddIndex(offset + 3);
+                mesh_side.AddIndex(offset + 1);
+                mesh_side.AddIndex(offset);
+                mesh_side.AddIndex(offset + 2);
+                mesh_side.AddIndex(offset + 3);
 
-                mesh.AddIndex(offset+1);
-                mesh.AddIndex(offset + 3);
-                mesh.AddIndex(offset + 3 + (nSec + 1) * 2);
 
-                
-                
-
+                mesh_side2.AddIndex(offset);
+                mesh_side2.AddIndex(offset + 3);
+                mesh_side2.AddIndex(offset + 2);
+                mesh_side2.AddIndex(offset);
+                mesh_side2.AddIndex(offset + 1);
+                mesh_side2.AddIndex(offset + 3);
 
             }
-            
 
+            mesh.AddMeshData(mesh_top);
+            mesh.AddMeshData(mesh_bot);
+            mesh.AddMeshData(mesh_side);
+            mesh.AddMeshData(mesh_side2);
+            mesh.Rgba.Fill((byte)255);
             return mesh;
 
         }
@@ -322,7 +286,6 @@ namespace signals.src.hangingwires
             Vec3d camPos = worldAccess.Player.Entity.CameraPos;
 
             rpi.GLEnableDepthTest();
-            rpi.GlToggleBlend(true);
             rpi.GlEnableCullFace();
 
             IStandardShaderProgram prog = rpi.StandardShader;
@@ -330,7 +293,7 @@ namespace signals.src.hangingwires
             prog.Use();
 
             AssetLocation wireTexName = new AssetLocation("block/metal/plate/lead.png");
-            wireTexName = new AssetLocation("block/tech/tech-powergeneratorbottom.png");
+            //wireTexName = new AssetLocation("block/tech/tech-powergeneratorbottom.png");
 
             int texid = capi.Render.GetOrLoadTexture(wireTexName);
             rpi.BindTexture2d(texid);
