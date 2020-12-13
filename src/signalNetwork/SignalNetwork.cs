@@ -79,8 +79,8 @@ namespace signals.src.transmission
             List<ISignalNode> sources = nodes.Values.Where(v => v.isSource).ToList();
             foreach (ISignalNode source in sources)
             {
-                List<NodePos> openList = new List<NodePos> { source.Pos };
-                List<NodePos> closedList = new List<NodePos>();
+                HashSet<NodePos> openList = new HashSet<NodePos> { source.Pos };
+                HashSet<NodePos> closedList = new HashSet<NodePos>();
                 
                 mod.Api.Logger.Debug("Network {0}: Simulation from source at {1}", this.networkId, source.Pos);
                 byte startValue = (byte)15;
@@ -93,19 +93,21 @@ namespace signals.src.transmission
                     if (closedList.Count == nodes.Count + 1) { mod.Api.Logger.Error("Network simulation: closed list larger than number of nodes in net!"); break; }
 
                     NodePos pos = openList.Last();
+
                     ISignalNode currentNode = nodes[pos];
                     
                     currentNode.value = startValue;
                     ISignalNodeProvider device = mod.GetDeviceAt(pos.blockPos);
                     device.OnNodeUpdate(pos);
 
-                    mod.Api.Logger.Debug("Network {0}: Asigning value {0} at node {1}",this.networkId, startValue, pos);
+                    mod.Api.Logger.Debug("Network {0}: Asigning value {1} at node {2}",this.networkId, startValue, pos);
 
-                    openList.RemoveAt(openList.Count - 1);
+                    openList.Remove(pos);
                     currentNode.Connections.ForEach(c => {
-                        if (!closedList.Contains(c.pos2))
+                        NodePos otherPos = c.pos1 == pos ? c.pos2 : c.pos1;
+                        if (!closedList.Contains(otherPos) && nodes.ContainsKey(otherPos))
                         {
-                            openList.Add(c.pos2);
+                            openList.Add(otherPos);
                         }
                     });
                     closedList.Add(pos);
@@ -124,7 +126,7 @@ namespace signals.src.transmission
             isValid = false;
         }
 
-        internal void AddNodesFoundFrom(NodePos pos, ISignalNode node)
+        public void AddNodesFoundFrom(NodePos pos, ISignalNode node)
         {
             List<NodePos> openList = new List<NodePos> { pos };
             List<NodePos> closedList = new List<NodePos>();
@@ -135,7 +137,7 @@ namespace signals.src.transmission
                 ISignalNode currentNode = mod.GetDeviceAt(currentPos.blockPos)?.GetNodeAt(currentPos);
 
                 openList.RemoveAt(openList.Count - 1);
-                if (currentNode != null)
+                if (currentNode != null && !nodes.ContainsKey(currentPos))
                 {
                     AddNode(currentPos, currentNode);
                     currentNode.Connections.ForEach(c => {

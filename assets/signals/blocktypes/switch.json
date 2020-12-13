@@ -1,0 +1,81 @@
+﻿{
+    "code": "knifeswitch",
+    "class": "BlockSwitch",
+    "attributes": {
+        "signalNodes": [
+            {
+                "index": 0,
+                "x1": 0.12,
+                "y1": 0.37,
+                "z1": 0.1,
+                "x2": 0.4,
+                "y2": 0.63,
+                "z2": 0.3
+
+            },
+            {
+                "index": 1,
+                "x1": 0.6,
+                "y1": 0.37,
+                "z1": 0.1,
+                "x2": 0.83,
+                "y2": 0.63,
+                "z2": 0.3
+            }
+        ]
+    },
+    "entityclass": "Generic",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalSwitch",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    },
+                    {
+                        "index": 1,
+                        "isSource": false
+                    }
+                ]
+            }
+
+
+
+        }
+    ],
+    "behaviors": [
+        {
+            "name": "ExchangeOnInteract",
+            "properties": {
+                "exchangeStates": [ "*-on", "*-off" ],
+                "sound": "effect/woodswitch",
+                "actionLangCode": "blockhelp-knifeswitch-onoff"
+            }
+        }
+
+    ],
+    "variantgroups": [
+        {
+            "code": "state",
+            "states": [ "on", "off" ]
+        }
+    ],
+    "shape": { "base": "signals:block/switch_{state}" },
+    "creativeinventory": {
+        "general": [ "*-off" ],
+        "decorative": [ "*-off" ]
+    },
+    "sideopaque": { "all": false },
+    "sidesolid": { "all": false },
+    "selectionBox": {
+        "x1": 0.15,
+        "y1": 0,
+        "z1": 0.1,
+        "x2": 0.85,
+        "y2": 0.15,
+        "z2": 0.9
+    }
+
+}

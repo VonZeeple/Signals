@@ -87,6 +87,16 @@ namespace signals.src
             
         }
 
+        public override void StartServerSide(ICoreServerAPI api)
+        {
+            base.StartServerSide(api);
+            api.Event.ChunkColumnLoaded += Event_ChunkColumnLoaded;
+        }
+        
+        private void Event_ChunkColumnLoaded( Vec2i chunkCoord, IWorldChunk[] chuncks)
+        {
+
+        }
 
         public override void StartClientSide(ICoreClientAPI api)
         {
@@ -117,7 +127,6 @@ namespace signals.src
 
 
         //TODO change this to be loaded with savegame
-        HashSet<WireConnection> wireConnections = new HashSet<WireConnection>();
         Dictionary<BlockPos, SNDeviceProxy> proxies = new Dictionary<BlockPos, SNDeviceProxy>();
 
 
@@ -150,11 +159,23 @@ namespace signals.src
                     //ISignalNode node = kv.Value;
                     NodePos pos = node.Pos;
                     if (pos == null) continue;
-                    Api.Logger.Debug("node found, at {0}", pos);
-                    if (!node.isSource) continue;
-                    Api.Logger.Debug("node is source, creating a network");
-                    SignalNetwork net = GetNetworkAt(pos, true);
-                    net.AddNode(pos, node);
+                    Api.Logger.Debug("node found, at {0}, looking at connections", pos);
+                    List<Connection> connections = node.Connections;
+                    SignalNetwork net;
+                    if (node.isSource)
+                    {
+                        Api.Logger.Debug("node is source, creating a network and lauching network discovery");
+                        net = GetNetworkAt(pos, true);
+                        net.AddNodesFoundFrom(node.Pos, node);
+                        continue;
+                    }
+                    
+                    foreach(Connection con in connections)
+                    {
+                        TryToAddConnection(con);
+                    }
+
+                    
                 }
              
             }
@@ -168,7 +189,7 @@ namespace signals.src
             ISignalNodeProvider dev1 = GetDeviceAt(con.pos1.blockPos);
             ISignalNodeProvider dev2 = GetDeviceAt(con.pos2.blockPos);
             if (dev1 == null || dev2 == null) return;
-            wireConnections.Add(con);
+            //wireConnections.Add(con);
             GetDeviceAt(con.pos1.blockPos)?.GetNodeAt(con.pos1)?.Connections.Add(con);
             GetDeviceAt(con.pos2.blockPos)?.GetNodeAt(con.pos2)?.Connections.Add(con.GetReversed());
             TryToAddConnection(con);

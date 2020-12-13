@@ -19,6 +19,7 @@ namespace signals.src.signalNetwork
         public NodePos pos2;
 
 
+
         public Connection() { }
         public Connection(NodePos pos1, NodePos pos2)
         {

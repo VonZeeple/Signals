@@ -57,6 +57,24 @@ namespace signals.src.hangingwires
             }
         }
 
+        internal List<WireConnection> GetWireConnectionsFrom(NodePos pos)
+        {
+            List<WireConnection> toProcess = data.connections.Where(c => c.pos1 == pos || c.pos2 == pos).ToList();
+            List<WireConnection> output = new List<WireConnection>();
+            foreach(WireConnection con in toProcess)
+            {
+                if(con.pos1 == pos)
+                {
+                    output.Add(new WireConnection(con.pos1, con.pos2));
+                }
+                else
+                {
+                    output.Add(new WireConnection(con.pos2, con.pos1));
+                }
+            }
+            return output;
+        }
+
         public override void StartClientSide(ICoreClientAPI api)
         {
             base.StartClientSide(api);
@@ -107,12 +125,15 @@ namespace signals.src.hangingwires
         {
             
             byte[] data = sapi.WorldManager.SaveGame.GetData("hangingWiresData");
-            if (data != null)
-            {
-                this.data = SerializerUtil.Deserialize<HangingWiresData>(data);
-            } else {
-                this.data = new HangingWiresData();
-            }
+
+                try
+                {
+                    this.data = SerializerUtil.Deserialize<HangingWiresData>(data);
+                }
+                catch(Exception e)
+                {
+                    this.data = new HangingWiresData();
+                }
 
         }
 
@@ -123,11 +144,21 @@ namespace signals.src.hangingwires
         public void RemoveAllNodesAtBlockPos(BlockPos pos)
         {
             if (api.Side == EnumAppSide.Client) return;
-            //TODO
-            //int removedlinks = data.connections.RemoveWhere((Connection con) => {
-             //   return con.pos1.blockPos == pos || con.pos2.blockPos == pos;
-            //});
-            //serverChannel.BroadcastPacket(data);
+
+            List<WireConnection> toRemove = data.connections.Where((WireConnection con) => {
+                return con.pos1.blockPos == pos || con.pos2.blockPos == pos;
+            }).ToList();
+            if(toRemove.Count > 0)
+            {
+                foreach(WireConnection con in toRemove)
+                {
+                    data.connections.Remove(con);
+                }
+                
+
+                serverChannel.BroadcastPacket(data);
+            }
+            
         }
 
         public void OnAddConnectionFromClient(IServerPlayer fromPlayer, AddConnectionPacket networkMessage)
@@ -137,15 +168,13 @@ namespace signals.src.hangingwires
 
             //TODO: add checks to be sure that their is a node provider at the position (never trust the client)
 
-            CreateConnection(connection, fromPlayer);
-            api.ModLoader.GetModSystem<SignalNetworkMod>()?.OnWireAdded(connection);
-
-            serverChannel.BroadcastPacket(data);
-        }
-
-        internal HangingWiresNetwork GetWireNetAt(NodePos pos)
-        {
-            throw new NotImplementedException();
+            //CreateConnection(connection, fromPlayer);
+            bool added = data.connections.Add(connection);
+            if (added)
+            {
+                api.ModLoader.GetModSystem<SignalNetworkMod>()?.OnWireAdded(connection);
+                serverChannel.BroadcastPacket(data);
+            }
         }
 
         NodePos pendingNode = null;
@@ -174,7 +203,7 @@ namespace signals.src.hangingwires
 
         #region Networks
 
-        public bool CreateConnection(WireConnection connection, IServerPlayer fromPlayer)
+        /*public bool CreateConnection(WireConnection connection, IServerPlayer fromPlayer)
         {
             if (connection.pos1 == connection.pos2) return false;
 
@@ -235,35 +264,35 @@ namespace signals.src.hangingwires
 
 
             return false;
-        }
+        }*/
 
         public void MergeNetworks(long netId1, long netId2)
         {
-            if (!data.HangingWiresNetworks.ContainsKey(netId1) || !data.HangingWiresNetworks.ContainsKey(netId2)) return;
+            //if (!data.HangingWiresNetworks.ContainsKey(netId1) || !data.HangingWiresNetworks.ContainsKey(netId2)) return;
 
-            data.HangingWiresNetworks[netId1].Connections.AddRange(data.HangingWiresNetworks[netId2].Connections);
-            data.HangingWiresNetworks.Remove(netId2);
+            //data.HangingWiresNetworks[netId1].Connections.AddRange(data.HangingWiresNetworks[netId2].Connections);
+            //data.HangingWiresNetworks.Remove(netId2);
         }
 
-        HangingWiresNetwork CreateNetwork(WireConnection connection)
-        {
-            HangingWiresNetwork newNet = new HangingWiresNetwork(data.nextNetworkId);
-            newNet.Connections.Add(connection);
-            data.HangingWiresNetworks[data.nextNetworkId] = newNet;
-            data.nextNetworkId++;
-            return newNet;
-        }
-        HangingWiresNetwork FindNetworkOf(NodePos pos)
-        {
-            foreach (HangingWiresNetwork net in data.HangingWiresNetworks.Values)
-            {
-                if (net.Connections.FirstOrDefault(x => (x.pos1 == pos || x.pos2 == pos)) != null)
-                {
-                    return net;
-                }
-            }
-            return null;
-        }
+        //HangingWiresNetwork CreateNetwork(WireConnection connection)
+        //{
+        //    HangingWiresNetwork newNet = new HangingWiresNetwork(data.nextNetworkId);
+        //    newNet.Connections.Add(connection);
+        //    data.HangingWiresNetworks[data.nextNetworkId] = newNet;
+        //    data.nextNetworkId++;
+        //    return newNet;
+        //}
+        //HangingWiresNetwork FindNetworkOf(NodePos pos)
+        //{
+            //foreach (HangingWiresNetwork net in data.HangingWiresNetworks.Values)
+            //{
+            //    if (net.Connections.FirstOrDefault(x => (x.pos1 == pos || x.pos2 == pos)) != null)
+            //    {
+            //        return net;
+            //    }
+            //}
+            //return null;
+        //}
 
 
         #endregion
@@ -296,7 +325,9 @@ namespace signals.src.hangingwires
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public class HangingWiresData
     {
-       public Dictionary<long, HangingWiresNetwork> HangingWiresNetworks = new Dictionary<long, HangingWiresNetwork>();
-        public long nextNetworkId = 1;
+        //public Dictionary<long, HangingWiresNetwork> HangingWiresNetworks = new Dictionary<long, HangingWiresNetwork>();
+        //public long nextNetworkId = 1;
+        public HashSet<WireConnection> connections = new HashSet<WireConnection>();
+
     }
 }

@@ -12,25 +12,28 @@ using Vintagestory.API.MathTools;
 
 namespace signals.src.signalNetwork
 {
-    class BEBehaviorSignalNodeProvider : BlockEntityBehavior, ISignalNodeProvider
+    public class BEBehaviorSignalNodeProvider : BlockEntityBehavior, ISignalNodeProvider
     {
 
         HangingWiresMod wireMod;
         SignalNetworkMod signalMod;
         List<ISignalNode> nodes;
+        protected BlockPos Pos;
 
         public BEBehaviorSignalNodeProvider(BlockEntity blockentity) : base(blockentity)
         {
             nodes = new List<ISignalNode>();
         }
 
-        
+
         public override void Initialize(ICoreAPI api, JsonObject properties)
         {
             base.Initialize(api, properties);
+            api.Logger.Debug("Initializing device at {0}", this.Blockentity.Pos);
             wireMod = api.ModLoader.GetModSystem<HangingWiresMod>();
             signalMod = api.ModLoader.GetModSystem<SignalNetworkMod>();
 
+            Pos = this.Blockentity?.Pos;
             //TODO, test if nodes have already been initialized via TreeAttributes
             JsonObject[] nodesTree = properties["signalNodes"]?.AsArray() ;
             if(nodesTree != null)
@@ -43,6 +46,9 @@ namespace signals.src.signalNetwork
                     BaseNode newNode = new BaseNode();
                     newNode.output = isSource ? (byte)15 : (byte)0;
                     newNode.Pos = new NodePos(this.Blockentity.Pos, index);
+
+                    newNode.Connections.AddRange(wireMod.GetWireConnectionsFrom(newNode.Pos));
+                    //TODO add internal connections
                     nodes.Add(newNode);
                 }
             }

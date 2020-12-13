@@ -88,18 +88,25 @@ namespace signals.src.transmission
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
+
             HangingWiresMod mod = api.ModLoader.GetModSystem<HangingWiresMod>();
             if (mod == null)
             {
                 api.Logger.Error("HangingWiresMod mod system not found");
-                        return base.OnBlockInteractStart(world, byPlayer, blockSel);
+            }
+            else
+            {
+                NodePos pos = GetNodePosForWire(world, blockSel, mod.GetPendingNode());
+                if (CanAttachWire(world, pos, mod.GetPendingNode()))
+                {
+                    if (pos != null) mod.SetPendingNode(GetNodePosForWire(world, blockSel));
+                    return true;
+                }
             }
 
-            NodePos pos = GetNodePosForWire(world, blockSel, mod.GetPendingNode());
-            if (CanAttachWire(world, pos, mod.GetPendingNode())) {
-                if (pos != null) mod.SetPendingNode(GetNodePosForWire(world, blockSel));
-                        }
-            return true;
+
+
+            return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
 
 
