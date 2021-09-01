@@ -8,6 +8,11 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
+[assembly: ModInfo( "signals",
+	Description = "To be added",
+	Website     = "",
+	Authors     = new []{ "unknown" } )]
+
 namespace signals.src
 {
     public class SignalsMod : ModSystem

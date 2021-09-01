@@ -2,10 +2,11 @@
   "type": "code",
   "modid": "signals",
   "name": "signals",
-  "author": "Unknown",
+  "authors": ["Unknown"],
   "description": "To be added",
+  "website": "",
   "version": "1.0.0",
-  "dependency": {
-    "game": "1.13.3"
+  "dependencies": {
+    "game": "1.15.5"
   }
 }

@@ -76,7 +76,7 @@ namespace signals.src
             singleVoxelMesh.ClimateColorMapIds = new byte[6].Fill((byte)0);
             singleVoxelMesh.SeasonColorMapIds = new byte[6].Fill((byte)0);
             singleVoxelMesh.ColorMapIdsCount = 6;
-            singleVoxelMesh.RenderPasses = new short[singleVoxelMesh.VerticesCount / 4].Fill((short)0);
+            singleVoxelMesh.RenderPassesAndExtraBits = new short[singleVoxelMesh.VerticesCount / 4].Fill((short)0);
             singleVoxelMesh.RenderPassCount = singleVoxelMesh.VerticesCount / 4;
 
             return singleVoxelMesh;

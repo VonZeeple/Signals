@@ -37,7 +37,7 @@ namespace signals.src
                 byItemStack.Attributes.SetInt("posy", blockPos.Y);
                 byItemStack.Attributes.SetInt("posz", blockPos.Z);
 
-                be.FromTreeAtributes(byItemStack.Attributes, world);
+                be.FromTreeAttributes(byItemStack.Attributes, world);
                 be.MarkDirty(true);
 
             }
