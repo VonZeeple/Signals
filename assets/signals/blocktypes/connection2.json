@@ -22,6 +22,66 @@
 
         }
     ],
+    "behaviors": [
+        {
+            "name": "OmniAttachable",
+            "properties": {
+                "facingCode": "side",
+                "attachmentAreas": {
+                    "up": {
+                        "x1": 7,
+                        "y1": 15,
+                        "z1": 7,
+                        "x2": 8,
+                        "y2": 15,
+                        "z2": 8
+                    },
+                    "down": {
+                        "x1": 4,
+                        "y1": 0,
+                        "z1": 4,
+                        "x2": 11,
+                        "y2": 0,
+                        "z2": 11
+                    },
+                    "south": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1
+                    },
+                    "west": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 90
+                    },
+                    "north": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 180
+                    },
+                    "east": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 270
+                    }
+                }
+            }
+        }],
     "variantgroups": [
         {
             "code": "side",
@@ -32,22 +92,50 @@
         "signalNodes": [
             {
                 "index": 0,
-                "x1": 0.12,
-                "y1": 0.37,
-                "z1": 0.1,
-                "x2": 0.4,
-                "y2": 0.63,
-                "z2": 0.3
+                "x1": 0.1725,
+                "y1": 0.0625,
+                "z1": 0.4225,
+                "x2": 0.39,
+                "y2": 0.32,
+                "z2": 0.5775,
+                "rotateXbytype": {
+                    "*-down": 180,
+                    "*-south": 90,
+                    "*-east": 90,
+                    "*-west": 90,
+                    "*-north": 270
+                },
+                "rotateYbytype": {
+                    "*-west": 180
+                },
+                "rotateZbytype": {
+                    "*-west": 270,
+                    "*-east": 270
+                }
 
             },
             {
                 "index": 1,
-                "x1": 0.6,
-                "y1": 0.37,
-                "z1": 0.1,
-                "x2": 0.83,
-                "y2": 0.63,
-                "z2": 0.3
+                "x1": 0.61,
+                "y1": 0.0625,
+                "z1": 0.4225,
+                "x2": 0.8275,
+                "y2": 0.32,
+                "z2": 0.5775,
+                "rotateXbytype": {
+                    "*-down": 180,
+                    "*-south": 90,
+                    "*-east": 90,
+                    "*-west": 90,
+                    "*-north": 270
+                },
+                "rotateYbytype": {
+                    "*-west": 180
+                },
+                "rotateZbytype": {
+                    "*-west": 270,
+                    "*-east": 270
+                }
             }
         ]
     },
@@ -55,31 +143,21 @@
         "general": [ "*-north" ]
     },
 
-    "shapebytype": {
-        "*-down": { "base": "signals:block/connections2" },
-        "*-up": {
-            "base": "signals:block/connections2",
-            "rotateX": 180
+    "shape": {
+        "base": "signals:block/connections2",
+        "rotateXbytype": {
+            "*-down": 180,
+            "*-south": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-north": 270
         },
-        "*-north": {
-            "base": "signals:block/connections2",
-            "rotateX": 90
+        "rotateYbytype": {
+            "*-west": 180
         },
-        "*-east": {
-            "base": "signals:block/connections2",
-            "rotateX": 90,
-            "rotateY": 180,
-            "rotateZ": 270
-        },
-        "*-west": {
-            "base": "signals:block/connections2",
-            "rotateX": 90,
-            "rotateY": 0,
-            "rotateZ": 270
-        },
-        "*-south": {
-            "base": "signals:block/connections2",
-            "rotateX": 270
+        "rotateZbytype": {
+            "*-west": 270,
+            "*-east": 270
         }
     },
     "sidesolid": { "all": false },
@@ -92,14 +170,42 @@
         "z1": 0,
         "x2": 0.88,
         "y2": 0.63,
-        "z2": 0.07
+        "z2": 0.07,
+        "rotateXbytype": {
+            "*-down": 180,
+            "*-south": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-north": 270
+        },
+        "rotateYbytype": {
+            "*-west": 180
+        },
+        "rotateZbytype": {
+            "*-west": 270,
+            "*-east": 270
+        }
     },
     "selectionBox": {
-        "x1": 0.12,
-        "y1": 0.37,
-        "z1": 0,
-        "x2": 0.88,
-        "y2": 0.63,
-        "z2": 0.07
+        "x1": 0.11,
+        "y1": 0,
+        "z1": 0.36,
+        "x2": 0.89,
+        "y2": 0.07,
+        "z2": 0.64,
+        "rotateXbytype": {
+            "*-down": 180,
+            "*-south": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-north": 270
+        },
+        "rotateYbytype": {
+            "*-west": 180
+        },
+        "rotateZbytype": {
+            "*-west": 270,
+            "*-east": 270
+        }
     }
 }
