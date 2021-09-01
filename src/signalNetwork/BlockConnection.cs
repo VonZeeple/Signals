@@ -9,15 +9,14 @@ using Vintagestory.API.MathTools;
 namespace signals.src.transmission
 {
 
-    public class WireAnchor
+    public class WireAnchor: RotatableCube
     {
-        public int index;
-        public float x1;
-        public float x2;
-        public float y1;
-        public float y2;
-        public float z1;
-        public float z2;
+        public int Index;
+
+        public WireAnchor(int index, float MinX, float MinY, float MinZ, float MaxX, float MaxY, float MaxZ) : base(MinX, MinY, MinZ, MaxX, MaxY, MaxZ)
+        {
+            Index = index;
+        }
     }
 
     class BlockConnection : Block, IHangingWireAnchor
@@ -62,7 +61,7 @@ namespace signals.src.transmission
             List<Cuboidf> boxes = new List<Cuboidf>();
             foreach(WireAnchor nb in wireAnchors)
             {
-                boxes.Add(new Cuboidf(nb.x1, nb.y1, nb.z1, nb.x2, nb.y2, nb.z2));
+                boxes.Add(nb.RotatedCopy());
             }
             boxes.AddRange(base.GetSelectionBoxes(world, pos));
             return boxes.ToArray();
@@ -112,7 +111,9 @@ namespace signals.src.transmission
         {
             foreach (WireAnchor box in wireAnchors)
             {
-                if (box.index == pos.index) return new Vec3f((box.x1 + box.x2) / 2, (box.y1 + box.y2) / 2, (box.z1 + box.z2) / 2);
+                Cuboidf cube =  box.RotatedCopy();
+                Vec3f position = new Vec3f(cube.MidX, cube.MidY, cube.MidZ);
+                if (box.Index == pos.index) return position;
             }
             return new Vec3f(0f, 0f, 0f);
         }
@@ -121,7 +122,7 @@ namespace signals.src.transmission
         {
             foreach (WireAnchor box in wireAnchors)
             {
-                if (box.index == blockSel.SelectionBoxIndex) return new NodePos(blockSel.Position, blockSel.SelectionBoxIndex);
+                if (box.Index == blockSel.SelectionBoxIndex) return new NodePos(blockSel.Position, blockSel.SelectionBoxIndex);
             }
             return null;
         }
@@ -138,7 +139,7 @@ namespace signals.src.transmission
             NodePos[] nodes = new NodePos[wireAnchors.Length];
             for(int i=0;i<wireAnchors.Length;i++)
             {
-                nodes[i] = new NodePos(pos, wireAnchors[i].index);
+                nodes[i] = new NodePos(pos, wireAnchors[i].Index);
             }
             return nodes;
         }
