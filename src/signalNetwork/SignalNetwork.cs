@@ -11,9 +11,6 @@ using Vintagestory.API.MathTools;
 namespace signals.src.transmission
 {
 
-
-
-    [ProtoContract]
     public class SignalNetwork
     {
         //The list of all the nodes containing connections etc
@@ -23,9 +20,8 @@ namespace signals.src.transmission
 
         internal SignalNetworkMod mod;
 
-        [ProtoMember(1)]
         public long networkId;
-        [ProtoMember(3)]
+
         public Dictionary<Vec3i, int> inChunks = new Dictionary<Vec3i, int>();
 
 

@@ -12,7 +12,7 @@ namespace signals.src.hangingwires
 {
     public interface IHangingWireAnchor
     {
-        Vec3f GetAnchorPosInBlock(IWorldAccessor world, NodePos pos);
+        Vec3f GetAnchorPosInBlock(NodePos pos);
 
         NodePos GetNodePosForWire(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null);
         bool CanAttachWire(IWorldAccessor world, NodePos pos, NodePos posInit = null);

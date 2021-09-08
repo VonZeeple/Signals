@@ -65,22 +65,16 @@ namespace signals.src
             {
                 //(api as ICoreClientAPI).Event.RegisterRenderer(this, EnumRenderStage.Before, "signalnetworktick");
                 clientNetworkChannel =
-                ((ICoreClientAPI)api).Network.RegisterChannel("signalnetwork");
-                //.RegisterMessageType(typeof(MechNetworkPacket))
-                //.RegisterMessageType(typeof(NetworkRemovedPacket))
-                //.RegisterMessageType(typeof(MechClientRequestPacket))
-                //.SetMessageHandler<MechNetworkPacket>(OnPacket)
-                //.SetMessageHandler<NetworkRemovedPacket>(OnNetworkRemovePacket);
+                ((ICoreClientAPI)api).Network.RegisterChannel("signalnetwork")
+                .RegisterMessageType(typeof(SignalNetworkPacket))
+                .SetMessageHandler<SignalNetworkPacket>(OnNetworkPacket);
             }
             else
             {
                 api.World.RegisterGameTickListener(OnServerGameTick, 20);
                 serverNetworkChannel =
-                ((ICoreServerAPI)api).Network.RegisterChannel("signalnetwork");
-                //.RegisterMessageType(typeof(MechNetworkPacket))
-                //.RegisterMessageType(typeof(NetworkRemovedPacket))
-                //.RegisterMessageType(typeof(MechClientRequestPacket))
-                //.SetMessageHandler<MechClientRequestPacket>(OnClientRequestPacket);
+                ((ICoreServerAPI)api).Network.RegisterChannel("signalnetwork")
+                .RegisterMessageType(typeof(SignalNetworkPacket));
             }
 
             
@@ -194,6 +188,15 @@ namespace signals.src
             GetDeviceAt(con.pos2.blockPos)?.GetNodeAt(con.pos2)?.Connections.Add(con.GetReversed());
             TryToAddConnection(con);
             TryToAddConnection(con.GetReversed());
+
+            SignalNetworkPacket packet = new SignalNetworkPacket();
+            packet.networks = new Dictionary<long, List<NodePos>>();
+            foreach(KeyValuePair<long, SignalNetwork> el in this.data.networksById)
+            {
+                SignalNetwork net = el.Value;
+                packet.networks.Add(el.Key,net.GetNodePositions().ToList());
+            }
+            serverNetworkChannel.BroadcastPacket<SignalNetworkPacket>(packet);
         }
 
         public void TryToAddConnection(Connection con)
@@ -317,6 +320,12 @@ namespace signals.src
 
             devicesToLoad.Add(device);
         }
+
+        internal void OnNetworkPacket(SignalNetworkPacket packet)
+        {
+
+            Renderer.RebuildMesh(packet.networks);
+        }
     }
 
 
@@ -324,8 +333,7 @@ namespace signals.src
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public class SignalNetworkPacket
     {
-        public long networkId;
-        public byte state;
+        public Dictionary<long,List<NodePos>> networks;
 
     }
 }

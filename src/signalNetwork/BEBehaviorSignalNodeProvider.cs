@@ -97,7 +97,7 @@ namespace signals.src.signalNetwork
             return null;
         }
 
-        public Vec3f GetNodePosinBlock(NodePos pos)
+        public virtual Vec3f GetNodePosinBlock(NodePos pos)
         {
             return new Vec3f(0.5f, 0.5f, 0.5f);
         }

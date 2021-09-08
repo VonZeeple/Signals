@@ -106,7 +106,7 @@ namespace signals.src.transmission
 
 
         #region Wire anchor
-        public Vec3f GetAnchorPosInBlock(IWorldAccessor world, NodePos pos)
+        public Vec3f GetAnchorPosInBlock(NodePos pos)
         {
             foreach (WireAnchor box in wireAnchors)
             {
