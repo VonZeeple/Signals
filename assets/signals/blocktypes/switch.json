@@ -23,7 +23,7 @@
             }
         ]
     },
-    "entityclass": "Generic",
+    "entityclass": "BlockEntitySwitch",
     "entityBehaviors": [
         {
             "name": "BEBehaviorSignalSwitch",

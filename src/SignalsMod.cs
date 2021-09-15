@@ -36,6 +36,7 @@ namespace signals.src
 
 
             api.RegisterBlockEntityClass("BlockEntityLightBulb", typeof(BlockEntityLightBulb));
+            api.RegisterBlockEntityClass("BlockEntitySwitch", typeof(BESwitch));
 
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
 

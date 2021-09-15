@@ -1,9 +1,4 @@
 ﻿using signals.src.transmission;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
@@ -21,6 +16,14 @@ namespace signals.src.signalNetwork
         {
             base.OnBlockPlaced(world, blockPos, byItemStack);
             this.api.Logger.Debug("switch block placed");
+        }
+
+        public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
+        {
+            BESwitch be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BESwitch;
+            if(be is null) return false;
+            be.OnInteract(byPlayer);
+            return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
 
     }
