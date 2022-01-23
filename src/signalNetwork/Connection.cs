@@ -1,64 +1,29 @@
-﻿using ProtoBuf;
-using signals.src.hangingwires;
+﻿using System;
 using signals.src.transmission;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace signals.src.signalNetwork
 {
-    [ProtoContract()]
-    [ProtoInclude(10, typeof(WireConnection))]
-    public class Connection : IEquatable<Connection>
+    public class Connection
     {
-        [ProtoMember(1)]
-        public NodePos pos1;
-        [ProtoMember(2)]
-        public NodePos pos2;
+        public ISignalNode node1;
+        public ISignalNode node2;
 
+        public byte Att; //attenuation from node1 to node2
+        public byte revAtt; //attenuation from node2 to node1
 
-
-        public Connection() { }
-        public Connection(NodePos pos1, NodePos pos2)
+        public ISignalNode GetOther(ISignalNode node)
         {
-            this.pos1 = pos1;
-            this.pos2 = pos2;
+            if(node == node1) return node2;
+            else if (node == node2) return node1;
+            else throw new ArgumentException("node not in connection.");
         }
 
-        public Connection GetReversed()
+        public Connection(ISignalNode node1, ISignalNode node2, byte att = 0, byte? revAtt = null)
         {
-            return new Connection(pos2, pos1);
-        }
-        public bool Equals(Connection otherPos)
-        {
-            if (otherPos == null) return false;
-            return (pos1 == otherPos.pos1 && pos2 == otherPos.pos2);
-        }
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Connection);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.pos1.GetHashCode()*128 + this.pos2.GetHashCode();
-        }
-
-        public static bool operator ==(Connection left, Connection right)
-        {
-            if (object.ReferenceEquals(left, null))
-            {
-                return object.ReferenceEquals(right, null);
-            }
-
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Connection left, Connection right)
-        {
-            return !(left == right);
+            this.node1 = node1;
+            this.node2 = node2;
+            this.Att = att;
+            this.revAtt = revAtt.HasValue? revAtt.Value : att;
         }
     }
 }
