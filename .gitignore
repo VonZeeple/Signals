@@ -1,4 +1,7 @@
 ﻿.ignore
+.vscode/
+bin/
+obj/
 *.csproj
 *.csproj.user
 *.dll
