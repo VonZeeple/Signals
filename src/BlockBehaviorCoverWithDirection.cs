@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vintagestory.API.Common;
+﻿using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
 namespace signals.src
@@ -19,21 +14,20 @@ namespace signals.src
         public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref EnumHandling handling, ref string failureCode)
         {
             handling = EnumHandling.PreventDefault;
-
             Block orientedBlock = GetOrientedBlock(world, blockSel);
-            if(orientedBlock.CanPlaceBlock(world, byPlayer, blockSel, ref failureCode))
+
+            if (orientedBlock.CanPlaceBlock(world, byPlayer, blockSel, ref failureCode))
             {
                 world.BlockAccessor.SetBlock(orientedBlock.BlockId, blockSel.Position, itemstack);
                 return true;
             }
             return false;
-            
         }
 
 
         public override bool CanPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ref EnumHandling handling, ref string failureCode)
         {
-            BlockFacing oppositeFace = blockSel.Face.GetOpposite();
+            BlockFacing oppositeFace = blockSel.Face.Opposite;
 
             BlockPos attachingBlockPos = blockSel.Position.AddCopy(oppositeFace);
             Block block = world.BlockAccessor.GetBlock(world.BlockAccessor.GetBlockId(attachingBlockPos));
@@ -62,7 +56,7 @@ namespace signals.src
             Vec3d projVector = hitPosition.SubCopy(normal).Sub(0.5, 0.5, 0.5);
 
             BlockFacing orientation = BlockFacing.FromVector(projVector.X, projVector.Y, projVector.Z);
-            BlockFacing oppositeFace = onBlockFace.GetOpposite();
+            BlockFacing oppositeFace = onBlockFace.Opposite;
             return world.BlockAccessor.GetBlock(block.CodeWithParts(orientation.Code, oppositeFace.Code));
         }
 
