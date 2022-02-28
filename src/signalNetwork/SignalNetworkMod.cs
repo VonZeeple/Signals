@@ -159,12 +159,10 @@ namespace signals.src
 
         internal void OnDeviceRemoved(ISignalNodeProvider device)
         {
+            if(this.Api.Side == EnumAppSide.Client) return;
             Dictionary<NodePos,ISignalNode> nodes = device.GetNodes();
-            foreach (ISignalNode node in nodes.Values) {
-                SignalNetwork net = GetNetworkAt(node.Pos);
-                if (net == null) return;
-                net.RemoveNode(node);
-            }
+            netManager.RemoveNodes(nodes.Values.ToArray());
+            needRenderUpdate = true;
         }
 
         internal void OnDeviceUnloaded(ISignalNodeProvider device)

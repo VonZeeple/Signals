@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using signals.src.transmission;
 using Vintagestory.API.Server;
 
@@ -145,17 +146,49 @@ namespace signals.src.signalNetwork
             }
         }
 
-        /// <summary>
-        /// Remove a connection between two nodes.
-        /// </summary>
-        public void RemoveConnection(Connection con)
+        private void RebuildNetwork(ISignalNetwork net)
         {
-            ISignalNode node1 = con.node1;
-            ISignalNode node2 = con.node2;
+            List<ISignalNode> nodesLeft = net.GetNodes().ToList();
+            List<ISignalNode> sources = nodesLeft.Where(v => v.isSource).ToList();
 
-            List<Connection> conToRemove = new List<Connection>();
-            node1.Connections.Remove(con);
-            node2.Connections.Remove(con);
+            foreach(ISignalNode node in nodesLeft)
+            {
+                net.RemoveNode(node);
+                node.netId = null;
+            }
+            networks.Remove(net.networkId);
+            foreach(ISignalNode source in sources)
+            {
+                if(!source.netId.HasValue && source.Connections.Count > 0)
+                {
+                    CreateNetwork(source);
+                    BuildNetFrom(source);
+                }
+            }
+            foreach(ISignalNode node in nodesLeft.Where(v=>!v.netId.HasValue))
+            {
+                node.value = 0;
+                Mod.GetDeviceAt(node.Pos.blockPos)?.OnNodeUpdate(node.Pos);
+            }
+        }
+        public void RemoveNodes(ISignalNode[] nodes)
+        {
+            HashSet<long> netToRebuild = new HashSet<long>();
+            foreach(ISignalNode node in nodes)
+            {
+                foreach(Connection con in node.Connections)
+                {
+                    ISignalNode otherNode = con.GetOther(node);
+                    otherNode.Connections.Remove(con);
+                }
+
+                if(node.netId.HasValue)
+                {
+                    netToRebuild.Add(node.netId.Value);
+                    networks[node.netId.Value].RemoveNode(node);
+                }
+            }
+            foreach(long netId in netToRebuild) RebuildNetwork(networks[netId]);
         }
     }
 }
