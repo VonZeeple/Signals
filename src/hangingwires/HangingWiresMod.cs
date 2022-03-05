@@ -1,17 +1,13 @@
 ﻿using ProtoBuf;
 using signals.src.signalNetwork;
-using signals.src.transmission;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
-using Vintagestory.GameContent.Mechanics;
 
 namespace signals.src.hangingwires
 {
@@ -200,102 +196,6 @@ namespace signals.src.hangingwires
             }
         }
         #endregion
-
-        #region Networks
-
-        /*public bool CreateConnection(WireConnection connection, IServerPlayer fromPlayer)
-        {
-            if (connection.pos1 == connection.pos2) return false;
-
-            HangingWiresNetwork net = FindNetworkOf(connection.pos1);
-            HangingWiresNetwork net2 = FindNetworkOf(connection.pos2);
-            
-            if (net == null && net2 == null)
-            {
-                
-                HangingWiresNetwork newNet = CreateNetwork(connection);
-                sapi.SendMessage(fromPlayer, 0, String.Format("creating new net {0}", newNet.NetworkId), EnumChatType.Notification);
-                return true;
-            }
-
-            if(net == net2)
-            {
-                if (net.Connections.Contains(connection)) { return false; }
-
-                sapi.SendMessage(fromPlayer, 0, String.Format("adding connection to net {0}", net.NetworkId), EnumChatType.Notification);
-                net.Connections.Add(connection);
-                return true;
-            }
-            
-
-            if (net != null)
-            {
-                if(net2 != null)
-                {
-                    net.Connections.Add(connection);
-                    MergeNetworks(net.NetworkId, net2.NetworkId);
-                    sapi.SendMessage(fromPlayer, 0, String.Format("Merging networks {0} and {1}", net.NetworkId, net2.NetworkId), EnumChatType.Notification);
-                    return true;
-                }
-                else
-                {
-                    net.Connections.Add(connection);
-                    sapi.SendMessage(fromPlayer, 0, String.Format("adding connection to networks {0}", net.NetworkId), EnumChatType.Notification);
-                    return true;
-                }
-
-            }
-            if(net2 != null)
-            {
-                if (net != null)
-                {
-                    net2.Connections.Add(connection);
-                    MergeNetworks(net.NetworkId, net2.NetworkId);
-                    sapi.SendMessage(fromPlayer, 0, String.Format("Merging networks {0} and {1}", net.NetworkId, net2.NetworkId), EnumChatType.Notification);
-                    return true;
-                }
-                else
-                {
-                    net2.Connections.Add(connection);
-                    sapi.SendMessage(fromPlayer, 0, String.Format("adding connection to networks {0}", net2.NetworkId), EnumChatType.Notification);
-                    return true;
-                }
-            }
-
-
-            return false;
-        }*/
-
-        public void MergeNetworks(long netId1, long netId2)
-        {
-            //if (!data.HangingWiresNetworks.ContainsKey(netId1) || !data.HangingWiresNetworks.ContainsKey(netId2)) return;
-
-            //data.HangingWiresNetworks[netId1].Connections.AddRange(data.HangingWiresNetworks[netId2].Connections);
-            //data.HangingWiresNetworks.Remove(netId2);
-        }
-
-        //HangingWiresNetwork CreateNetwork(WireConnection connection)
-        //{
-        //    HangingWiresNetwork newNet = new HangingWiresNetwork(data.nextNetworkId);
-        //    newNet.Connections.Add(connection);
-        //    data.HangingWiresNetworks[data.nextNetworkId] = newNet;
-        //    data.nextNetworkId++;
-        //    return newNet;
-        //}
-        //HangingWiresNetwork FindNetworkOf(NodePos pos)
-        //{
-            //foreach (HangingWiresNetwork net in data.HangingWiresNetworks.Values)
-            //{
-            //    if (net.Connections.FirstOrDefault(x => (x.pos1 == pos || x.pos2 == pos)) != null)
-            //    {
-            //        return net;
-            //    }
-            //}
-            //return null;
-        //}
-
-
-        #endregion
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
@@ -305,20 +205,6 @@ namespace signals.src.hangingwires
 
         public AddConnectionPacket()
         {
-        }
-    }
-
-
-    [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-    public class HangingWiresNetwork
-    {
-        public long NetworkId;
-        public HashSet<WireConnection> Connections = new HashSet<WireConnection>();
-
-        public HangingWiresNetwork() { }
-        public HangingWiresNetwork(long netId)
-        {
-            NetworkId = netId;
         }
     }
 
