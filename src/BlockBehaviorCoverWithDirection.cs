@@ -5,10 +5,26 @@ namespace signals.src
 {
     class BlockBehaviorCoverWithDirection : BlockBehavior
     {
+        string orientationCode = "orientation";
+        string sideCode = "side";
 
         public BlockBehaviorCoverWithDirection(Block block) : base(block)
         {
 
+        }
+
+        public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, ref float dropQuantityMultiplier, ref EnumHandling handled)
+        {
+            handled = EnumHandling.PreventDefault;
+            AssetLocation baseBlock = block.CodeWithVariants(new string[]{orientationCode, sideCode}, new string[]{"north","down"});
+            return new ItemStack[] { new ItemStack(world.BlockAccessor.GetBlock(baseBlock)) };
+        }
+
+        public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos, ref EnumHandling handled)
+        {
+            handled = EnumHandling.PreventDefault;
+            AssetLocation baseBlock = block.CodeWithVariants(new string[]{orientationCode, sideCode}, new string[]{"north","down"});
+            return new ItemStack(world.BlockAccessor.GetBlock(baseBlock));
         }
 
         public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref EnumHandling handling, ref string failureCode)
