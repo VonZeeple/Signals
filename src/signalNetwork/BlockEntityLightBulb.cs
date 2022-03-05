@@ -37,7 +37,7 @@ namespace signals.src.signalNetwork
             currentState = true;
             if (onBlock == null) return;
             Api.World.BlockAccessor.ExchangeBlock(onBlock.BlockId, Pos);
-            Api.World.PlaySoundAt(new AssetLocation("signals:sounds/buzz_short"), Pos.X, Pos.Y, Pos.Z);
+            Api.World.PlaySoundAt(new AssetLocation("signals:sounds/buzz_short"), Pos.X, Pos.Y, Pos.Z, randomizePitch:false, volume:0.1f);
         }
 
         private void SwitchOff()
