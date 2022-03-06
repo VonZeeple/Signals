@@ -40,6 +40,7 @@ namespace signals.src
             api.RegisterBlockEntityClass("BlockEntitySwitch", typeof(BESwitch));
             api.RegisterBlockEntityClass("BlockEntityValve", typeof(BEValve));
             api.RegisterBlockEntityClass("BEPressurePlate", typeof(BEPressurePlate));
+            api.RegisterBlockEntityClass("BESignalMeter", typeof(BESignalMeter));
 
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
 
