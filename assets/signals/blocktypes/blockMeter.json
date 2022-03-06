@@ -1,0 +1,49 @@
+﻿{
+    "code": "blockmeter",
+    "class": "BlockSignalConnection",
+    "attributes": {
+        "signalNodes": [
+            {
+                "index": 0,
+                "x1": 0.40625,
+                "y1": 0.0625,
+                "z1": 0.09375,
+                "x2": 0.59375,
+                "y2": 0.25,
+                "z2": 0.28125
+            }
+        ]
+    },
+    "entityclass": "BESignalMeter",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalConnector",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    }
+                ]
+            }
+        }
+    ],
+    "creativeinventory":
+    {
+        "general": [ "*" ],
+        "signals": ["*"]
+    },
+    "shape": { "base": "signals:block/signalmeter" },
+    "sidesolid": { "all": false },
+    "sideopaque": { "all": false },
+    "blockmaterial": "Metal",
+    "selectionbox":
+    {
+        "x1": 0,
+        "y1": 0,
+        "z1": 0,
+        "x2": 1,
+        "y2": 0.0625,
+        "z2": 1
+    }
+}
