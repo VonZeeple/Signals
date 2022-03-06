@@ -8,7 +8,7 @@ namespace signals.src.signalNetwork
 
         public override void Initialize(ICoreAPI api)
         {
-            BlockSwitch block = this.Block as BlockSwitch;
+            Block block = this.Block as Block;
             state = block.LastCodePart() == "on";
             base.Initialize(api);
         }

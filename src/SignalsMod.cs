@@ -32,12 +32,14 @@ namespace signals.src
             api.RegisterBlockClass("BlockBreadboard", typeof(BlockCircuitBoard));
             api.RegisterBlockClass("BlockSignalConnection", typeof(BlockConnection));
             api.RegisterBlockClass("BlockSwitch", typeof(BlockSwitch));
+            api.RegisterBlockClass("BlockPressurePlate", typeof(BlockPressurePlate));
 
 
 
             api.RegisterBlockEntityClass("BlockEntityLightBulb", typeof(BlockEntityLightBulb));
             api.RegisterBlockEntityClass("BlockEntitySwitch", typeof(BESwitch));
             api.RegisterBlockEntityClass("BlockEntityValve", typeof(BEValve));
+            api.RegisterBlockEntityClass("BEPressurePlate", typeof(BEPressurePlate));
 
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
 

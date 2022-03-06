@@ -1,0 +1,126 @@
+{
+    "code":"pressureplate",
+    "class": "BlockPressurePlate",
+    "behaviors": [
+		{
+			"name": "OmniRotatable",
+			"properties": {
+				"rotateSides": true,
+				"facing": "block"
+			}
+		}
+	],
+    "variantgroups": [
+		{ "code": "rot", "states": ["north", "east", "south", "west", "up", "down"] },
+        {"code": "pressed", "states": ["true", "false"]}
+	],
+    "entityclass": "BEPressurePlate",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalSwitch",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    },
+                    {
+                        "index": 1,
+                        "isSource": false
+                    }
+                ]
+            }
+        }
+    ],
+    "creativeinventory": {
+		"general": ["*-down-false"]
+	},
+    "attributes": {
+        "signalNodes": [
+            {
+                "index": 0,
+                "x1": 0.625,
+                "y1": 0.25,
+                "z1": 0.40625,
+                "x2": 0.8125,
+                "y2": 0.5,
+                "z2": 0.59375,
+                "rotateXByType": {
+                    "*-north-*": 90,
+                    "*-south-*": 270,
+                    "*-up-*": 180,
+                    "*-down-*": 0
+                },
+                "rotateZByType": {
+                    "*-east-*": 90,
+                    "*-west-*": 270
+                }
+
+            },
+            {
+                "index": 1,
+                "x1": 0.1875,
+                "y1": 0.25,
+                "z1": 0.40625,
+                "x2": 0.375,
+                "y2": 0.5,
+                "z2": 0.59375,
+                "rotateXByType": {
+                    "*-north-*": 90,
+                    "*-south-*": 270,
+                    "*-up-*": 180,
+                    "*-down-*": 0
+                },
+                "rotateZByType": {
+                    "*-east-*": 90,
+                    "*-west-*": 270
+                }
+            }
+        ]
+    },
+    "sideSolidOpaqueAoByType": {
+		"*-north-*": { "all": false, "north": true },
+		"*-east-*": { "all": false, "east": true },
+		"*-south-*": { "all": false, "south": true },
+		"*-west-*": { "all": false, "west": true },
+		"*-up-*": { "all": false, "up": true },
+		"*-down-*": { "all": false, "down": true }
+	},
+    "shape": {
+        "base": "signals:block/pressure_plate",
+		"rotateXByType": {
+			"*-north-*": 90,
+			"*-south-*": 270,
+			"*-up-*": 180,
+			"*-down-*": 0
+		},
+		"rotateZByType": {
+			"*-east-*": 90,
+			"*-west-*": 270
+		}
+    },
+    "collisionbox": { "x1": 0, "y1": 0, "z1": 0,   "x2": 1, "y2": 0.25, "z2": 1,
+		"rotateXByType": {
+			"*-north-*": 90,
+			"*-south-*": 270,
+			"*-up-*": 180,
+			"*-down-*": 0
+		},
+		"rotateZByType": {
+			"*-east-*": 90,
+			"*-west-*": 270
+		}
+	},
+	"selectionbox": { "x1": 0, "y1": 0, "z1": 0,   "x2": 1, "y2": 0.25, "z2": 1,
+		"rotateXByType": {
+			"*-north-*": 90,
+			"*-south-*": 270,
+			"*-up-*": 180,
+			"*-down-*": 0
+		},
+		"rotateZByType": {
+			"*-east-*": 90,
+			"*-west-*": 270
+		}
+	}
+}
