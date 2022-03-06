@@ -32,14 +32,13 @@ namespace signals.src.transmission
         {
             base.OnLoaded(api);
 
-            //NodeBox[] indices = this.Attributes?["signalNodes"]?.AsArray<NodeBox>();
+            wireAnchors = new WireAnchor[0];
             JsonObject[] jsonObj = Attributes?["signalNodes"]?.AsArray();
             if (jsonObj != null)
             {
                 try
                 {
                     wireAnchors = new WireAnchor[jsonObj.Length];
-
                     for(int i=0;i<jsonObj.Length;i++)
                     {
                         wireAnchors[i] = jsonObj[i].AsObject<WireAnchor>();
