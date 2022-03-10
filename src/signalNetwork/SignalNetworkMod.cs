@@ -188,7 +188,7 @@ namespace signals.src
 
         internal void OnNetworkPacket(SignalNetworkPacket packet)
         {
-            Renderer.RebuildMesh(packet.networks);
+            //Renderer.RebuildMesh(packet.networks);
         }
     }
 
