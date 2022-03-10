@@ -31,7 +31,6 @@ namespace signals.src
 
             api.RegisterBlockClass("BlockBreadboard", typeof(BlockCircuitBoard));
             api.RegisterBlockClass("BlockSignalConnection", typeof(BlockConnection));
-            api.RegisterBlockClass("BlockSignalSource", typeof(BlockSource));
             api.RegisterBlockClass("BlockSwitch", typeof(BlockSwitch));
 
 
