@@ -23,10 +23,10 @@
         {
             "index": 0,
             "x1": 0.36,
-            "y1": 0.1,
+            "y1": 0.6,
             "z1": 0.36,
             "x2": 0.64,
-            "y2": 0.4,
+            "y2": 0.9,
             "z2": 0.64,
             "rotateXbytype": {
                 "*-down": 180,
@@ -61,11 +61,6 @@
             "states": [ "north", "east", "south", "west", "up", "down" ]
         }
     ],
-    "lightHsvbytype": {
-
-        "*-on-*": [ 7, 4, 18 ],
-        "*-off-*": [ 0, 0, 0 ]
-    },
     "lightAbsorption": 0,
     "drawtype": "json",
     "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south", "*-east-east", "*-east-west", "*-west-east", "*-west-west" ],
@@ -160,7 +155,22 @@
         "z1": 0,
         "x2": 1,
         "y2": 0.0625,
-        "z2": 1
+        "z2": 1,
+        "rotateXByType": {
+            "*-up": 180,
+            "*-north": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-south": 270
+        },
+        "rotateYByType": {
+            "*-east": 180,
+            "*-west": 0
+        },
+        "rotateZByType": {
+            "*-east": 270,
+            "*-west": 270
+        }
     },
     "collisionbox": {
         "x1": 0,
@@ -168,7 +178,22 @@
         "z1": 0,
         "x2": 1,
         "y2": 0.0625,
-        "z2": 1
+        "z2": 1,
+        "rotateXByType": {
+            "*-up": 180,
+            "*-north": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-south": 270
+        },
+        "rotateYByType": {
+            "*-east": 180,
+            "*-west": 0
+        },
+        "rotateZByType": {
+            "*-east": 270,
+            "*-west": 270
+        }
     },
     "guiTransform": {
         "origin": {
