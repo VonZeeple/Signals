@@ -33,7 +33,8 @@
         }
     ],
             "creativeinventory": {
-                "general": [ "*" ]
+                "general": [ "*" ],
+                "signals": ["*"]
             },
             "shape": { "base": "game:block/basic/cube" },
             "drawtype": "cube",
