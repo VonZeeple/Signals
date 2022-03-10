@@ -172,7 +172,7 @@ namespace signals.src.hangingwires
                 float y = dPos.Y / nSec * j;
                 float z = dPos.Z / nSec * j;
                 float l = (float)Math.Sqrt(x * x + y * y + z * z);
-                float dy = Catenary(l / dist, 1, 0.5f);
+                float dy = Catenary(l / dist, 1, 2f);
                 pos = new Vec3f(x, y + dy, z);
 
 
