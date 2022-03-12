@@ -178,7 +178,7 @@ namespace signals.src.hangingwires
         {
             return this.pendingNode;
         }
-        public void SetPendingNode(NodePos pos)
+        public void ConnectWire(NodePos pos, IPlayer byPlayer)
         {
             if (api.Side == EnumAppSide.Server) return;
 
