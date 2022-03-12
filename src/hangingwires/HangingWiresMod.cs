@@ -16,6 +16,8 @@ namespace signals.src.hangingwires
 
         public HangingWiresRenderer Renderer;
 
+        private PendingWireRenderer WireRenderer;
+
         IServerNetworkChannel serverChannel;
         IClientNetworkChannel clientChannel;
 
@@ -178,14 +180,16 @@ namespace signals.src.hangingwires
         {
             return this.pendingNode;
         }
-        public void ConnectWire(NodePos pos, IPlayer byPlayer)
+        public void ConnectWire(NodePos pos, IPlayer byPlayer, IHangingWireAnchor anchor)
         {
             if (api.Side == EnumAppSide.Server) return;
 
             if(pendingNode == null)
             {
                 pendingNode = pos;
+                Vec3f offset = anchor.GetAnchorPosInBlock(pos);
                 capi?.ShowChatMessage(String.Format("Pending {0}:{1}",pos.blockPos,pos.index));
+                WireRenderer = new PendingWireRenderer(capi, this,pos.blockPos, offset);
             }
             else
             {
@@ -193,6 +197,7 @@ namespace signals.src.hangingwires
                 WireConnection connection = new WireConnection(pendingNode, pos);
                 clientChannel.SendPacket(new AddConnectionPacket() { connection = connection});
                 pendingNode = null;
+                WireRenderer?.Dispose();
             }
         }
         #endregion
