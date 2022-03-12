@@ -11,7 +11,7 @@ using Vintagestory.API.Util;
 
 namespace signals.src
 {
-    class BlockCircuitBoard : Block
+    class BlockCircuitBoard : Block, IHangingWireAnchor
     {
         public override void OnLoaded(ICoreAPI api)
         {
@@ -91,7 +91,7 @@ namespace signals.src
             if (mod != null && api.Side == EnumAppSide.Client)
             {
                 NodePos pos = GetNodePosForWire(world, blockSel);
-                if (pos != null) mod.ConnectWire(GetNodePosForWire(world, blockSel), byPlayer);
+                if (pos != null) mod.ConnectWire(GetNodePosForWire(world, blockSel), byPlayer, this);
             }
 
             base.OnBlockInteractStart(world, byPlayer, blockSel);
@@ -212,6 +212,11 @@ namespace signals.src
         }
 
         public NodePos[] GetWireAnchors(IWorldAccessor world, BlockPos pos)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Vec3f GetAnchorPosInBlock(NodePos pos)
         {
             throw new System.NotImplementedException();
         }
