@@ -91,7 +91,7 @@ namespace signals.src
             if (mod != null && api.Side == EnumAppSide.Client)
             {
                 NodePos pos = GetNodePosForWire(world, blockSel);
-                if (pos != null) mod.SetPendingNode(GetNodePosForWire(world, blockSel));
+                if (pos != null) mod.ConnectWire(GetNodePosForWire(world, blockSel), byPlayer);
             }
 
             base.OnBlockInteractStart(world, byPlayer, blockSel);
