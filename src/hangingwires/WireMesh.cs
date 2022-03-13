@@ -82,19 +82,19 @@ namespace signals.src.hangingwires
                 mesh_side2.AddVertex(pos1.X + pos.X + b.X * t, pos1.Y + pos.Y - t, pos1.Z + pos.Z + b.Z * t, j * du, 0, color);
 
 
-                mesh_top.Flags[2 * j] = VertexFlags.NormalToPackedInt(new Vec3f(0,1,0)) << 15;
-                mesh_top.Flags[2 * j+1] = VertexFlags.NormalToPackedInt(new Vec3f(0, 1, 0)) << 15;
+                mesh_top.Flags[2 * j] = VertexFlags.PackNormal(new Vec3f(0,1,0)) << 15;
+                mesh_top.Flags[2 * j+1] = VertexFlags.PackNormal(new Vec3f(0, 1, 0)) << 15;
                 
-                mesh_bot.Flags[2 * j] = VertexFlags.NormalToPackedInt(new Vec3f(0, -1, 0)) << 15;
-                mesh_bot.Flags[2 * j + 1] = VertexFlags.NormalToPackedInt(new Vec3f(0, -1, 0)) << 15;
+                mesh_bot.Flags[2 * j] = VertexFlags.PackNormal(new Vec3f(0, -1, 0)) << 15;
+                mesh_bot.Flags[2 * j + 1] = VertexFlags.PackNormal(new Vec3f(0, -1, 0)) << 15;
                 
-                mesh_side.Flags[2 * j] = VertexFlags.NormalToPackedInt(-b.X,-b.Y,-b.Z) << 15;
-                mesh_side.Flags[2 * j + 1] = VertexFlags.NormalToPackedInt(-b.X, -b.Y, -b.Z) << 15;
+                mesh_side.Flags[2 * j] = VertexFlags.PackNormal(-b.X,-b.Y,-b.Z) << 15;
+                mesh_side.Flags[2 * j + 1] = VertexFlags.PackNormal(-b.X, -b.Y, -b.Z) << 15;
                 
-                mesh_side2.Flags[2 * j] = VertexFlags.NormalToPackedInt(b) << 15;
-                mesh_side2.Flags[2 * j + 1] = VertexFlags.NormalToPackedInt(b) << 15;
+                mesh_side2.Flags[2 * j] = VertexFlags.PackNormal(b) << 15;
+                mesh_side2.Flags[2 * j + 1] = VertexFlags.PackNormal(b) << 15;
 
-                int flag = VertexFlags.LeavesWindWaveBitMask;
+                int flag = VertexFlags.WindBitsMask;
                 
                 if(j!=0 && j<nSec)
                 {
