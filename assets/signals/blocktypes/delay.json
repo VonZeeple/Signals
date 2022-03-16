@@ -1,0 +1,67 @@
+{
+    "code": "blockdelay",
+    "class": "BlockDelay",
+    "attributes": {
+        "signalNodes": [
+            {
+                "index": 0,
+                "x1": 0.125,
+                "y1": 0.0625,
+                "z1": 0.0625,
+                "x2": 0.3125,
+                "y2": 0.25,
+                "z2": 0.25
+            },
+            {
+                "index": 1,
+                "x1": 0.625,
+                "y1": 0.0625,
+                "z1": 0.0625,
+                "x2": 0.8125,
+                "y2": 0.25,
+                "z2": 0.25
+            }
+        ]
+    },
+    "entityclass": "BEDelay",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalConnector",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    },
+                    {
+                        "index": 1,
+                        "isSource": false
+                    }
+                ]
+            }
+        }
+    ],
+    "variantgroups": [
+        {
+            "code": "value",
+            "states": ["0", "1","2","3","4","5"]
+        }
+    ],
+    "creativeinventory": {
+        "general": [ "*-1" ],
+        "signals": [ "*-1" ]
+    },
+    "sideopaque": { "all": false },
+    "sidesolid": { "all": false },
+    "shape": {
+        "base": "signals:block/delay_{value}"
+    },
+    "selectionBox": {
+        "x1": 0,
+        "y1": 0,
+        "z1": 0,
+        "x2": 1,
+        "y2": 0.2,
+        "z2": 1
+    }
+}
