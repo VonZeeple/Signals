@@ -2,6 +2,7 @@
 using signals.src.hangingwires;
 using signals.src.signalNetwork;
 using signals.src.transmission;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
@@ -96,11 +97,27 @@ namespace signals.src
 
         #region network stuff
 
+        List<Action> ToDoOnSignalTick = new List<Action>();
+
+        public void RegisterSignalTickListener(Action OnSignalTick){
+            ToDoOnSignalTick.Add(OnSignalTick);
+        }
+        public void DisposeSignalTickListener(){
+            
+        }
         List<ISignalNodeProvider> devicesToLoad = new List<ISignalNodeProvider>();
 
+        private float timeFromLastTick = 0;
         public void OnServerGameTick(float dt)
         {
+            timeFromLastTick += dt;
+            if (timeFromLastTick < 0.1) return;
+            timeFromLastTick = 0;
+
             LoadDevices();
+            foreach (Action toDo in ToDoOnSignalTick){
+                toDo();
+            }
 
             foreach(SignalNetwork net in netManager.networks.Values)
             {

@@ -15,7 +15,8 @@ namespace signals.src.signalNetwork
         public override void Initialize(ICoreAPI api){
             base.Initialize(api);
             values = new byte[6]{15,0,0,0,0,0};
-            RegisterGameTickListener(OnServerGameTick, 50);
+            SignalNetworkMod signalMod = api.ModLoader.GetModSystem<SignalNetworkMod>();
+            signalMod.RegisterSignalTickListener(OnSignalNetworkTick);
             if (api.Side == EnumAppSide.Client){
                 renderer = new BEDelayRenderer(api as ICoreClientAPI, Pos);
                 (api as ICoreClientAPI).Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "signaldelay");
@@ -35,7 +36,7 @@ namespace signals.src.signalNetwork
             renderer?.Dispose();
         }
 
-        public void OnServerGameTick(float dt)
+        public void OnSignalNetworkTick()
         {
             if(values.All(o => o == 0)){
                 values[0] = 15;
