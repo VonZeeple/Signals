@@ -10,7 +10,8 @@
 	"textures": {
 		"oak-dark": "game:block/wood/oak-dark",
 		"bluetop": "game:block/clay/brickslab/bluetop",
-		"aged-ceramic2": "game:block/clay/aged-ceramic2"
+		"aged-ceramic2": "game:block/clay/aged-ceramic2",
+		"filament": "game:block/glowworm/glowworm"
 	},
 	"elements": [
 		{
