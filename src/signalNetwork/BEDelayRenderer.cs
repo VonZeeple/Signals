@@ -46,7 +46,7 @@ namespace signals.src.transmission
             for (int i = 0; i < Math.Min(values.Length, shape.Elements.Length); i++){
                 ShapeElement el = shape.Elements[i];
                 foreach (ShapeElementFace face in el.Faces.Values){
-                    face.Glow = 150*values[i]/15;
+                    face.Glow = 255*values[i]/15;
                 }
             }
             ITesselatorAPI mesher = api.Tesselator;
