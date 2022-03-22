@@ -11,7 +11,7 @@
 		"oak-dark": "game:block/wood/oak-dark",
 		"bluetop": "game:block/clay/brickslab/bluetop",
 		"aged-ceramic2": "game:block/clay/aged-ceramic2",
-		"filament": "game:block/glowworm/glowworm"
+		"filament": "game:block/metal/plate/lead"
 	},
 	"elements": [
 		{
@@ -173,10 +173,10 @@
 			}
 		},
 		{
-			"name": "cursor",
-			"from": [ 5.5, 3.0, 9.0 ], 
-			"to": [ 6.5, 3.5, 11.0 ], 
-			"rotationOrigin": [ 4.5, 3.0, 9.5 ],
+			"name": "needle",
+			"from": [ 4.25, 3.0, 9.0 ], 
+			"to": [ 5.25, 3.5, 11.0 ], 
+			"rotationOrigin": [ 9.5, 3.0, 9.5 ],
 			"faces": {
 				"north": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 1.0, 0.5 ] },
 				"east": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 0.5 ] },
@@ -187,7 +187,7 @@
 			},
 			"children": [
 				{
-					"name": "cursor1",
+					"name": "needle2",
 					"from": [ 0.25, 0.0, -1.0 ], 
 					"to": [ 0.75, 0.5, 0.0 ], 
 					"rotationOrigin": [ -1.0, 0.0, -0.5 ],
