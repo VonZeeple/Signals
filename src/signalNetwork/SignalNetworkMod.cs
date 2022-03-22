@@ -102,8 +102,8 @@ namespace signals.src
         public void RegisterSignalTickListener(Action OnSignalTick){
             ToDoOnSignalTick.Add(OnSignalTick);
         }
-        public void DisposeSignalTickListener(){
-            
+        public void DisposeSignalTickListener(Action OnSignalTick){
+            ToDoOnSignalTick.Remove(OnSignalTick);
         }
         List<ISignalNodeProvider> devicesToLoad = new List<ISignalNodeProvider>();
 
