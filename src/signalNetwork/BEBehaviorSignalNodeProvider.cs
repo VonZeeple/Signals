@@ -36,8 +36,10 @@ namespace signals.src.signalNetwork
                 {
                     int index = json["index"].AsInt();
                     bool isSource = json.KeyExists("isSource") ? json["isSource"].AsBool(): false;
+                    byte output = json.KeyExists("output") ? (byte)(json["output"].AsInt()): (byte)15;
                     BaseNode newNode = new BaseNode();
-                    newNode.output = isSource ? (byte)15 : (byte)0;
+                    newNode.isSource = isSource;
+                    newNode.output = isSource ? output : (byte)0;
                     newNode.Pos = new NodePos(this.Blockentity.Pos, index);
 
                     nodes.Add(newNode);

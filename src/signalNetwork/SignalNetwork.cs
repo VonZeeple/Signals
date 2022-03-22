@@ -50,9 +50,14 @@ namespace signals.src.transmission
 
             foreach (ISignalNode source in sources){
                 List<ISignalNode> openList = new List<ISignalNode>{source};
-                updated.Add(source);
-                byte startValue = (byte)15;
+                byte startValue;
+                if (updated.Contains(source)){
+                    startValue = Math.Max(source.output,source.value);
+                }else{
+                    startValue = source.output;
+                }
                 source.value = startValue;
+                updated.Add(source);
                 while (openList.Count > 0) {
                     ISignalNode node = openList.Last();
                     openList.Remove(node);

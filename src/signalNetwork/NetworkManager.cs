@@ -36,6 +36,14 @@ namespace signals.src.signalNetwork
             return net;
         }
 
+        public void UpdateSource(ISignalNode node, byte newValue){
+            if (!node.isSource) return;
+            if (node.output == newValue) return;
+            node.output = newValue;
+            if (!node.netId.HasValue) return;
+            ISignalNetwork net = networks[node.netId.Value];
+            net.isValid = false;
+        }
         public void AddNodes(ISignalNode[] nodes)
         {
             foreach(ISignalNode node in nodes)
