@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
@@ -77,7 +78,7 @@ namespace signals.src.hangingwires
         {
             base.StartClientSide(api);
             capi = api;
-
+            capi.Event.ChunkDirty += OnChunkDirty;
 
             api.Event.BlockTexturesLoaded += onLoaded;
             api.Event.LeaveWorld += () =>
@@ -85,6 +86,12 @@ namespace signals.src.hangingwires
                 Renderer?.Dispose();
             };
 
+        }
+
+        private void OnChunkDirty(Vec3i chunkCoord, IWorldChunk chunk, EnumChunkDirtyReason reason){
+            if( reason == EnumChunkDirtyReason.NewlyLoaded){
+                Renderer.UpdateWiresMesh(data);
+            }       
         }
 
         private void onDataFromServer(HangingWiresData data)
@@ -106,7 +113,18 @@ namespace signals.src.hangingwires
 
             api.Event.GameWorldSave += Event_GameWorldSave;
             api.Event.SaveGameLoaded += Event_SaveGameLoaded;
-            sapi.Event.PlayerJoin += Event_OnPlayerJoin;
+            sapi.Event.PlayerNowPlaying += Event_OnPlayerJoin;
+            sapi.Event.ChunkColumnLoaded += Event_ChunksLoaded;
+        }
+
+        private void Event_ChunksLoaded(Vec2i chunkCoord, IWorldChunk[] chunks){
+            foreach(IPlayer player in sapi.World.AllOnlinePlayers){
+                foreach(IWorldChunk chunk in chunks){
+                    if (chunk.Entities.Contains(player.Entity)){
+                        //serverChannel.SendPacket<HangingWiresData>(data, player as IServerPlayer);
+                    }
+                }
+            }
         }
 
         private void Event_GameWorldSave()
