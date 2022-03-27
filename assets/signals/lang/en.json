@@ -1,3 +1,19 @@
 {
-    "game:tabname-signals": "Signals"
+    "game:tabname-signals": "Signals",
+    "signals:block-blockdelay-*": "Delay",
+    "signals:block-blockresistor-1-*": "Resistor (1)",
+    "signals:block-blockresistor-2-*": "Resistor (2)",
+    "signals:block-blockresistor-3-*": "Resistor (3)",
+    "signals:block-blockresistor-4-*": "Resistor (4)",
+    "signals:block-blockresistor-5-*": "Resistor (5)",
+    "signals:block-blockresistor-6-*": "Resistor (6)",
+    "signals:block-blockresistor-7-*": "Resistor (7)",
+    "signals:block-blockresistor-8-*": "Resistor (8)",
+    "signals:block-blockresistor-9-*": "Resistor (9)",
+    "signals:block-blockresistor-10-*": "Resistor (10)",
+    "signals:block-blockresistor-11-*": "Resistor (11)",
+    "signals:block-blockresistor-12-*": "Resistor (12)",
+    "signals:block-blockresistor-13-*": "Resistor (13)",
+    "signals:block-blockresistor-14-*": "Resistor (14)",
+    "signals:block-blockresistor-15-*": "Resistor (15)"
 }
