@@ -140,7 +140,8 @@
         ]
     },
     "creativeinventory": {
-        "general": [ "*-north" ]
+        "general": [ "*-north" ],
+        "signals": [ "*-north" ]
     },
 
     "shape": {
