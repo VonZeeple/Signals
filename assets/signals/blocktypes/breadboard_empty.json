@@ -196,7 +196,7 @@
     "blockmaterial": "Metal",
     "creativeinventory": {
         "general": [ "*-north-down" ],
-        "decorative": [ "*-north-down" ]
+        "signals": [ "*-north-down" ]
     },
     "replaceable": 300,
     "resistance": 2,

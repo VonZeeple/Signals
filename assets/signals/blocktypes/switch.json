@@ -64,7 +64,7 @@
     "shape": { "base": "signals:block/switch_{state}" },
     "creativeinventory": {
         "general": [ "*-off" ],
-        "decorative": [ "*-off" ]
+        "signals": [ "*-off" ]
     },
     "sideopaque": { "all": false },
     "sidesolid": { "all": false },
