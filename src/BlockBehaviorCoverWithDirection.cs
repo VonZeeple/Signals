@@ -1,4 +1,5 @@
-﻿using Vintagestory.API.Common;
+﻿using System.Collections.Generic;
+using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
 namespace signals.src
@@ -73,7 +74,8 @@ namespace signals.src
 
             BlockFacing orientation = BlockFacing.FromVector(projVector.X, projVector.Y, projVector.Z);
             BlockFacing oppositeFace = onBlockFace.Opposite;
-            return world.BlockAccessor.GetBlock(block.CodeWithParts(orientation.Code, oppositeFace.Code));
+            AssetLocation oBlock = block.CodeWithVariants(new Dictionary<string, string>(){{orientationCode, orientation.Code}, {sideCode, oppositeFace.Code}});
+            return world.BlockAccessor.GetBlock(oBlock);
         }
 
 
