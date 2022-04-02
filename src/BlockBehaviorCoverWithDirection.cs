@@ -6,8 +6,8 @@ namespace signals.src
 {
     class BlockBehaviorCoverWithDirection : BlockBehavior
     {
-        string orientationCode = "orientation";
-        string sideCode = "side";
+        public string orientationCode => "orientation";
+        public string sideCode => "side";
 
         public BlockBehaviorCoverWithDirection(Block block) : base(block)
         {
