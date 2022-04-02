@@ -34,5 +34,13 @@ namespace signals.src.signalNetwork
             };
             return true;
         }
+
+        public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+        {
+            string info = base.GetPlacedBlockInfo(world, pos, forPlayer);
+            int value = Int32.Parse(this.Variant["value"]);
+            info += "\r\n delay: " + (value+1).ToString();
+            return info;
+        }
     }
 }
