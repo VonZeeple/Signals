@@ -104,6 +104,14 @@ namespace signals.src.transmission
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
 
+        public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+        {
+            string info = base.GetPlacedBlockInfo(world, pos, forPlayer);
+            BlockSelection sel = forPlayer.Entity.BlockSelection;
+            NodePos nodepos = this.GetNodePosForWire(world, sel);
+            info +="\r\n" + nodepos?.ToString();
+            return info;
+        }
 
         #region Wire anchor
         public Vec3f GetAnchorPosInBlock(NodePos pos)
