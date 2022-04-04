@@ -79,7 +79,7 @@ namespace signals.src.hangingwires
             base.StartClientSide(api);
             capi = api;
             capi.Event.ChunkDirty += OnChunkDirty;
-
+            capi.Event.AfterActiveSlotChanged += OnActiveSlotChanged;
             api.Event.BlockTexturesLoaded += onLoaded;
             api.Event.LeaveWorld += () =>
             {
@@ -175,6 +175,12 @@ namespace signals.src.hangingwires
                 serverChannel.BroadcastPacket(data);
             }
             
+        }
+
+
+        public void OnActiveSlotChanged(ActiveSlotChangeEventArgs slotChange){
+            pendingNode = null;
+            WireRenderer?.Dispose();
         }
 
         public void OnAddConnectionFromClient(IServerPlayer fromPlayer, AddConnectionPacket networkMessage)
