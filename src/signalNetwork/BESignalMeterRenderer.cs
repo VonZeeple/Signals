@@ -35,6 +35,7 @@ namespace signals.src.transmission
             needleMeshRef?.Dispose();
         }
 
+        private float currentAngle = 0;
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
             if (needleMeshRef == null) return;
@@ -47,12 +48,17 @@ namespace signals.src.transmission
 
             IStandardShaderProgram prog = rpi.PreparedStandardShader(pos.X, pos.Y, pos.Z);
             rpi.BindTexture2d(texId);
+            if (currentAngle > AngleRad){
+                currentAngle = GameMath.Clamp(currentAngle-(20*deltaTime),AngleRad,currentAngle);
+            }else if (currentAngle < AngleRad){
+                currentAngle = GameMath.Clamp(currentAngle+(20*deltaTime),currentAngle,AngleRad);
+            }
 
             prog.ModelMatrix = ModelMat
                 .Identity()
                 .Translate(pos.X - camPos.X, pos.Y - camPos.Y, pos.Z - camPos.Z)
                 .Translate(0.5f, 0.5f, 0.5f)
-                .RotateZ(AngleRad)
+                .RotateZ(currentAngle)
                 //.Translate(-0.5f, 0, -0.5f)
                 .Values
             ;
