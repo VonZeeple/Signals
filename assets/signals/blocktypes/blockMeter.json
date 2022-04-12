@@ -1,6 +1,6 @@
 ﻿{
     "code": "blockmeter",
-    "class": "BlockSignalConnection",
+    "class": "BlockSignalMeter",
     "attributes": {
         "signalNodes": [
             {
@@ -12,7 +12,14 @@
                 "y2": 0.25,
                 "z2": 0.28125
             }
-        ]
+        ],
+        "attachmentAreas": {
+			"down": { "x1": 7, "y1": 15, "z1": 7, "x2": 8, "y2": 16, "z2": 8 },
+			"north": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 180 },
+			"east": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 270 },
+			"south": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 0 },
+			"west": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 90 }
+		}
     },
     "entityclass": "BESignalMeter",
     "entityBehaviors": [
@@ -28,12 +35,24 @@
             }
         }
     ],
+    "variantgroups": [
+		{ "code": "type", "states": ["floor", "wall"] },
+        { "code": "orientation", "loadFromProperties": "abstract/horizontalorientation" }
+	],
     "creativeinventory":
     {
         "general": [ "*" ],
         "signals": ["*"]
     },
-    "shape": { "base": "signals:block/signalmeter" },
+    "shape": {
+        "base": "signals:block/signalmeter_{type}",
+        "rotateYbytype": {
+            "*-north": 180,
+            "*-east": 90,
+            "*-south": 0,
+            "*-west": 270
+        }
+	},
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
     "blockmaterial": "Metal",
