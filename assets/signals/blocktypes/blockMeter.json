@@ -1,18 +1,31 @@
 ﻿{
     "code": "blockmeter",
-    "class": "BlockSignalConnection",
+    "class": "BlockSignalMeter",
     "attributes": {
         "signalNodes": [
             {
                 "index": 0,
-                "x1": 0.40625,
-                "y1": 0.0625,
-                "z1": 0.09375,
-                "x2": 0.59375,
-                "y2": 0.25,
-                "z2": 0.28125
+                "x1": 0.375,
+                "y1": 0.8125,
+                "z1": 0.0,
+                "x2": 0.5625,
+                "y2": 1.0,
+                "z2": 0.1875,
+                "rotateYbytype": {
+                    "*-north": 180,
+                    "*-east": 90,
+                    "*-south": 0,
+                    "*-west": 270
+                }
             }
-        ]
+        ],
+        "attachmentAreas": {
+			"down": { "x1": 7, "y1": 15, "z1": 7, "x2": 8, "y2": 16, "z2": 8 },
+			"north": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 180 },
+			"east": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 270 },
+			"south": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 0 },
+			"west": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 90 }
+		}
     },
     "entityclass": "BESignalMeter",
     "entityBehaviors": [
@@ -28,12 +41,24 @@
             }
         }
     ],
+    "variantgroups": [
+		{ "code": "type", "states": ["floor", "wall"] },
+        { "code": "orientation", "loadFromProperties": "abstract/horizontalorientation" }
+	],
     "creativeinventory":
     {
-        "general": [ "*" ],
-        "signals": ["*"]
+        "general": [ "*-wall-north" ],
+        "signals": ["*-wall-north"]
     },
-    "shape": { "base": "signals:block/signalmeter" },
+    "shape": {
+        "base": "signals:block/signalmeter_{type}",
+        "rotateYbytype": {
+            "*-north": 180,
+            "*-east": 90,
+            "*-south": 0,
+            "*-west": 270
+        }
+	},
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
     "blockmaterial": "Metal",

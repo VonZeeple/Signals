@@ -34,6 +34,7 @@ namespace signals.src
             api.RegisterBlockClass("BlockSwitch", typeof(BlockSwitch));
             api.RegisterBlockClass("BlockPressurePlate", typeof(BlockPressurePlate));
             api.RegisterBlockClass("BlockDelay", typeof(BlockDelay));
+            api.RegisterBlockClass("BlockSignalMeter", typeof(BlockSignalMeter));
 
 
             api.RegisterBlockEntityClass("BlockEntityLightBulb", typeof(BlockEntityLightBulb));
