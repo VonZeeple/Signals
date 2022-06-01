@@ -1,8 +1,5 @@
-﻿.ignore
-.vscode/
-bin/
+﻿bin/
 obj/
-*.csproj
 *.csproj.user
 *.dll
 *.pdb
