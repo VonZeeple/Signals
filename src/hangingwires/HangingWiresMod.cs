@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
@@ -146,7 +145,7 @@ namespace signals.src.hangingwires
                 {
                     this.data = SerializerUtil.Deserialize<HangingWiresData>(data);
                 }
-                catch(Exception e)
+                catch(Exception)
                 {
                     this.data = new HangingWiresData();
                 }
@@ -177,6 +176,18 @@ namespace signals.src.hangingwires
             
         }
 
+        public bool IsHoldingWire(IPlayer player){
+            Item item = player?.Entity.RightHandItemSlot.Itemstack?.Item;
+            return item?.Code?.ToString() == "signals:el_wire";
+        }
+
+        public bool UseWire(IPlayer player){
+            ItemStack itemStack = player?.InventoryManager.ActiveHotbarSlot.Itemstack;
+            if ( itemStack?.Item?.Code?.ToString() != "signals:el_wire") return false;
+            player?.InventoryManager.ActiveHotbarSlot.TakeOut(1);
+            player?.InventoryManager.ActiveHotbarSlot.MarkDirty();
+            return true;
+        }
 
         public void OnActiveSlotChanged(ActiveSlotChangeEventArgs slotChange){
             pendingNode = null;
@@ -190,12 +201,13 @@ namespace signals.src.hangingwires
 
             //TODO: add checks to be sure that their is a node provider at the position (never trust the client)
 
-            //CreateConnection(connection, fromPlayer);
             bool added = data.connections.Add(connection);
             if (added)
             {
-                api.ModLoader.GetModSystem<SignalNetworkMod>()?.OnWireAdded(connection);
-                serverChannel.BroadcastPacket(data);
+                if (UseWire(fromPlayer)){
+                    api.ModLoader.GetModSystem<SignalNetworkMod>()?.OnWireAdded(connection);
+                    serverChannel.BroadcastPacket(data);
+                }
             }
         }
 
@@ -204,9 +216,12 @@ namespace signals.src.hangingwires
         {
             return this.pendingNode;
         }
+
         public void ConnectWire(NodePos pos, IPlayer byPlayer, IHangingWireAnchor anchor)
         {
             if (api.Side == EnumAppSide.Server) return;
+
+            if (!IsHoldingWire(byPlayer)) return;
 
             if(pendingNode == null)
             {
@@ -219,7 +234,7 @@ namespace signals.src.hangingwires
             {
                 capi?.ShowChatMessage(String.Format("trying to attach {0}:{1}", pos.blockPos, pos.index));
                 WireConnection connection = new WireConnection(pendingNode, pos);
-                clientChannel.SendPacket(new AddConnectionPacket() { connection = connection});
+                clientChannel.SendPacket(new AddConnectionPacket() { connection = connection, byPlayer = byPlayer.PlayerUID});
                 pendingNode = null;
                 WireRenderer?.Dispose();
             }
@@ -231,6 +246,7 @@ namespace signals.src.hangingwires
     public class AddConnectionPacket
     {
         public WireConnection connection;
+        public string byPlayer;
 
         public AddConnectionPacket()
         {

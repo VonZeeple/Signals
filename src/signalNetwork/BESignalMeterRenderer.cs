@@ -11,14 +11,16 @@ namespace signals.src.transmission
         public float AngleRad = 0;
         private ICoreClientAPI api;
         private BlockPos pos;
-
-
+        string type;
+        BlockFacing facing;
         private int texId;
 
-        public BESignalMeterRenderer(ICoreClientAPI capi,BlockPos pos, MeshData mesh)
+        public BESignalMeterRenderer(ICoreClientAPI capi,BlockPos pos, MeshData mesh, string type, BlockFacing facing)
         {
             this.pos = pos;
             this.api = capi;
+            this.facing = facing;
+            this.type = type;
             needleMeshRef = capi.Render.UploadMesh(mesh);
             Block block = capi.World.GetBlock(new AssetLocation("signals:blockMeter"));
             TextureAtlasPosition tpos = capi.BlockTextureAtlas.GetPosition(block, "needle");
@@ -54,12 +56,28 @@ namespace signals.src.transmission
                 currentAngle = GameMath.Clamp(currentAngle+(20*deltaTime),currentAngle,AngleRad);
             }
 
+            float yAngle;
+            if (facing == BlockFacing.NORTH){
+                yAngle = 180;
+            }else if (facing == BlockFacing.EAST){
+                yAngle = 90;
+            }else if (facing == BlockFacing.SOUTH){
+                yAngle = 0;
+            }else{
+                yAngle = 270;
+            }
+
+            float zOffset = 0f;
+            if( type == "wall" ){
+                zOffset = -0.25f;
+            }
             prog.ModelMatrix = ModelMat
                 .Identity()
                 .Translate(pos.X - camPos.X, pos.Y - camPos.Y, pos.Z - camPos.Z)
                 .Translate(0.5f, 0.5f, 0.5f)
+                .RotateYDeg(yAngle)
                 .RotateZ(currentAngle)
-                //.Translate(-0.5f, 0, -0.5f)
+                .Translate(0, 0, zOffset)
                 .Values
             ;
 

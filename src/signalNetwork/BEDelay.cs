@@ -3,6 +3,7 @@ using signals.src.transmission;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
 
 namespace signals.src.signalNetwork
 {
@@ -25,8 +26,22 @@ namespace signals.src.signalNetwork
             values = new byte[6]{0,0,0,0,0,0};
             signalMod = api.ModLoader.GetModSystem<SignalNetworkMod>();
             signalMod.RegisterSignalTickListener(OnSignalNetworkTick);
+
+
             if (api.Side == EnumAppSide.Client){
-                renderer = new BEDelayRenderer(api as ICoreClientAPI, Pos);
+                BlockFacing facing = BlockFacing.DOWN;
+                BlockFacing orientation = BlockFacing.NORTH;
+                BlockBehaviorCoverWithDirection bb = block.GetBehavior<BlockBehaviorCoverWithDirection>();
+                if (bb!=null) {
+                    string facing_str = block.Variant[bb.sideCode];
+                    string orientation_str = block.Variant[bb.orientationCode];
+                    if( facing_str!=null && orientation_str!=null){
+                        facing = BlockFacing.FromCode(facing_str);
+                        orientation = BlockFacing.FromCode(orientation_str);
+                    }
+                }
+
+                renderer = new BEDelayRenderer(api as ICoreClientAPI, Pos, facing, orientation);
                 (api as ICoreClientAPI).Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "signaldelay");
                 renderer.UpdateMesh(values);
             }
@@ -49,7 +64,12 @@ namespace signals.src.signalNetwork
         public void OnSignalNetworkTick()
         {
             Block block = this.Block as Block;
-            state = Int32.Parse(block.Variant["value"]);
+            string val_str = block.Variant["value"];
+            if (val_str != null){
+                state = Int32.Parse(val_str);
+            }else{
+                state = 0;
+            }
             for (int i=0; i < values.Length-1; i++){
                 if(values.Length-i-1 <=state){
                     values[values.Length-i-1] = values[values.Length-i-2];
@@ -58,6 +78,7 @@ namespace signals.src.signalNetwork
                 }
             }
             BEBehaviorSignalConnector beb = GetBehavior<BEBehaviorSignalConnector>();
+            if (beb == null) return;
             ISignalNode nodeProbe = beb.GetNodeAt(new NodePos(this.Pos, 0));
             ISignalNode nodeSource = beb.GetNodeAt(new NodePos(this.Pos, 1));
             values[0] = nodeProbe.value;

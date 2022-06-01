@@ -21,11 +21,15 @@ namespace signals.src.transmission
         private Shape shape;
 
         private Block Block;
+        protected BlockFacing facing;
+        protected BlockFacing orientation;
 
-        public BEDelayRenderer(ICoreClientAPI capi, BlockPos pos)
+        public BEDelayRenderer(ICoreClientAPI capi, BlockPos pos, BlockFacing face=null, BlockFacing orientation=null)
         {
             this.pos = pos;
             this.api = capi;
+            this.facing = face;
+            this.orientation = orientation;
             Block = capi.World.BlockAccessor.GetBlock(pos);
             byte[] values = new byte[6]{0,0,0,0,0,0};
 
@@ -49,9 +53,15 @@ namespace signals.src.transmission
                     face.Glow = 255*values[i]/15;
                 }
             }
+            Vec3f rotate = new Vec3f(0, 0, 0);
+            if (facing != null && orientation != null)
+            {
+                rotate = SignalsUtils.FacingToRotation(orientation, facing);
+            }
             ITesselatorAPI mesher = api.Tesselator;
             MeshData mesh;
             mesher.TesselateShape(Block, shape, out mesh);
+            mesh.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), rotate.X * GameMath.PI / 180, rotate.Y * GameMath.PI / 180, rotate.Z * GameMath.PI / 180);
             lightsMeshRef = api.Render.UploadMesh(mesh);
         }
 

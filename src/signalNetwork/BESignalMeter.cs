@@ -2,6 +2,7 @@ using signals.src.transmission;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
 
 namespace signals.src.signalNetwork
 {
@@ -14,7 +15,12 @@ namespace signals.src.signalNetwork
             base.Initialize(api);
             if (api.Side == EnumAppSide.Client)
             {
-                renderer = new BESignalMeterRenderer(api as ICoreClientAPI, Pos, GenMesh());
+                string type = "wall";
+                string orientation = BlockFacing.NORTH.Code;
+                Block.Variant.TryGetValue("type", out type);
+                Block.Variant.TryGetValue("orientation", out orientation);
+
+                renderer = new BESignalMeterRenderer(api as ICoreClientAPI, Pos, GenMesh(), type, BlockFacing.FromCode(orientation));
                 (api as ICoreClientAPI).Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "signalmeter");
             }
         }
