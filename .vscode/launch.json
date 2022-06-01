@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [{
+      "name": "Launch Client",
+      "type": "clr",
+      "request": "launch",
+      "preLaunchTask": "Build (Debug)",
+      "program": "${env:VINTAGE_STORY}/Vintagestory.exe",
+      "args": [
+        "--playStyle" , "preset-surviveandbuild",
+        "--openWorld" , "signals-testland",
+        "--addModPath", "${workspaceFolder}/bin/Debug/net461",
+        "--addOrigin" , "${workspaceFolder}/assets",
+      ],
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+    }]
+  }
