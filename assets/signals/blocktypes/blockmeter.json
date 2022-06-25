@@ -59,6 +59,7 @@
             "*-west": 270
         }
 	},
+    "textures": { "needle": { "base": "game:block/creative/col69"}},
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
     "blockmaterial": "Metal",
