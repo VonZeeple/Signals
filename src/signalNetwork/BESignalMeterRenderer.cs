@@ -22,9 +22,11 @@ namespace signals.src.transmission
             this.facing = facing;
             this.type = type;
             needleMeshRef = capi.Render.UploadMesh(mesh);
-            Block block = capi.World.GetBlock(new AssetLocation("signals:blockMeter"));
-            TextureAtlasPosition tpos = capi.BlockTextureAtlas.GetPosition(block, "needle");
-            texId = tpos.atlasTextureId;
+            Block block = capi.World.GetBlock(new AssetLocation("signals:blockmeter"));
+            if(block != null){
+                TextureAtlasPosition tpos = capi.BlockTextureAtlas.GetPosition(block, "needle");
+                texId = tpos.atlasTextureId;
+            }
         }
 
         public double RenderOrder => 0.5;
