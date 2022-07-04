@@ -25,12 +25,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <None Include="UNLICENSE" CopyToOutputDirectory="PreserveNewest"/>
-    <None Include="resources/**">
-      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+    <!--
+    <None Include="LICENSE" CopyToOutputDirectory="PreserveNewest"/>
+    -->
+    <None Include="assets/**">
+      <Link>assets/%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.5.0"/>
   </ItemGroup>
