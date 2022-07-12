@@ -2,7 +2,9 @@
     "code": "blockmeter",
     "class": "BlockSignalMeter",
     "attributes": {
-        "signalNodes": [
+        "signalNodesbytype": {
+            "*-wall-*":
+            [
             {
                 "index": 0,
                 "x1": 0.375,
@@ -18,7 +20,26 @@
                     "*-west": 270
                 }
             }
-        ],
+            ],
+            "*-floor-*":
+            [
+                {
+                    "index": 0,
+                    "x1": 0.375,
+                    "y1": 0.0625,
+                    "z1": 0.6875,
+                    "x2": 0.625,
+                    "y2": 0.3125,
+                    "z2": 0.9375,
+                    "rotateYbytype": {
+                        "*-north": 0,
+                        "*-east": 270,
+                        "*-south": 180,
+                        "*-west": 90
+                    }
+                }
+            ]
+        },
         "attachmentAreas": {
 			"down": { "x1": 7, "y1": 15, "z1": 7, "x2": 8, "y2": 16, "z2": 8 },
 			"north": { "x1": 6, "y1": 0, "z1": 15, "x2": 10, "y2": 5, "z2": 15, "rotateY": 180 },
@@ -63,13 +84,33 @@
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
     "blockmaterial": "Metal",
-    "selectionbox":
-    {
-        "x1": 0,
-        "y1": 0,
-        "z1": 0,
-        "x2": 1,
-        "y2": 0.0625,
-        "z2": 1
+    "selectionboxbytype":{
+        "*-floor-*":{
+            "x1": 0.125,
+            "y1": 0,
+            "z1": 0.25,
+            "x2": 0.875,
+            "y2": 0.875,
+            "z2": 0.5625,
+            "rotateYbytype": {
+                "*-north": 180,
+                "*-east": 90,
+                "*-south": 0,
+                "*-west": 270
+            }
+        },"*-wall-*":{
+            "x1": 0.1875,
+            "y1": 0.1875,
+            "z1": 0,
+            "x2": 0.8125,
+            "y2": 0.8125,
+            "z2": 0.3125,
+            "rotateYbytype": {
+                "*-north": 180,
+                "*-east": 90,
+                "*-south": 0,
+                "*-west": 270
+            }
+        }
     }
 }

@@ -33,7 +33,8 @@
         }
     ],
     "creativeinventory": {
-		"general": ["*-down-false"]
+		"general": ["*-up-false"],
+        "signals": ["*-up-false"]
 	},
     "attributes": {
         "signalNodes": [
