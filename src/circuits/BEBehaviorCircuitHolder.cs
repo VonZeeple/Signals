@@ -109,19 +109,7 @@ namespace signals.src.circuits.components
         #endregion
 
 
-        public void Update(float dt)
-        {
-            if (Api.Side == EnumAppSide.Client) return;
-
-            List<Tuple<int, byte>> updatedNetworks = Circuit?.updateSimulation(dt);
-            if (updatedNetworks != null)
-            {
-                if (updatedNetworks.Count > 0)
-                {
-                    SendUpdatedNetworksPacket(updatedNetworks);
-                }
-            }
-        }
+        public void Update(float dt){}
 
         #region Interactions
         internal Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, ItemStack holdingItemStack = null)
@@ -258,34 +246,6 @@ namespace signals.src.circuits.components
 
         #region network
 
-        private void SendUpdatedNetworksPacket(List<Tuple<int, byte>> updatedNetworks)
-        {
-
-            byte[] data;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                BinaryWriter writer = new BinaryWriter(ms);
-                foreach (Tuple<int, byte> item in updatedNetworks)
-                {
-                    writer.Write(item.Item1);
-                    writer.Write(item.Item2);
-                }
-                data = ms.ToArray();
-
-
-            }
-
-            IPlayer[] playersInRange = Api.World.GetPlayersAround(Pos.ToVec3d(), 2400, 2400);
-
-            foreach (IPlayer player in playersInRange)
-            {
-                ((ICoreServerAPI)Api).Network.SendBlockEntityPacket(player as IServerPlayer, Pos.X, Pos.Y, Pos.Z,
-            (int)EnumBECircuitPacket.networkUpdate,
-            data);
-            }
-
-        }
-
 
         //Notifies the server that the block have been interacted with
         public void SendUseOverPacket(IPlayer byPlayer, Vec3i voxelPos, Vec3i voxelBoxPos, BlockFacing facing, bool mouseMode)
@@ -317,39 +277,6 @@ namespace signals.src.circuits.components
         public override void OnReceivedServerPacket(int packetid, byte[] data)
         {
             base.OnReceivedServerPacket(packetid, data);
-            if (packetid == (int)EnumBECircuitPacket.networkUpdate)
-            {
-                List<Tuple<int, byte>> updatedNetworks = new List<Tuple<int, byte>>();
-                try
-                {
-                    using (MemoryStream ms = new MemoryStream(data))
-                    {
-                        BinaryReader reader = new BinaryReader(ms);
-                        while (ms.Position < ms.Length)
-                        {
-                            int net_id = reader.ReadInt32();
-                            byte value = reader.ReadByte();
-
-                            updatedNetworks.Add(new Tuple<int, byte>(net_id, value));
-                        }
-
-
-                    }
-                }
-                catch (Exception e)
-                {
-
-                }
-                if (updatedNetworks.Count > 0)
-                {
-                    Circuit.UpdateClientSide(updatedNetworks);
-                    foreach (Tuple<int, byte> tuple in updatedNetworks)
-                    {
-                        renderer?.UpdateNetworkState(tuple.Item1, tuple.Item2);
-                    }
-                }
-
-            }
         }
 
         //When the server recieve a packet from a client

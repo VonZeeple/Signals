@@ -93,14 +93,6 @@ namespace signals.src
 
         }
 
-        internal void UpdateClientSide(List<Tuple<int, byte>> updatedNetworks)
-        {
-            foreach (Tuple<int,byte> tuple in updatedNetworks)
-            {
-                if (!wiring.networks.ContainsKey(tuple.Item1)) continue;
-                wiring.networks[tuple.Item1].state = tuple.Item2;
-            }
-        }
 
         private byte getStateAtPos(Vec3i pos)
         {
@@ -109,48 +101,6 @@ namespace signals.src
             return wiring.networks[id].state;
         }
 
-
-        
-        public List<Tuple<int, byte>> updateSimulation(float dt)
-        {
-            List<Tuple<int, byte>> updatedNetworks = new List<Tuple<int, byte>>();
-            if (api.Side == EnumAppSide.Client) return null;
-
-            foreach(CircuitComponent comp in components)
-            {
-                Vec3i[] inPos = comp.GetInputPositions();
-                byte[] inputs = inPos.Select(x => getStateAtPos(x)).ToArray();
-                comp.SetInputs(inputs);
-                comp.Update(dt);
-            }
-            foreach(CircuitComponent comp in components)
-            {
-                Vec3i[] outPos = comp.GetOutputPositions();
-                for (int i=0;i<outPos.Length;i++)
-                {
-                    int netId = wiring.GetWireIdAtPos(outPos[i]);
-                    if (netId >= 0)
-                    {
-                        if (wiring.networks[netId].nextState < comp.GetOutputs()[i])
-                        {
-                            wiring.networks[netId].nextState = comp.GetOutputs()[i];
-                        }
-                    }
-                    
-                }
-            }
-
-            
-            foreach(int key in wiring.networks.Keys)
-            {
-                if (wiring.networks[key].Update())
-                {
-                    updatedNetworks.Add(new Tuple<int, byte>(key, wiring.networks[key].state));
-                }
-            }
-
-            return updatedNetworks;
-        }
 
         #endregion
  

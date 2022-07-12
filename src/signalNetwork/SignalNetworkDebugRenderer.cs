@@ -12,7 +12,7 @@ namespace signals.src.signalNetwork
         public double RenderOrder => 0.94;
         public int RenderRange => 100;
 
-        private List<(Vec3d, Vec3d)> connections;
+        private List<List<Vec3d>> connections;
         private MeshRef meshRef;
         private MeshRef[] cachedConnectionsMesh;
         Dictionary<long,List<NodePos>> data;
@@ -90,12 +90,12 @@ namespace signals.src.signalNetwork
         {
             this.data = data;
             IBlockAccessor access = capi.World.BlockAccessor;
-            connections = new List<(Vec3d, Vec3d)>();
+            connections = new List<List<Vec3d>>();
             cachedConnectionsMesh = new MeshRef[connections.Count];
             int i = 0;
-            foreach ((Vec3d, Vec3d) tuple in connections)
+            foreach (List<Vec3d> tuple in connections)
             {
-                MeshData mesh = MakeLineMesh(new Vec3f(0, 0, 0), tuple.Item2.SubCopy(tuple.Item1).ToVec3f());
+                MeshData mesh = MakeLineMesh(new Vec3f(0, 0, 0), tuple[1].SubCopy(tuple[0]).ToVec3f());
                 cachedConnectionsMesh[i] = this.capi.Render.UploadMesh(mesh);
                 i++;
             }
@@ -128,9 +128,9 @@ namespace signals.src.signalNetwork
             Vec3d camPos = worldAccess.Player.Entity.CameraPos;
 
             int i = 0;
-            foreach((Vec3d, Vec3d) tuple in connections)
+            foreach(List<Vec3d> tuple in connections)
             {
-                ModelMat.Set(rpi.CameraMatrixOriginf).Translate(tuple.Item1.X - camPos.X, tuple.Item1.Y - camPos.Y, tuple.Item1.Z - camPos.Z);
+                ModelMat.Set(rpi.CameraMatrixOriginf).Translate(tuple[0].X - camPos.X, tuple[0].Y - camPos.Y, tuple[0].Z - camPos.Z);
                 prog.UniformMatrix("modelViewMatrix", ModelMat.Values);
                 rpi.RenderMesh(cachedConnectionsMesh[i++]);
             }
