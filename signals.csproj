@@ -28,6 +28,7 @@
     <!--
     <None Include="LICENSE" CopyToOutputDirectory="PreserveNewest"/>
     -->
+    <None Include="modinfo.json" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="assets/**">
       <Link>assets/%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
