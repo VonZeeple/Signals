@@ -83,6 +83,7 @@
     "textures": { "needle": { "base": "game:block/creative/col69"}},
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
+    "lightAbsorption": 0,
     "blockmaterial": "Metal",
     "selectionboxbytype":{
         "*-floor-*":{

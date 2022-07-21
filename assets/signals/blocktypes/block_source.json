@@ -30,6 +30,7 @@
     "sideopaque": {
         "all": false
     },
+    "lightAbsorption": 0,
     "selectionbox": {
         "x1": 0,
         "y1": 0,

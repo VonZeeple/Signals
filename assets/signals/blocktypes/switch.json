@@ -68,6 +68,7 @@
     },
     "sideopaque": { "all": false },
     "sidesolid": { "all": false },
+    "lightAbsorption": 0,
     "selectionBox": {
         "x1": 0.15,
         "y1": 0,

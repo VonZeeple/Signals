@@ -162,6 +162,7 @@
     },
     "sideopaque": { "all": false },
     "sidesolid": { "all": false },
+    "lightAbsorption": 0,
     "shape": {
         "base": "signals:block/delay_{value}",
         "rotateXbytype": {
