@@ -9,7 +9,7 @@ namespace signals.src.signalNetwork
 {
     class BEDelay : BlockEntity, IBESignalReceptor
     {
-        private byte[] values;
+        private byte[] values = new byte[6]{0,0,0,0,0,0};
         private byte lastInput;
 
         private int state = 0;
@@ -23,7 +23,6 @@ namespace signals.src.signalNetwork
             if( block.Variant["value"] != null ){
                 state = Int32.Parse(block.Variant["value"]);
             }
-            values = new byte[6]{0,0,0,0,0,0};
             signalMod = api.ModLoader.GetModSystem<SignalNetworkMod>();
             signalMod.RegisterSignalTickListener(OnSignalNetworkTick);
 

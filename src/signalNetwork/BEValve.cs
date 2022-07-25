@@ -5,7 +5,7 @@ namespace signals.src.signalNetwork
 {
     class BEValve : BlockEntity, IBESignalReceptor
     {
-        public byte state;//TO do, save this in treeAttribute
+        public byte state;
 
         public override void Initialize(ICoreAPI api)
         {
@@ -16,8 +16,8 @@ namespace signals.src.signalNetwork
 
         public void OnServerGameTick(float dt)
         {
-            BEBehaviorSignalValve valve = GetBehavior<BEBehaviorSignalValve>();
-            valve?.commute(state);
+            //BEBehaviorSignalValve valve = GetBehavior<BEBehaviorSignalValve>();
+            //valve?.commute(state);
         }
 
         public void OnValueChanged(NodePos pos, byte value)
