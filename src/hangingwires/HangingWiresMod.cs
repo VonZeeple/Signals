@@ -177,6 +177,7 @@ namespace signals.src.hangingwires
         public bool UseWire(IPlayer player){
             ItemStack itemStack = player?.InventoryManager.ActiveHotbarSlot.Itemstack;
             if ( itemStack?.Item?.Code?.ToString() != "signals:el_wire") return false;
+            if ( player.WorldData.CurrentGameMode == EnumGameMode.Creative ){return true;}
             player?.InventoryManager.ActiveHotbarSlot.TakeOut(1);
             player?.InventoryManager.ActiveHotbarSlot.MarkDirty();
             return true;
