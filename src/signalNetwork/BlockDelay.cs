@@ -39,7 +39,7 @@ namespace signals.src.signalNetwork
         {
             string info = base.GetPlacedBlockInfo(world, pos, forPlayer);
             int value = Int32.Parse(this.Variant["value"]);
-            info += "\r\n delay: " + (value+1).ToString();
+            info += "Delay: " + (value+1).ToString() + "\r\n";
             return info;
         }
     }
