@@ -15,5 +15,14 @@
     "signals:block-blockresistor-12-*": "Resistor (12)",
     "signals:block-blockresistor-13-*": "Resistor (13)",
     "signals:block-blockresistor-14-*": "Resistor (14)",
-    "signals:block-blockresistor-15-*": "Resistor (15)"
+    "signals:block-blockresistor-15-*": "Resistor (15)",
+    "signals:block-blockmeter-*": "Signalmeter",
+    "signals:block-blocklightbulb-*": "Light bulb",
+    "signals:block-pressureplate-*": "Pressure plate",
+    "signals:block-blockvalve-*": "Signal valve",
+    "signals:block-blockconnection-*": "Connector",
+    "signals:block-blockconnection2-*": "Double connector",
+    "signals:block-knifeswitch-*": "Switch",
+    "signals:block-blocksource": "Signal source",
+    "signals:block-blockbuzzer": "Buzzer"
 }
