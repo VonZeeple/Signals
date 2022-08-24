@@ -31,7 +31,7 @@
         "all": false
     },
     "lightAbsorption": 0,
-    "selectionbox": {
+    "collisionselectionbox": {
         "x1": 0,
         "y1": 0,
         "z1": 0,

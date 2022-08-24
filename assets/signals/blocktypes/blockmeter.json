@@ -85,7 +85,7 @@
     "sideopaque": { "all": false },
     "lightAbsorption": 0,
     "blockmaterial": "Metal",
-    "selectionboxbytype":{
+    "collisionselectionboxbytype":{
         "*-floor-*":{
             "x1": 0.125,
             "y1": 0,
