@@ -2,7 +2,6 @@ using System;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
-using Vintagestory.API.MathTools;
 
 namespace signals.src.signalNetwork
 {
@@ -20,6 +19,8 @@ namespace signals.src.signalNetwork
         }
 
         private float GetPitch(){return (float)Math.Pow(2, pitch*1.0/12);}
+
+        public int GetPitchInfo(){return pitch;}
 
         internal void UpdateSound(){
             if(Api?.Side != EnumAppSide.Client){return;}

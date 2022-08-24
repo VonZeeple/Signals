@@ -1,5 +1,6 @@
 using signals.src.transmission;
 using Vintagestory.API.Common;
+using Vintagestory.API.MathTools;
 
 namespace signals.src.signalNetwork
 {
@@ -15,6 +16,17 @@ namespace signals.src.signalNetwork
                 return true;
             }
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
+        }
+
+        public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+        {
+            string info = base.GetPlacedBlockInfo(world, pos, forPlayer);
+            BEBuzzer be = world.BlockAccessor.GetBlockEntity(pos) as BEBuzzer;
+            if(!(be is null)){
+                int value = be.GetPitchInfo();
+                info += "Pitch: " + (value).ToString() + "\r\n";
+            }
+            return info;
         }
     }
 }
