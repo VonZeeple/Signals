@@ -109,7 +109,7 @@ namespace signals.src.transmission
             string info = base.GetPlacedBlockInfo(world, pos, forPlayer);
             BlockSelection sel = forPlayer.Entity.BlockSelection;
             NodePos nodepos = this.GetNodePosForWire(world, sel);
-            info +="\r\n" + nodepos?.ToString();
+            if (!(nodepos == null)){info += nodepos?.ToString() + "\r\n";}
             return info;
         }
 

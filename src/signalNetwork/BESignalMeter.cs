@@ -22,6 +22,7 @@ namespace signals.src.signalNetwork
 
                 renderer = new BESignalMeterRenderer(api as ICoreClientAPI, Pos, GenMesh(), type, BlockFacing.FromCode(orientation));
                 (api as ICoreClientAPI).Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "signalmeter");
+                UpdateRenderer();
             }
         }
 

@@ -1,9 +1,10 @@
 ﻿{
-    "code": "blocksource",
-    "class": "BlockSignalConnection",
+    "code": "blockbuzzer",
+    "class": "BlockBuzzer",
     "attributes": {
         "signalNodes": [
             {
+                "index": 0,
                 "x1": 0.40625,
                 "y1": 0.5625,
                 "z1": 0.40625,
@@ -13,7 +14,7 @@
             }
         ]
     },
-    "entityclass": "Generic",
+    "entityclass": "BEBuzzer",
     "entityBehaviors": [
         {
             "name": "BEBehaviorSignalConnector",
@@ -21,7 +22,7 @@
                 "signalNodes": [
                     {
                         "index": 0,
-                        "isSource": true
+                        "isSource": false
                     }
                 ]
             }

@@ -117,13 +117,6 @@ namespace signals.src.hangingwires
         }
 
         private void Event_ChunksLoaded(Vec2i chunkCoord, IWorldChunk[] chunks){
-            foreach(IPlayer player in sapi.World.AllOnlinePlayers){
-                foreach(IWorldChunk chunk in chunks){
-                    if (chunk.Entities.Contains(player.Entity)){
-                        //serverChannel.SendPacket<HangingWiresData>(data, player as IServerPlayer);
-                    }
-                }
-            }
         }
 
         private void Event_GameWorldSave()
@@ -184,6 +177,7 @@ namespace signals.src.hangingwires
         public bool UseWire(IPlayer player){
             ItemStack itemStack = player?.InventoryManager.ActiveHotbarSlot.Itemstack;
             if ( itemStack?.Item?.Code?.ToString() != "signals:el_wire") return false;
+            if ( player.WorldData.CurrentGameMode == EnumGameMode.Creative ){return true;}
             player?.InventoryManager.ActiveHotbarSlot.TakeOut(1);
             player?.InventoryManager.ActiveHotbarSlot.MarkDirty();
             return true;

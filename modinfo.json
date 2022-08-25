@@ -2,11 +2,11 @@
   "type": "code",
   "modid": "signals",
   "name": "signals",
-  "authors": ["Unknown"],
-  "description": "To be added",
-  "website": "",
-  "version": "1.0.0",
+  "authors": ["PFev"],
+  "description": "Wires, triodes and more.",
+  "website": "https://github.com/VonZeeple/Signals",
+  "version": "0.1.1",
   "dependencies": {
-    "game": "1.16.4"
+    "game": "1.16.5"
   }
 }

@@ -24,6 +24,8 @@ namespace signals.src.transmission
 
         public long networkId;
 
+        public bool firstTick = true;
+
         /// <summary>
         /// Set to false when the nodes in the network needs upate
         /// </summary>
@@ -95,13 +97,14 @@ namespace signals.src.transmission
             isValid = true;//Needs to be here as following
             foreach(ISignalNode node in nodes.Values){
                 if(!updated.Contains(node)){
-                    if(node.value != 0){changed.Add(node);};
+                    if(node.value != 0 | firstTick){changed.Add(node);};
                     node.value = 0;
                 }
             }
             foreach(ISignalNode node in changed){
                 mod.GetDeviceAt(node.Pos.blockPos)?.OnNodeUpdate(node.Pos);
             }
+            firstTick = false;
         }
 
         public void AddNode(ISignalNode node){

@@ -15,7 +15,7 @@ namespace signals.src.transmission
         BlockFacing facing;
         private int texId;
 
-        public BESignalMeterRenderer(ICoreClientAPI capi,BlockPos pos, MeshData mesh, string type, BlockFacing facing)
+        public BESignalMeterRenderer(ICoreClientAPI capi, BlockPos pos, MeshData mesh, string type, BlockFacing facing)
         {
             this.pos = pos;
             this.api = capi;

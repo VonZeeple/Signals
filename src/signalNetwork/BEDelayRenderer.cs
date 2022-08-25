@@ -49,7 +49,7 @@ namespace signals.src.transmission
             if (lightsMeshRef != null) lightsMeshRef.Dispose();
             for (int i = 0; i < Math.Min(values.Length, shape.Elements.Length); i++){
                 ShapeElement el = shape.Elements[i];
-                foreach (ShapeElementFace face in el.Faces.Values){
+                foreach (ShapeElementFace face in el.FacesResolved){
                     face.Glow = 255*values[i]/15;
                 }
             }
