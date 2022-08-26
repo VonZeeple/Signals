@@ -1,0 +1,71 @@
+﻿{
+    "code": "buttonswitch",
+    "class": "BlockButtonSwitch",
+    "attributes": {
+        "signalNodes": [
+            {
+                "index": 0,
+                "x1": 0.125,
+                "y1": 0.0625,
+                "z1": 0.0625,
+                "x2": 0.3125,
+                "y2": 0.25,
+                "z2": 0.25
+            },
+            {
+                "index": 1,
+                "x1": 0.625,
+                "y1": 0.0625,
+                "z1": 0.0625,
+                "x2": 0.8125,
+                "y2": 0.25,
+                "z2": 0.25
+            }
+        ]
+    },
+    "entityclass": "BEButtonSwitch",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalSwitch",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    },
+                    {
+                        "index": 1,
+                        "isSource": false
+                    }
+                ]
+            }
+
+
+
+        }
+    ],
+    "behaviors": [],
+    "variantgroups": [
+        {
+            "code": "state",
+            "states": [ "on", "off" ]
+        }
+    ],
+    "shape": { "base": "signals:block/switch_{state}" },
+    "creativeinventory": {
+        "general": [ "*-off" ],
+        "signals": [ "*-off" ]
+    },
+    "sideopaque": { "all": false },
+    "sidesolid": { "all": false },
+    "lightAbsorption": 0,
+    "selectionBox": {
+        "x1": 0.15,
+        "y1": 0,
+        "z1": 0.1,
+        "x2": 0.85,
+        "y2": 0.15,
+        "z2": 0.9
+    }
+
+}
