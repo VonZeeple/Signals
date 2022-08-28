@@ -24,5 +24,6 @@
     "signals:block-blockconnection2-*": "Double connector",
     "signals:block-knifeswitch-*": "Switch",
     "signals:block-blocksource": "Signal source",
-    "signals:block-blockbuzzer": "Buzzer"
+    "signals:block-blockbuzzer": "Buzzer",
+    "signals:item-el_wire": "Signal wire"
 }

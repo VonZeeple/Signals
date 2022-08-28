@@ -3,7 +3,7 @@
     "texture": { "base": "signals:item/el_wire" },
     "creativeinventory": {
         "general": [ "*" ],
-        "items": [ "*" ]
+        "signals": [ "*" ]
     },
     "maxstacksize": 16,
     "materialDensity": 510
