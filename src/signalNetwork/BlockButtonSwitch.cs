@@ -5,6 +5,7 @@ namespace signals.src.signalNetwork
 {
     class BlockButtonSwitch : BlockConnection
     {
+        string sound = "effect/woodswitch";
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             bool result = base.OnBlockInteractStart(world, byPlayer, blockSel);
@@ -13,6 +14,7 @@ namespace signals.src.signalNetwork
                 if(!(be is null)){
                     be.OnInteract(byPlayer);
                 }
+                world.PlaySoundAt(new AssetLocation("sounds/" + sound), blockSel.Position.X, blockSel.Position.Y, blockSel.Position.Z, byPlayer);
                 return true;
             }
             return result;
@@ -29,6 +31,7 @@ namespace signals.src.signalNetwork
             BEButtonSwitch be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEButtonSwitch;
             if(!(be is null)){
                 be.ReleaseInteract();
+                world.PlaySoundAt(new AssetLocation("sounds/" + sound), blockSel.Position.X, blockSel.Position.Y, blockSel.Position.Z, byPlayer);
             }
         }
 
