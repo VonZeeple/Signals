@@ -40,7 +40,8 @@ namespace signals.src.signalNetwork
 
             if(!buzzSound.IsPlaying & playing){
                 buzzSound.Start();
-                buzzSound.FadeIn(0.01f, null);}
+                buzzSound.FadeIn(0.0f, null);
+                }
             if(buzzSound.IsPlaying & !playing){
                 buzzSound.FadeOutAndStop(0.01f);}
         }
