@@ -55,6 +55,8 @@ namespace signals.src
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalConnector",typeof(BEBehaviorSignalConnector));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalSwitch", typeof(BEBehaviorSignalSwitch));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalValve", typeof(BEBehaviorSignalValve));
+            api.RegisterBlockEntityBehaviorClass("BEBehaviorAnemometer", typeof(BEBehaviorAnemometer));
+            api.RegisterBlockEntityBehaviorClass("BEBehaviorRiftDetector", typeof(BEBehaviorRiftDetector));
 
             RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
             RegisterCircuitComponentClass("source", typeof(CircuitComponentSource));
