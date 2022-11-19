@@ -8,13 +8,13 @@ namespace signals.src.signalNetwork
     class BEBuzzer : BlockEntity, IBESignalReceptor
     {
         private int pitch = 0;
-        private bool playing;
+        private byte signalValue;
         AssetLocation asset = new AssetLocation("Game:sounds/voice/clarinet");
         ILoadedSound buzzSound;
         
         void IBESignalReceptor.OnValueChanged(NodePos pos, byte value)
         {
-            playing = (value != 0);
+            signalValue = value;
             MarkDirty();
         }
 
@@ -37,12 +37,12 @@ namespace signals.src.signalNetwork
                     Range = 16,
                 });
             }
-
-            if(!buzzSound.IsPlaying & playing){
+            buzzSound.SetVolume((float)signalValue/15f);
+            if(!buzzSound.IsPlaying & signalValue != (byte)0){
                 buzzSound.Start();
                 buzzSound.FadeIn(0.0f, null);
                 }
-            if(buzzSound.IsPlaying & !playing){
+            if(buzzSound.IsPlaying & signalValue == (byte)0){
                 buzzSound.FadeOutAndStop(0.01f);}
         }
 
@@ -64,7 +64,7 @@ namespace signals.src.signalNetwork
         {
             base.FromTreeAttributes(tree, worldForResolving);
             pitch = tree.GetInt("pitch", 0);
-            playing = tree.GetBool("playing", false);
+            signalValue = (byte)tree.GetInt("value", 0);
             UpdateSound();
         }
 
@@ -72,7 +72,7 @@ namespace signals.src.signalNetwork
         {
             base.ToTreeAttributes(tree);
             tree.SetInt("pitch", pitch);
-            tree.SetBool("playing", playing);
+            tree.SetInt("value", (int)signalValue);
         }
 
         ~BEBuzzer()
