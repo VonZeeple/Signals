@@ -46,6 +46,7 @@ namespace signals.src
             api.RegisterBlockEntityClass("BESignalMeter", typeof(BESignalMeter));
             api.RegisterBlockEntityClass("BEDelay", typeof(BEDelay));
             api.RegisterBlockEntityClass("BEBuzzer", typeof(BEBuzzer));
+            api.RegisterBlockEntityClass("BEScreen", typeof(BEScreen));
             api.RegisterBlockEntityClass("BEButtonSwitch", typeof(BEButtonSwitch));
 
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
