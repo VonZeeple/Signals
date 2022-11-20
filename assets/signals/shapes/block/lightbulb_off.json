@@ -11,7 +11,7 @@
 		"statictranslocator_glass": "game:block/machine/statictranslocator/statictranslocator_glass",
 		"iron": "game:block/metal/lantern/iron",
 		"aged-ceramic2": "game:block/clay/aged-ceramic2",
-		"filament": "game:block/glowworm/glowworm"
+		"filament": "game:block/machine/statictranslocator/rustyglow"
 	},
 	"elements": [
 		{
