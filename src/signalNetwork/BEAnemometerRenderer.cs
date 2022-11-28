@@ -33,7 +33,9 @@ namespace signals.src.signalNetwork
             api.Event.UnregisterRenderer(this, EnumRenderStage.Opaque);
             rotorMeshRef?.Dispose();
         }
+
         private void CreateMesh(){
+            rotorMeshRef?.Dispose();
             Shape shape = Shape.TryGet(api, "signals:shapes/block/winddetector_rotor.json");
             if(shape == null) return;
             MeshData mesh;
@@ -55,7 +57,7 @@ namespace signals.src.signalNetwork
 
             IStandardShaderProgram prog = rpi.PreparedStandardShader(pos.X, pos.Y, pos.Z);
             //this line make render disapear
-            //rpi.BindTexture2d(api.ItemTextureAtlas.AtlasTextureIds[0]);
+            rpi.BindTexture2d(api.ItemTextureAtlas.AtlasTextureIds[0]);
             angle_deg += targetSpeed*deltaTime;
             prog.ModelMatrix = ModelMat
                 .Identity()
