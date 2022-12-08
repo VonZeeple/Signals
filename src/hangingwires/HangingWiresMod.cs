@@ -141,6 +141,12 @@ namespace signals.src.hangingwires
 
         #region interactions
 
+        public bool TryToRemoveConnection(NodePos pos1, NodePos pos2){
+            int removed = data.connections.RemoveWhere(c => ((c.pos1 == pos1) && (c.pos2 == pos2)) || ((c.pos1 == pos2) && (c.pos2 == pos1)));
+            serverChannel.BroadcastPacket(data);
+            return removed > 0;
+        }
+
         public bool TryToAddConnection(WireConnection connection){
             bool added = data.connections.Add(connection);
             if (added)

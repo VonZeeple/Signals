@@ -94,12 +94,11 @@ namespace signals.src.transmission
                 NodePos pos = GetNodePosForWire(world, blockSel, mod.GetPendingNode());
                 if (CanAttachWire(world, pos, mod.GetPendingNode()))
                 {
-                    if (pos != null) mod.ConnectWire(pos, byPlayer, this);
-                    return true;
+                    if (pos != null){
+                        if (mod.ConnectWire(pos, byPlayer, this)){return true;}
+                        }
                 }
             }
-
-
 
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }

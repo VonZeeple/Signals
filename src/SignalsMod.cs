@@ -1,5 +1,6 @@
 ﻿using signals.src.circuits;
 using signals.src.circuits.components;
+using signals.src.hangingwires;
 using signals.src.signalNetwork;
 using signals.src.transmission;
 using System;
@@ -58,6 +59,9 @@ namespace signals.src
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalValve", typeof(BEBehaviorSignalValve));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorAnemometer", typeof(BEBehaviorAnemometer));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorRiftDetector", typeof(BEBehaviorRiftDetector));
+
+            api.RegisterCollectibleBehaviorClass("WireCutterBehavior", typeof(WireCutterBehavior));
+            api.RegisterItemClass("WireCutterItem", typeof(WireCutterItem));
 
             RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
             RegisterCircuitComponentClass("source", typeof(CircuitComponentSource));

@@ -87,11 +87,11 @@ namespace signals.src.hangingwires
             return this.pendingNode;
         }
 
-        public void ConnectWire(NodePos pos, IPlayer byPlayer, IHangingWireAnchor anchor)
+        public bool ConnectWire(NodePos pos, IPlayer byPlayer, IHangingWireAnchor anchor)
         {
-            if (api.Side == EnumAppSide.Server) return;
+            if (api.Side == EnumAppSide.Server) return false;
 
-            if (!IsHoldingWire(byPlayer)) return;
+            if (!IsHoldingWire(byPlayer)) return false;
 
             if(pendingNode == null)
             {
@@ -108,6 +108,7 @@ namespace signals.src.hangingwires
                 pendingNode = null;
                 WireRenderer?.Dispose();
             }
+            return true;
         }
     }
 
