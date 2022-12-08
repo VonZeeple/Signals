@@ -47,7 +47,7 @@ namespace signals.src
             BlockFacing oppositeFace = blockSel.Face.Opposite;
 
             BlockPos attachingBlockPos = blockSel.Position.AddCopy(oppositeFace);
-            Block block = world.BlockAccessor.GetBlock(world.BlockAccessor.GetBlockId(attachingBlockPos));
+            Block block = world.BlockAccessor.GetBlock(attachingBlockPos);
 
             if (block.CanAttachBlockAt(world.BlockAccessor, this.block, attachingBlockPos, blockSel.Face))
             {
