@@ -20,26 +20,28 @@ namespace signals.src.transmission
         Random random;
         int screenSizeX = 16;
         int screenSizeY = 16;
+        protected BlockFacing orientation;
 
-        public BEScreenRenderer(ICoreClientAPI capi, BlockPos pos, int screenSizeX, int screenSizeY)
+        public BEScreenRenderer(ICoreClientAPI capi, BlockPos pos, int screenSizeX, int screenSizeY, BlockFacing orientation=null)
         {
             this.screenSizeX = screenSizeX;
             this.screenSizeY = screenSizeY;
             this.api = capi;
             this.pos = pos;
+            this.orientation = orientation;
             random = new Random();
             api.BlockTextureAtlas.GetOrInsertTexture(new AssetLocation("game:textures/block/machine/statictranslocator/rustyglow"), out _, out texpos);
             screenMeshRef = capi.Render.UploadMesh(GetSquareMesh());
         }
 
-        private MeshData GetSquareMesh(){
+        private MeshData GetSquareMesh(int brightness = 0){
             MeshData mesh = QuadMeshUtil.GetCustomQuad(0f,0f,0f,1f/16,1f/16, 255,255,255,255);
             for (int i = 0; i < mesh.Uv.Length; i+=2)
             {
-                mesh.Uv[i + 0] = texpos.x1 + mesh.Uv[i + 0] * 32f / api.BlockTextureAtlas.Size.Width;
-                mesh.Uv[i + 1] = texpos.y1 + mesh.Uv[i + 1] * 32f / api.BlockTextureAtlas.Size.Height;
+                mesh.Uv[i + 0] = texpos.x1 + mesh.Uv[i + 0] * 1f / api.BlockTextureAtlas.Size.Width;
+                mesh.Uv[i + 1] = texpos.y1 + mesh.Uv[i + 1] * 1f / api.BlockTextureAtlas.Size.Height;
             }
-            mesh.Flags = new int[] { 128, 128, 128, 128 };
+            mesh.Flags = new int[] { brightness, brightness, brightness, brightness };
             return mesh;
         }
 
@@ -55,13 +57,15 @@ namespace signals.src.transmission
             for (int x = 0; x < values.Length; x++){
                 if(values[x] > 0){
                     if(mesh == null){
-                        mesh = GetSquareMesh().Translate(1f/16*(x%screenSizeX),1f/16*(x/screenSizeX),0);
+                        mesh = GetSquareMesh(values[x]*17).Scale(new Vec3f(0,0,0), 12f/16, 12f/16, 1f).Translate(1f/16*12f/16*(x%screenSizeX),1f/16*12f/16*(x/screenSizeX),0);
                     }else{
-                        mesh.AddMeshData(GetSquareMesh().Translate(1f/16*(x%screenSizeX),1f/16*(x/screenSizeX),0));
+                        mesh.AddMeshData(GetSquareMesh(values[x]*17).Scale(new Vec3f(0,0,0), 12f/16, 12f/16, 1f).Translate(1f/16*12f/16*(x%screenSizeX),1f/16*12f/16*(x/screenSizeX),0));
                     }
                 }
             }
             if(mesh != null){
+                mesh.Translate(new Vec3f(2f/16, 2f/16, 15.001f/16));
+                mesh.Rotate(new Vec3f(0.5f,0,0.5f),0, (orientation.HorizontalAngleIndex-1) * 90 * GameMath.PI / 180, 0);
                 screenMeshRef = api.Render.UploadMesh(mesh);
             }
         }
@@ -84,8 +88,8 @@ namespace signals.src.transmission
             prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;
 
             prog.ModelMatrix = ModelMat
-            .Identity().Translate(pos.X - camPos.X + 2f/16,pos.Y - camPos.Y + 2f/16,pos.Z - camPos.Z+15.001f/16)
-            .Scale(12f/16, 12f/16, 1f)
+            .Identity().Translate(pos.X - camPos.X, pos.Y - camPos.Y, pos.Z - camPos.Z)
+            //.Scale(12f/16, 12f/16, 1f)
             .Values;
             rpi.RenderMesh(screenMeshRef);
 

@@ -5,6 +5,8 @@ using signals.src.transmission;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
 
 namespace signals.src.signalNetwork
 {
@@ -54,7 +56,8 @@ namespace signals.src.signalNetwork
             signalMod.RegisterSignalTickListener(OnSignalNetworkTick);
             if (api.Side == EnumAppSide.Client)
             {
-                renderer = new BEScreenRenderer(api as ICoreClientAPI, this.Pos,SCREEN_SIZE_X, SCREEN_SIZE_Y);
+                BlockFacing orientation = BlockFacing.FromCode(this.Block.Variant["horizontalorientation"]);
+                renderer = new BEScreenRenderer(api as ICoreClientAPI, this.Pos,SCREEN_SIZE_X, SCREEN_SIZE_Y, orientation);
                 (api as ICoreClientAPI).Event.RegisterRenderer(renderer, EnumRenderStage.Opaque, "signalsceen");
                 renderer.UpdateMesh(values);
             }

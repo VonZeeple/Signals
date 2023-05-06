@@ -10,7 +10,11 @@
                 "z1": 0.375,
                 "x2": 1,
                 "y2": 0.5625,
-                "z2": 0.625
+                "z2": 0.625,
+                "rotateYByType":{"*-north": 0,
+                               "*-west": 90,
+                               "*-south": 180,
+                               "*-east": 270}
             },
             {
                 "index": 1,
@@ -19,7 +23,11 @@
                 "z1": 0.375,
                 "x2": 0.5625,
                 "y2": 1,
-                "z2": 0.625
+                "z2": 0.625,
+                "rotateYByType":{"*-north": 0,
+                               "*-west": 90,
+                               "*-south": 180,
+                               "*-east": 270}
             },
             {
                 "index": 2,
@@ -28,7 +36,11 @@
                 "z1": 0,
                 "x2": 0.625,
                 "y2": 0.625,
-                "z2": 0.25
+                "z2": 0.25,
+                "rotateYByType":{"*-north": 0,
+                               "*-west": 90,
+                               "*-south": 180,
+                               "*-east": 270}
             },
             {
                 "index": 3,
@@ -37,10 +49,17 @@
                 "z1": 0.1875,
                 "x2": 0.625,
                 "y2": 0.3125,
-                "z2": 0.4375
+                "z2": 0.4375,
+                "rotateYByType":{"*-north": 0,
+                               "*-west": 90,
+                               "*-south": 180,
+                               "*-east": 270}
             }
         ]
     },
+    "behaviors": [{"name": "HorizontalOrientable",
+                   "properties": {  "dropBlockFace": "north" }}],
+    "variantgroups": [{ "loadFromProperties": "abstract/horizontalorientation" }],
     "entityclass": "BEScreen",
     "entityBehaviors": [
         {
@@ -72,12 +91,21 @@
         "z1": 0.8,
         "x2": 1,
         "y2": 1,
-        "z2": 1
+        "z2": 1,
+        "rotateYByType":{"*-north": 0,
+                               "*-west": 90,
+                               "*-south": 180,
+                               "*-east": 270}
     },
     "creativeinventory": {
-        "general": [ "*" ],
-        "signals": ["*"]
+        "general": [ "*-east" ],
+        "signals": ["*-east"]
     },
-    "shape": { "base": "signals:block/screen" },
+    "shape": { "base": "signals:block/screen",
+               "rotateYByType":{"*-north": 0,
+                               "*-west": 90,
+                               "*-south": 180,
+                               "*-east": 270}
+            },
     "drawtype": "json"
 }
