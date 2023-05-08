@@ -25,9 +25,9 @@ namespace signals.src.hangingwires
             //if (handHandling == EnumHandHandling.PreventDefault) return;
             IHangingWireAnchor anchor = byEntity.World.BlockAccessor.GetBlock(blockSel.Position) as IHangingWireAnchor;
             NodePos pos = anchor?.GetNodePosForWire(byEntity.World, blockSel, pendingNode);
-            api.Logger.Error(pos.ToString());
             if (pos == null) return;
 
+            api.Logger.Error(pos.ToString());
             if (pendingNode == null){
                 pendingNode = pos;
                 api.Logger.Error("added pending node");
