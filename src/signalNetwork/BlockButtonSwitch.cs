@@ -12,7 +12,7 @@ namespace signals.src.signalNetwork
             if ( blockSel.SelectionBoxIndex == GetSelectionBoxes(world.BlockAccessor, blockSel.Position).Length - 1 ){
                 BEButtonSwitch be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEButtonSwitch;
                 if(!(be is null)){
-                    be.OnInteract(byPlayer);
+                    be.OnInteract();
                 }
                 world.PlaySoundAt(new AssetLocation("sounds/" + sound), blockSel.Position.X, blockSel.Position.Y, blockSel.Position.Z, byPlayer);
                 return true;

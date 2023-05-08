@@ -22,7 +22,7 @@ namespace signals.src.signalNetwork
             return true;
         }
 
-        internal override bool OnInteract(IPlayer byPlayer)
+        internal override bool OnInteract()
         {
             BEBehaviorSignalSwitch sw = GetBehavior<BEBehaviorSignalSwitch>();
             sw?.commute(true);
