@@ -6,7 +6,7 @@ using Vintagestory.API.MathTools;
 
 namespace signals.src.signalNetwork
 {
-    class BEAccuator : BlockEntity, IBESignalReceptor
+    class BEActuator : BlockEntity, IBESignalReceptor
     {
         byte signalLevel = 0;
 
@@ -15,15 +15,17 @@ namespace signals.src.signalNetwork
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
-            if (api.Side == EnumAppSide.Client)
-            {
-
+            if(this.Block.Variant["orientation"] != null){
+                BlockFacing facing = BlockFacing.FromCode(this.Block.Variant["orientation"]);
+                if(facing != null){
+                    Orientation = facing;
+                }
+                Api.Logger.Notification(this.Block.Variant["orientation"]);
             }
         }
 
         public void OnValueChanged(NodePos pos, byte value)
         {
-            Api.Logger.Notification("value changed");
             if(pos.blockPos == Pos)
             {
                 if(signalLevel != value)
@@ -32,7 +34,6 @@ namespace signals.src.signalNetwork
                     MarkDirty();
                     if(value>0)
                     {
-                        Api.Logger.Notification("activating");
                         Activate();
                     }
                 }

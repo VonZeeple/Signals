@@ -49,7 +49,7 @@ namespace signals.src
             api.RegisterBlockEntityClass("BEBuzzer", typeof(BEBuzzer));
             api.RegisterBlockEntityClass("BEScreen", typeof(BEScreen));
             api.RegisterBlockEntityClass("BEButtonSwitch", typeof(BEButtonSwitch));
-            api.RegisterBlockEntityClass("BEAccuator", typeof(BEAccuator));
+            api.RegisterBlockEntityClass("BEActuator", typeof(BEActuator));
 
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
 
