@@ -19,7 +19,7 @@ namespace signals.src.hangingwires
 
             float t = 0.015f;//thickness
             Vec3f dPos = pos2 - pos1;
-            float dist = pos2.Distance(pos1);
+            float dist = pos2.DistanceTo(pos1);
 
             int nSec = (int)Math.Floor(dist*2);//number of section
             nSec = nSec > 5 ? nSec : 5;

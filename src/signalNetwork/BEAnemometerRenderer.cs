@@ -57,7 +57,7 @@ namespace signals.src.signalNetwork
 
             IStandardShaderProgram prog = rpi.PreparedStandardShader(pos.X, pos.Y, pos.Z);
             //this line make render disapear
-            rpi.BindTexture2d(api.ItemTextureAtlas.AtlasTextureIds[0]);
+            rpi.BindTexture2d(api.ItemTextureAtlas.AtlasTextures[0].TextureId);
             angle_deg += targetSpeed*deltaTime;
             prog.ModelMatrix = ModelMat
                 .Identity()

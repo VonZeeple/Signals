@@ -10,10 +10,10 @@
 	"textures": {
 		"bluetop": "game:block/clay/brickslab/bluetop",
 		"aged-ceramic2": "game:block/clay/aged-ceramic2",
-		"tech-powergenerator": "game:block/tech/tech-powergenerator",
+		"tech-powergenerator": "game:block/machine/tech/tech-powergenerator",
 		"iron": "game:block/metal/lantern/iron",
 		"aged1": "game:block/wood/planks/aged1",
-		"tech-powergeneratormain": "game:block/tech/tech-powergeneratormain"
+		"tech-powergeneratormain": "game:block/machine/tech/tech-powergeneratormain"
 	},
 	"elements": [
 		{

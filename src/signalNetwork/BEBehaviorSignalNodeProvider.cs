@@ -12,7 +12,6 @@ namespace signals.src.signalNetwork
     {
         SignalNetworkMod signalMod;
         List<ISignalNode> nodes;
-        protected BlockPos Pos;
 
         public BEBehaviorSignalNodeProvider(BlockEntity blockentity) : base(blockentity)
         {
@@ -25,7 +24,6 @@ namespace signals.src.signalNetwork
             base.Initialize(api, properties);
             //wireMod = api.ModLoader.GetModSystem<HangingWiresMod>();
             signalMod = api.ModLoader.GetModSystem<SignalNetworkMod>();
-            Pos = this.Blockentity?.Pos;
             if (api.Side == EnumAppSide.Client) return;
             JsonObject[] nodesTree = properties["signalNodes"]?.AsArray() ;
             if(nodesTree != null)
