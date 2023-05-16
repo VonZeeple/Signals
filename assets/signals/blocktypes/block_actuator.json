@@ -93,7 +93,7 @@
             }
         }
     ],
-    "shape": {"base": "block/valve_{powered}",
+    "shape": {"base": "block/actuator_{powered}",
     "rotateXbytype": {
         "*-south-up": 180,
         "*-north-up": 180,

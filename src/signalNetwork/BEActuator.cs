@@ -24,6 +24,25 @@ namespace signals.src.signalNetwork
             }
         }
 
+        private void SwapBlock(bool is_on){
+            //TODO: put this code in block
+            AssetLocation newCode;
+            Block block = this.Block;
+            try {
+                if(is_on){
+                    newCode = block.CodeWithVariant("powered", "on");
+                }else{
+                    newCode = block.CodeWithVariant("powered", "off");
+                }
+                Block newBlock = this.Api.World.BlockAccessor.GetBlock(newCode);
+                this.Api.World.BlockAccessor.ExchangeBlock(newBlock.BlockId, this.Pos);
+                this.Api.World.BlockAccessor.MarkBlockDirty(this.Pos);
+            }
+            catch (Exception){
+                this.Api.Logger.Debug("Can't swap actuator block");
+            };
+        }
+
         public void OnValueChanged(NodePos pos, byte value)
         {
             if(pos.blockPos == Pos)
@@ -35,7 +54,9 @@ namespace signals.src.signalNetwork
                     if(value>0)
                     {
                         Activate();
-                    }
+                        SwapBlock(true);
+                    }else{
+                    SwapBlock(false);}
                 }
 
             }
