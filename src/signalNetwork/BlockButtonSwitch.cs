@@ -13,6 +13,7 @@ namespace signals.src.signalNetwork
             BESwitch be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BESwitch;
             if(!(be is null)){
                 be.OnInteract();
+                be.ReleaseInteract();
             }
             base.Activate(world, caller, blockSel, activationArgs);
         }
