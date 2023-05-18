@@ -3,6 +3,7 @@ using signals.src.signalNetwork;
 using System;
 using System.Collections.Generic;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
@@ -12,10 +13,12 @@ namespace signals.src.transmission
     public class WireAnchor: RotatableCube
     {
         public int Index;
+        public string Name;
 
-        public WireAnchor(int index, float MinX, float MinY, float MinZ, float MaxX, float MaxY, float MaxZ) : base(MinX, MinY, MinZ, MaxX, MaxY, MaxZ)
+        public WireAnchor(int index, string name, float MinX, float MinY, float MinZ, float MaxX, float MaxY, float MaxZ) : base(MinX, MinY, MinZ, MaxX, MaxY, MaxZ)
         {
             Index = index;
+            Name = name;
         }
     }
 
@@ -107,8 +110,10 @@ namespace signals.src.transmission
         {
             string info = base.GetPlacedBlockInfo(world, pos, forPlayer);
             BlockSelection sel = forPlayer.Entity.BlockSelection;
-            NodePos nodepos = this.GetNodePosForWire(world, sel);
-            if (!(nodepos == null)){info += nodepos?.ToString() + "\r\n";}
+            //NodePos nodepos = this.GetNodePosForWire(world, sel);
+            //if (!(nodepos == null)){info += nodepos?.ToString() + "\r\n";}
+            string name = this.GetAnchorName(world, sel) ?? "con-unamed";
+            info += Lang.Get("signals:"+name)+"\r\n";
             return info;
         }
 
@@ -122,6 +127,15 @@ namespace signals.src.transmission
                 if (box.Index == pos.index) return position;
             }
             return new Vec3f(0f, 0f, 0f);
+        }
+
+        public string GetAnchorName(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null)
+        {
+            foreach (WireAnchor box in wireAnchors)
+            {
+                if (box.Index == blockSel.SelectionBoxIndex) return box.Name;
+            }
+            return null;
         }
 
         public NodePos GetNodePosForWire(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null)
