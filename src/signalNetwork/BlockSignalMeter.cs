@@ -49,14 +49,6 @@ namespace signals.src.signalNetwork
                 if (PlaceOnFloor(world, blockSel)) return true;
             }
 
-            // Otherwise attach to any possible face
-            BlockFacing[] faces = BlockFacing.ALLFACES;
-            for (int i = 0; i < faces.Length; i++)
-            {
-                if (faces[i] == BlockFacing.DOWN) continue;
-                if (TryAttachTo(world, blockSel.Position, faces[i])) return true;
-            }
-
             failureCode = "requireattachable";
             return false;
         }
@@ -98,6 +90,5 @@ namespace signals.src.signalNetwork
 
             return false;
         }
-        
     }
 }
