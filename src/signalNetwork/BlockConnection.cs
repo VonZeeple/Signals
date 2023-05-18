@@ -112,8 +112,10 @@ namespace signals.src.transmission
             BlockSelection sel = forPlayer.Entity.BlockSelection;
             //NodePos nodepos = this.GetNodePosForWire(world, sel);
             //if (!(nodepos == null)){info += nodepos?.ToString() + "\r\n";}
-            string name = this.GetAnchorName(world, sel) ?? "con-unamed";
-            info += Lang.Get("signals:"+name)+"\r\n";
+            string name = this.GetAnchorName(world, sel);
+            if(name != null){
+                info += Lang.Get("signals:"+name)+"\r\n";
+            }
             return info;
         }
 
@@ -133,7 +135,7 @@ namespace signals.src.transmission
         {
             foreach (WireAnchor box in wireAnchors)
             {
-                if (box.Index == blockSel.SelectionBoxIndex) return box.Name;
+                if (box.Index == blockSel.SelectionBoxIndex) return box.Name ?? "con-unamed";
             }
             return null;
         }
