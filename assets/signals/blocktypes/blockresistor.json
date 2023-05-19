@@ -46,76 +46,22 @@
 
         }
     ],
-    "behaviors": [
-        {
-            "name": "OmniAttachable",
-            "properties": {
-                "facingCode": "side",
-                "attachmentAreas": {
-                    "up": {
-                        "x1": 7,
-                        "y1": 15,
-                        "z1": 7,
-                        "x2": 8,
-                        "y2": 15,
-                        "z2": 8
-                    },
-                    "down": {
-                        "x1": 4,
-                        "y1": 0,
-                        "z1": 4,
-                        "x2": 11,
-                        "y2": 0,
-                        "z2": 11
-                    },
-                    "south": {
-                        "x1": 7,
-                        "y1": 11,
-                        "z1": 0,
-                        "x2": 8,
-                        "y2": 13,
-                        "z2": 1
-                    },
-                    "west": {
-                        "x1": 7,
-                        "y1": 11,
-                        "z1": 0,
-                        "x2": 8,
-                        "y2": 13,
-                        "z2": 1,
-                        "rotateY": 90
-                    },
-                    "north": {
-                        "x1": 7,
-                        "y1": 11,
-                        "z1": 0,
-                        "x2": 8,
-                        "y2": 13,
-                        "z2": 1,
-                        "rotateY": 180
-                    },
-                    "east": {
-                        "x1": 7,
-                        "y1": 11,
-                        "z1": 0,
-                        "x2": 8,
-                        "y2": 13,
-                        "z2": 1,
-                        "rotateY": 270
-                    }
-                }
-            }
-        }],
+    "behaviors": [{ "name": "BlockBehaviorCoverWithDirection" }],
     "variantgroups": [
         {
             "code": "value",
             "states": ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]
         },
         {
+            "code": "orientation",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        },
+        {
             "code": "side",
             "states": [ "north", "east", "south", "west", "up", "down" ]
         }
     ],
+    "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south", "*-east-east", "*-east-west", "*-west-east", "*-west-west" ],
     "attributes": {
         "signalNodes": [
             {
@@ -127,20 +73,52 @@
                 "y2": 0.25,
                 "z2": 0.59375,
                 "rotateXbytype": {
-                    "*-down": 180,
-                    "*-south": 90,
-                    "*-east": 90,
-                    "*-west": 90,
-                    "*-north": 270
+                    "*-south-up": 180,
+                    "*-north-up": 180,
+                    "*-west-up": 180,
+                    "*-east-up": 180,
+                    "*-north-west":180,
+                    "*-up-west": 270,
+                    "*-down-west":90,
+                    "*-down-east":270,
+                    "*-south-east":180,
+                    "*-up-north":90,
+                    "*-down-north":90,
+                    "*-east-north":90,
+                    "*-west-north":90,
+                    "*-up-south":270,
+                    "*-down-south":270,
+                    "*-east-south":270,
+                    "*-west-south":270
                 },
-                "rotateYbytype": {
-                    "*-west": 180
+                "rotateYbytype":{
+                    "*-south-down":180,
+                    "*-east-down":270,
+                    "*-west-down":90,
+                    "*-north-up":180,
+                    "*-west-up":90,
+                    "*-east-up":270,
+                    "*-north-west":180,
+                    "*-south-west":180,
+                    "*-up-west":180,
+                    "*-down-west":180,
+                    "*-down-north":180,
+                    "*-east-north":270,
+                    "*-west-north":90,
+                    "*-up-south":180,
+                    "*-east-south":270,
+                    "*-west-south":90
                 },
-                "rotateZbytype": {
-                    "*-west": 270,
-                    "*-east": 270
+                "rotateZbyType":{
+                    "*-north-west":90,
+                    "*-south-west":90,
+                    "*-up-west":90,
+                    "*-down-west":90,
+                    "*-up-east":90,
+                    "*-down-east":90,
+                    "*-north-east":90,
+                    "*-south-east":90
                 }
-
             },
             {
                 "index": 1,
@@ -151,41 +129,107 @@
                 "y2": 0.25,
                 "z2": 0.59375,
                 "rotateXbytype": {
-                    "*-down": 180,
-                    "*-south": 90,
-                    "*-east": 90,
-                    "*-west": 90,
-                    "*-north": 270
+                    "*-south-up": 180,
+                    "*-north-up": 180,
+                    "*-west-up": 180,
+                    "*-east-up": 180,
+                    "*-north-west":180,
+                    "*-up-west": 270,
+                    "*-down-west":90,
+                    "*-down-east":270,
+                    "*-south-east":180,
+                    "*-up-north":90,
+                    "*-down-north":90,
+                    "*-east-north":90,
+                    "*-west-north":90,
+                    "*-up-south":270,
+                    "*-down-south":270,
+                    "*-east-south":270,
+                    "*-west-south":270
                 },
-                "rotateYbytype": {
-                    "*-west": 180
+                "rotateYbytype":{
+                    "*-south-down":180,
+                    "*-east-down":270,
+                    "*-west-down":90,
+                    "*-north-up":180,
+                    "*-west-up":90,
+                    "*-east-up":270,
+                    "*-north-west":180,
+                    "*-south-west":180,
+                    "*-up-west":180,
+                    "*-down-west":180,
+                    "*-down-north":180,
+                    "*-east-north":270,
+                    "*-west-north":90,
+                    "*-up-south":180,
+                    "*-east-south":270,
+                    "*-west-south":90
                 },
-                "rotateZbytype": {
-                    "*-west": 270,
-                    "*-east": 270
+                "rotateZbyType":{
+                    "*-north-west":90,
+                    "*-south-west":90,
+                    "*-up-west":90,
+                    "*-down-west":90,
+                    "*-up-east":90,
+                    "*-down-east":90,
+                    "*-north-east":90,
+                    "*-south-east":90
                 }
             }
         ]
     },
     "creativeinventory": {
-        "general": [ "*-up" ],
-        "signals": ["*-up"]
+        "general": [ "*-north-down" ],
+        "signals": ["*-north-down"]
     },
     "shape": {
         "base": "signals:block/resistor",
         "rotateXbytype": {
-            "*-down": 180,
-            "*-south": 90,
-            "*-east": 90,
-            "*-west": 90,
-            "*-north": 270
+            "*-south-up": 180,
+            "*-north-up": 180,
+            "*-west-up": 180,
+            "*-east-up": 180,
+            "*-north-west":180,
+            "*-up-west": 270,
+            "*-down-west":90,
+            "*-down-east":270,
+            "*-south-east":180,
+            "*-up-north":90,
+            "*-down-north":90,
+            "*-east-north":90,
+            "*-west-north":90,
+            "*-up-south":270,
+            "*-down-south":270,
+            "*-east-south":270,
+            "*-west-south":270
         },
-        "rotateYbytype": {
-            "*-west": 180
+        "rotateYbytype":{
+            "*-south-down":180,
+            "*-east-down":270,
+            "*-west-down":90,
+            "*-north-up":180,
+            "*-west-up":90,
+            "*-east-up":270,
+            "*-north-west":180,
+            "*-south-west":180,
+            "*-up-west":180,
+            "*-down-west":180,
+            "*-down-north":180,
+            "*-east-north":270,
+            "*-west-north":90,
+            "*-up-south":180,
+            "*-east-south":270,
+            "*-west-south":90
         },
-        "rotateZbytype": {
-            "*-west": 270,
-            "*-east": 270
+        "rotateZbyType":{
+            "*-north-west":90,
+            "*-south-west":90,
+            "*-up-west":90,
+            "*-down-west":90,
+            "*-up-east":90,
+            "*-down-east":90,
+            "*-north-east":90,
+            "*-south-east":90
         }
     },
     "texturesByType": {
@@ -218,18 +262,51 @@
         "y2": 0.63,
         "z2": 0.07,
         "rotateXbytype": {
-            "*-down": 180,
-            "*-south": 90,
-            "*-east": 90,
-            "*-west": 90,
-            "*-north": 270
+            "*-south-up": 180,
+            "*-north-up": 180,
+            "*-west-up": 180,
+            "*-east-up": 180,
+            "*-north-west":180,
+            "*-up-west": 270,
+            "*-down-west":90,
+            "*-down-east":270,
+            "*-south-east":180,
+            "*-up-north":90,
+            "*-down-north":90,
+            "*-east-north":90,
+            "*-west-north":90,
+            "*-up-south":270,
+            "*-down-south":270,
+            "*-east-south":270,
+            "*-west-south":270
         },
-        "rotateYbytype": {
-            "*-west": 180
+        "rotateYbytype":{
+            "*-south-down":180,
+            "*-east-down":270,
+            "*-west-down":90,
+            "*-north-up":180,
+            "*-west-up":90,
+            "*-east-up":270,
+            "*-north-west":180,
+            "*-south-west":180,
+            "*-up-west":180,
+            "*-down-west":180,
+            "*-down-north":180,
+            "*-east-north":270,
+            "*-west-north":90,
+            "*-up-south":180,
+            "*-east-south":270,
+            "*-west-south":90
         },
-        "rotateZbytype": {
-            "*-west": 270,
-            "*-east": 270
+        "rotateZbyType":{
+            "*-north-west":90,
+            "*-south-west":90,
+            "*-up-west":90,
+            "*-down-west":90,
+            "*-up-east":90,
+            "*-down-east":90,
+            "*-north-east":90,
+            "*-south-east":90
         }
     },
     "selectionBox": {
@@ -240,18 +317,51 @@
         "y2": 0.07,
         "z2": 0.64,
         "rotateXbytype": {
-            "*-down": 180,
-            "*-south": 90,
-            "*-east": 90,
-            "*-west": 90,
-            "*-north": 270
+            "*-south-up": 180,
+            "*-north-up": 180,
+            "*-west-up": 180,
+            "*-east-up": 180,
+            "*-north-west":180,
+            "*-up-west": 270,
+            "*-down-west":90,
+            "*-down-east":270,
+            "*-south-east":180,
+            "*-up-north":90,
+            "*-down-north":90,
+            "*-east-north":90,
+            "*-west-north":90,
+            "*-up-south":270,
+            "*-down-south":270,
+            "*-east-south":270,
+            "*-west-south":270
         },
-        "rotateYbytype": {
-            "*-west": 180
+        "rotateYbytype":{
+            "*-south-down":180,
+            "*-east-down":270,
+            "*-west-down":90,
+            "*-north-up":180,
+            "*-west-up":90,
+            "*-east-up":270,
+            "*-north-west":180,
+            "*-south-west":180,
+            "*-up-west":180,
+            "*-down-west":180,
+            "*-down-north":180,
+            "*-east-north":270,
+            "*-west-north":90,
+            "*-up-south":180,
+            "*-east-south":270,
+            "*-west-south":90
         },
-        "rotateZbytype": {
-            "*-west": 270,
-            "*-east": 270
+        "rotateZbyType":{
+            "*-north-west":90,
+            "*-south-west":90,
+            "*-up-west":90,
+            "*-down-west":90,
+            "*-up-east":90,
+            "*-down-east":90,
+            "*-north-east":90,
+            "*-south-east":90
         }
     }
 }
