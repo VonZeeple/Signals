@@ -177,6 +177,7 @@
     "signals": [ "*-off-north-down" ]
 },
 "replaceable": 300,
+"lightAbsorption": 0,
 "resistance": 2,
 "selectionbox": {
     "x1": 0,

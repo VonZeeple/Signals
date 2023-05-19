@@ -153,8 +153,8 @@
 						"east": { "texture": "#device-blank", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
 						"south": { "texture": "#device-blank", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
 						"west": { "texture": "#device-blank", "uv": [ 0.0, 0.0, 2.0, 1.0 ] },
-						"up": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
-						"down": { "texture": "#bluetop", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
+						"up": { "texture": "#device-blank", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+						"down": { "texture": "#device-blank", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
 					}
 				},
 				{
