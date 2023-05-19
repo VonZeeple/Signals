@@ -17,7 +17,6 @@ namespace signals.src.signalNetwork
             api = capi;
             this.pos = pos;
             this.block = block;
-            CreateMesh();
         }
 
         public double RenderOrder => 0.5;
@@ -34,9 +33,10 @@ namespace signals.src.signalNetwork
             rotorMeshRef?.Dispose();
         }
 
-        private void CreateMesh(){
+        public void CreateMesh(){
             rotorMeshRef?.Dispose();
-            Shape shape = Shape.TryGet(api, "signals:shapes/block/winddetector_rotor.json");
+            AssetLocation loc = new AssetLocation("signals:shapes/block/winddetector_rotor.json");
+            Shape shape = Shape.TryGet(api, loc);
             if(shape == null) return;
             MeshData mesh;
             api.Tesselator.TesselateShape(block, shape, out mesh);
@@ -49,15 +49,12 @@ namespace signals.src.signalNetwork
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
-            if (rotorMeshRef == null) CreateMesh();
-            if (rotorMeshRef == null) return;
+            if (rotorMeshRef == null){CreateMesh();}
             IRenderAPI rpi = api.Render;
             Vec3d camPos = api.World.Player.Entity.CameraPos;
             rpi.GlDisableCullFace();
 
             IStandardShaderProgram prog = rpi.PreparedStandardShader(pos.X, pos.Y, pos.Z);
-            //this line make render disapear
-            rpi.BindTexture2d(api.ItemTextureAtlas.AtlasTextures[0].TextureId);
             angle_deg += targetSpeed*deltaTime;
             prog.ModelMatrix = ModelMat
                 .Identity()

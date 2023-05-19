@@ -52,7 +52,7 @@ namespace signals.src.signalNetwork
 
         private void initListener()
         {
-            Blockentity.RegisterGameTickListener(OnSlowServerTick, 1000); 
+            Blockentity.RegisterGameTickListener(OnSlowServerTick, 1000);
         }
 
         private byte GetSignalValue()
@@ -64,7 +64,6 @@ namespace signals.src.signalNetwork
 
         private void OnSlowServerTick(float dt)
         {
-            
             currentWindSpeed = weatherSystem.WeatherDataSlowAccess.GetWindSpeed(Blockentity.Pos.ToVec3d());
             if(sourceNodePos != null){
                 nodeProvider?.UpdateSource(sourceNodePos, GetSignalValue());
@@ -88,7 +87,7 @@ namespace signals.src.signalNetwork
         public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
         {
             base.GetBlockInfo(forPlayer, dsc);
-            dsc.AppendLine(string.Format(Lang.Get("Wind speed: {0}%", (int)(100*currentWindSpeed))));
+            dsc.AppendLine(string.Format("Wind speed: {0}%", (int)(100*currentWindSpeed)));
         }
     }
 }

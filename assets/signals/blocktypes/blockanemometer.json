@@ -33,9 +33,6 @@
                 "maxWindSpeed": 1.5,
                 "sourceNodeIndex": 0
             }
-        },
-        {
-            "name": "BEBehaviorRiftDetector"
         }
     ],
     "sideopaque": {
@@ -54,5 +51,9 @@
         "general": [ "*" ],
         "signals": ["*"]
     },
+    "textures": {
+        "rotor": { "base":"game:block/machine/device-plate"},
+		"center": { "base":"game:block/creative/col39"}
+	},
     "shape": { "base": "signals:block/winddetector_stator" }
 }
