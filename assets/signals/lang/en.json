@@ -25,6 +25,8 @@
     "signals:block-knifeswitch-*": "Switch",
     "signals:block-blocksource": "Signal source",
     "signals:block-blockbuzzer": "Buzzer",
+    "signals:block-blockactuator-*": "Actuator",
+    "signals:block-buttonswitch-*": "Button switch",
     "signals:item-el_wire": "Signal wire",
     "signals:con-unamed": "Wire connector",
     "signals:con-anode": "Anode",

@@ -47,7 +47,7 @@ namespace signals.src.signalNetwork
         public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc)
         {
             base.GetBlockInfo(forPlayer, dsc);
-            dsc.AppendLine(string.Format(Lang.Get("rift-activity-" + currentCode+"\r\n")));
+            dsc.AppendLine(Lang.Get("rift-activity-" + currentCode)+"\r\n");
         }
     }
 }
