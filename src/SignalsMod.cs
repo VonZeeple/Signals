@@ -39,7 +39,6 @@ namespace signals.src
             api.RegisterBlockClass("BlockBuzzer", typeof(BlockBuzzer));
             api.RegisterBlockClass("BlockButtonSwitch", typeof(BlockButtonSwitch));
 
-
             api.RegisterBlockEntityClass("BlockEntityLightBulb", typeof(BlockEntityLightBulb));
             api.RegisterBlockEntityClass("BlockEntitySwitch", typeof(BESwitch));
             api.RegisterBlockEntityClass("BlockEntityValve", typeof(BEValve));
@@ -52,6 +51,7 @@ namespace signals.src
             api.RegisterBlockEntityClass("BEActuator", typeof(BEActuator));
 
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
+            api.RegisterBlockBehaviorClass("BlockBehaviorSoundOnActivate", typeof(BlockBehaviorSoundOnActivate));
 
             api.RegisterBlockEntityBehaviorClass("BEBehaviorCircuitHolder", typeof(BEBehaviorCircuitHolder));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalProvider", typeof(BEBehaviorSignalNodeProvider));

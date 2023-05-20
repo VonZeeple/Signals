@@ -1,0 +1,107 @@
+{
+    "code": "blockbell",
+    "behaviors": [
+        {
+            "name": "BlockBehaviorSoundOnActivate",
+            "properties": {
+                "sound": "game:sounds/effect/receptionbell"
+            }
+        },
+        {
+            "name": "OmniAttachable",
+            "properties": {
+                "facingCode": "position",
+                "attachmentAreas": {
+                    "down": {
+                        "x1": 7,
+                        "y1": 15,
+                        "z1": 7,
+                        "x2": 8,
+                        "y2": 15,
+                        "z2": 8
+                    },
+                    "up": {
+                        "x1": 4,
+                        "y1": 0,
+                        "z1": 4,
+                        "x2": 11,
+                        "y2": 0,
+                        "z2": 11
+                    },
+                    "north": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1
+                    },
+                    "east": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 90
+                    },
+                    "south": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 180
+                    },
+                    "west": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 270
+                    }
+                }
+            }
+        }
+    ],
+    "variantgroups": [
+        {
+            "code": "position",
+            "states": [
+                "up",
+                "down"
+            ],
+            "loadFromProperties": "abstract/horizontalorientation"
+        }
+    ],
+    "attributes": {},
+    "sideopaque": {
+        "all": false
+    },
+    "lightAbsorption": 0,
+    "creativeinventory": {
+        "general": [
+            "*-north"
+        ],
+        "signals": [
+            "*-north"
+        ]
+    },
+    "shape": {
+        "base": "signals:block/bell",
+        "rotateXByType": {
+			"*-north": 270,
+			"*-south": 90,
+			"*-up": 0,
+			"*-down": 180
+		},
+		"rotateZByType": {
+			"*-east": 270,
+			"*-west": 90
+		}
+    },
+    "drawtype": "json"
+}
