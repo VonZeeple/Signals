@@ -11,14 +11,14 @@ namespace signals.src.hangingwires
     {
         public double RenderOrder => 0.5;
         public int RenderRange => 100;
-        HangingWiresMod mod;
+        PlacingWiresMod mod;
         ICoreClientAPI capi;
 
         MeshRef wireMesh;
         private BlockPos blockPos;
         private Vec3f posOffset;
 
-        public PendingWireRenderer(ICoreClientAPI capi, HangingWiresMod mod, BlockPos pos, Vec3f offset)
+        public PendingWireRenderer(ICoreClientAPI capi, PlacingWiresMod mod, BlockPos pos, Vec3f offset)
         {
             this.mod = mod;
             this.capi = capi;

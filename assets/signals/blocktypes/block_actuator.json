@@ -1,0 +1,228 @@
+﻿{
+    "code": "blockactuator",
+    "class": "BlockSignalConnection",
+    "attributes": {
+        "signalNodes": [
+            {
+                "index": 0,
+                "x1": 0.21875,
+                "y1": 0.0625,
+                "z1": 0.59375,
+                "x2": 0.40625,
+                "y2": 0.25,
+                "z2": 0.78125,
+                "rotateXbytype": {
+                    "*-south-up": 180,
+                    "*-north-up": 180,
+                    "*-west-up": 180,
+                    "*-east-up": 180,
+                    "*-north-west":180,
+                    "*-up-west": 270,
+                    "*-down-west":90,
+                    "*-down-east":270,
+                    "*-south-east":180,
+                    "*-up-north":90,
+                    "*-down-north":90,
+                    "*-east-north":90,
+                    "*-west-north":90,
+                    "*-up-south":270,
+                    "*-down-south":270,
+                    "*-east-south":270,
+                    "*-west-south":270
+                },
+                "rotateYbytype":{
+                    "*-south-down":180,
+                    "*-east-down":270,
+                    "*-west-down":90,
+                    "*-north-up":180,
+                    "*-west-up":90,
+                    "*-east-up":270,
+                    "*-north-west":180,
+                    "*-south-west":180,
+                    "*-up-west":180,
+                    "*-down-west":180,
+                    "*-down-north":180,
+                    "*-east-north":270,
+                    "*-west-north":90,
+                    "*-up-south":180,
+                    "*-east-south":270,
+                    "*-west-south":90
+                },
+                "rotateZbyType":{
+                    "*-north-west":90,
+                    "*-south-west":90,
+                    "*-up-west":90,
+                    "*-down-west":90,
+                    "*-up-east":90,
+                    "*-down-east":90,
+                    "*-north-east":90,
+                    "*-south-east":90
+                }
+            }
+        ]
+    },
+    "behaviors": [ { "name": "BlockBehaviorCoverWithDirection" } ],
+    "variantgroups": [
+
+        {
+            "code": "powered",
+            "states": [ "on", "off" ]
+        },
+        {
+            "code": "orientation",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        },
+        {
+            "code": "side",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        }
+    ],
+    "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south", "*-east-east", "*-east-west", "*-west-east", "*-west-west" ],
+
+    "entityclass": "BEActuator",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalConnector",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    }
+                ]
+            }
+        }
+    ],
+    "shape": {"base": "block/actuator_{powered}",
+    "rotateXbytype": {
+        "*-south-up": 180,
+        "*-north-up": 180,
+        "*-west-up": 180,
+        "*-east-up": 180,
+        "*-north-west":180,
+        "*-up-west": 270,
+        "*-down-west":90,
+        "*-down-east":270,
+        "*-south-east":180,
+        "*-up-north":90,
+        "*-down-north":90,
+        "*-east-north":90,
+        "*-west-north":90,
+        "*-up-south":270,
+        "*-down-south":270,
+        "*-east-south":270,
+        "*-west-south":270
+    },
+    "rotateYbytype":{
+        "*-south-down":180,
+        "*-east-down":270,
+        "*-west-down":90,
+        "*-north-up":180,
+        "*-west-up":90,
+        "*-east-up":270,
+        "*-north-west":180,
+        "*-south-west":180,
+        "*-up-west":180,
+        "*-down-west":180,
+        "*-down-north":180,
+        "*-east-north":270,
+        "*-west-north":90,
+        "*-up-south":180,
+        "*-east-south":270,
+        "*-west-south":90
+    },
+    "rotateZbyType":{
+        "*-north-west":90,
+        "*-south-west":90,
+        "*-up-west":90,
+        "*-down-west":90,
+        "*-up-east":90,
+        "*-down-east":90,
+        "*-north-east":90,
+        "*-south-east":90
+    }
+},
+"sidesolidByType": {
+    "*-down": {
+        "all": false,
+        "down": true
+    },
+    "*-up": {
+        "all": false,
+        "up": true
+    },
+    "*-north": {
+        "all": false,
+        "north": true
+    },
+    "*-east": {
+        "all": false,
+        "east": true
+    },
+    "*-west": {
+        "all": false,
+        "west": true
+    },
+    "*-south": {
+        "all": false,
+        "south": true
+    }
+},
+"sideopaque": {
+    "all": false
+},
+"blockmaterial": "Metal",
+"creativeinventory": {
+    "general": [ "*-off-north-down" ],
+    "signals": [ "*-off-north-down" ]
+},
+"replaceable": 300,
+"lightAbsorption": 0,
+"resistance": 2,
+"selectionbox": {
+    "x1": 0,
+    "y1": 0,
+    "z1": 0,
+    "x2": 1,
+    "y2": 0.0625,
+    "z2": 1,
+    "rotateXByType": {
+        "*-up": 180,
+        "*-north": 90,
+        "*-east": 90,
+        "*-west": 90,
+        "*-south": 270
+    },
+    "rotateYByType": {
+        "*-east": 180,
+        "*-west": 0
+    },
+    "rotateZByType": {
+        "*-east": 270,
+        "*-west": 270
+    }
+},
+"collisionbox": {
+    "x1": 0,
+    "y1": 0,
+    "z1": 0,
+    "x2": 1,
+    "y2": 0.0625,
+    "z2": 1,
+    "rotateXByType": {
+        "*-up": 180,
+        "*-north": 90,
+        "*-east": 90,
+        "*-west": 90,
+        "*-south": 270
+    },
+    "rotateYByType": {
+        "*-east": 180,
+        "*-west": 0
+    },
+    "rotateZByType": {
+        "*-east": 270,
+        "*-west": 270
+    }
+    }
+}

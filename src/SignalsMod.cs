@@ -1,5 +1,6 @@
 ﻿using signals.src.circuits;
 using signals.src.circuits.components;
+using signals.src.hangingwires;
 using signals.src.signalNetwork;
 using signals.src.transmission;
 using System;
@@ -36,7 +37,7 @@ namespace signals.src
             api.RegisterBlockClass("BlockDelay", typeof(BlockDelay));
             api.RegisterBlockClass("BlockSignalMeter", typeof(BlockSignalMeter));
             api.RegisterBlockClass("BlockBuzzer", typeof(BlockBuzzer));
-
+            api.RegisterBlockClass("BlockButtonSwitch", typeof(BlockButtonSwitch));
 
             api.RegisterBlockEntityClass("BlockEntityLightBulb", typeof(BlockEntityLightBulb));
             api.RegisterBlockEntityClass("BlockEntitySwitch", typeof(BESwitch));
@@ -45,14 +46,23 @@ namespace signals.src
             api.RegisterBlockEntityClass("BESignalMeter", typeof(BESignalMeter));
             api.RegisterBlockEntityClass("BEDelay", typeof(BEDelay));
             api.RegisterBlockEntityClass("BEBuzzer", typeof(BEBuzzer));
+            api.RegisterBlockEntityClass("BEScreen", typeof(BEScreen));
+            api.RegisterBlockEntityClass("BEButtonSwitch", typeof(BEButtonSwitch));
+            api.RegisterBlockEntityClass("BEActuator", typeof(BEActuator));
 
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
+            api.RegisterBlockBehaviorClass("BlockBehaviorSoundOnActivate", typeof(BlockBehaviorSoundOnActivate));
 
             api.RegisterBlockEntityBehaviorClass("BEBehaviorCircuitHolder", typeof(BEBehaviorCircuitHolder));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalProvider", typeof(BEBehaviorSignalNodeProvider));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalConnector",typeof(BEBehaviorSignalConnector));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalSwitch", typeof(BEBehaviorSignalSwitch));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalValve", typeof(BEBehaviorSignalValve));
+            api.RegisterBlockEntityBehaviorClass("BEBehaviorAnemometer", typeof(BEBehaviorAnemometer));
+            api.RegisterBlockEntityBehaviorClass("BEBehaviorRiftDetector", typeof(BEBehaviorRiftDetector));
+
+            api.RegisterCollectibleBehaviorClass("WireCutterBehavior", typeof(WireCutterBehavior));
+            api.RegisterItemClass("WireCutterItem", typeof(WireCutterItem));
 
             RegisterCircuitComponentClass("valve", typeof(CircuitComponentValve));
             RegisterCircuitComponentClass("source", typeof(CircuitComponentSource));

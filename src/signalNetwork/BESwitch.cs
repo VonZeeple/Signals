@@ -13,7 +13,9 @@ namespace signals.src.signalNetwork
             base.Initialize(api);
         }
 
-        internal bool OnInteract(IPlayer byPlayer)
+        internal virtual bool ReleaseInteract(){return true;}
+
+        internal virtual bool OnInteract()
         {
             state = !state;
             BEBehaviorSignalSwitch sw = GetBehavior<BEBehaviorSignalSwitch>();

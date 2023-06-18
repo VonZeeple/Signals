@@ -2,7 +2,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 
-namespace signals.src.transmission
+namespace signals.src.signalNetwork
 {
     public class BESignalMeterRenderer : IRenderer
     {

@@ -16,8 +16,6 @@ namespace signals.src.hangingwires
 
         public HangingWiresRenderer Renderer;
 
-        private PendingWireRenderer WireRenderer;
-
         IServerNetworkChannel serverChannel;
         IClientNetworkChannel clientChannel;
 
@@ -42,16 +40,12 @@ namespace signals.src.hangingwires
             {
                 clientChannel = ((ICoreClientAPI)api).Network.RegisterChannel("hangingwires")
                 .RegisterMessageType(typeof(HangingWiresData))
-                .RegisterMessageType(typeof(AddConnectionPacket))
                 .SetMessageHandler<HangingWiresData>(onDataFromServer);
-
             }
             else
             {
                 serverChannel = ((ICoreServerAPI)api).Network.RegisterChannel("hangingwires")
-               .RegisterMessageType(typeof(HangingWiresData))
-               .RegisterMessageType(typeof(AddConnectionPacket))
-               .SetMessageHandler<AddConnectionPacket>(OnAddConnectionFromClient);
+               .RegisterMessageType(typeof(HangingWiresData));
             }
         }
 
@@ -78,7 +72,6 @@ namespace signals.src.hangingwires
             base.StartClientSide(api);
             capi = api;
             capi.Event.ChunkDirty += OnChunkDirty;
-            capi.Event.AfterActiveSlotChanged += OnActiveSlotChanged;
             api.Event.BlockTexturesLoaded += onLoaded;
             api.Event.LeaveWorld += () =>
             {
@@ -90,7 +83,7 @@ namespace signals.src.hangingwires
         private void OnChunkDirty(Vec3i chunkCoord, IWorldChunk chunk, EnumChunkDirtyReason reason){
             if( reason == EnumChunkDirtyReason.NewlyLoaded){
                 Renderer.UpdateWiresMesh(data);
-            }       
+            }
         }
 
         private void onDataFromServer(HangingWiresData data)
@@ -131,7 +124,6 @@ namespace signals.src.hangingwires
 
         private void Event_SaveGameLoaded()
         {
-            
             byte[] data = sapi.WorldManager.SaveGame.GetData("hangingWiresData");
 
                 try
@@ -149,6 +141,22 @@ namespace signals.src.hangingwires
 
         #region interactions
 
+        public bool TryToRemoveConnection(NodePos pos1, NodePos pos2){
+            int removed = data.connections.RemoveWhere(c => ((c.pos1 == pos1) && (c.pos2 == pos2)) || ((c.pos1 == pos2) && (c.pos2 == pos1)));
+            serverChannel.BroadcastPacket(data);
+            return removed > 0;
+        }
+
+        public bool TryToAddConnection(WireConnection connection){
+            bool added = data.connections.Add(connection);
+            if (added)
+            {
+                api.ModLoader.GetModSystem<SignalNetworkMod>()?.OnWireAdded(connection);
+                serverChannel.BroadcastPacket(data);
+            }
+            return added;
+        }
+
         public void RemoveAllNodesAtBlockPos(BlockPos pos)
         {
             if (api.Side == EnumAppSide.Client) return;
@@ -162,89 +170,11 @@ namespace signals.src.hangingwires
                 {
                     data.connections.Remove(con);
                 }
-                
 
                 serverChannel.BroadcastPacket(data);
             }
-            
-        }
-
-        public bool IsHoldingWire(IPlayer player){
-            Item item = player?.Entity.RightHandItemSlot.Itemstack?.Item;
-            return item?.Code?.ToString() == "signals:el_wire";
-        }
-
-        public bool UseWire(IPlayer player){
-            ItemStack itemStack = player?.InventoryManager.ActiveHotbarSlot.Itemstack;
-            if ( itemStack?.Item?.Code?.ToString() != "signals:el_wire") return false;
-            if ( player.WorldData.CurrentGameMode == EnumGameMode.Creative ){return true;}
-            player?.InventoryManager.ActiveHotbarSlot.TakeOut(1);
-            player?.InventoryManager.ActiveHotbarSlot.MarkDirty();
-            return true;
-        }
-
-        public void OnActiveSlotChanged(ActiveSlotChangeEventArgs slotChange){
-            pendingNode = null;
-            WireRenderer?.Dispose();
-        }
-
-        public void OnAddConnectionFromClient(IServerPlayer fromPlayer, AddConnectionPacket networkMessage)
-        {
-            var connection = networkMessage.connection as WireConnection;
-            if (connection == null) return;
-
-            //TODO: add checks to be sure that their is a node provider at the position (never trust the client)
-
-            bool added = data.connections.Add(connection);
-            if (added)
-            {
-                if (UseWire(fromPlayer)){
-                    api.ModLoader.GetModSystem<SignalNetworkMod>()?.OnWireAdded(connection);
-                    serverChannel.BroadcastPacket(data);
-                }
-            }
-        }
-
-        NodePos pendingNode = null;
-        public NodePos GetPendingNode()
-        {
-            return this.pendingNode;
-        }
-
-        public void ConnectWire(NodePos pos, IPlayer byPlayer, IHangingWireAnchor anchor)
-        {
-            if (api.Side == EnumAppSide.Server) return;
-
-            if (!IsHoldingWire(byPlayer)) return;
-
-            if(pendingNode == null)
-            {
-                pendingNode = pos;
-                Vec3f offset = anchor.GetAnchorPosInBlock(pos);
-                capi?.ShowChatMessage(String.Format("Pending {0}:{1}",pos.blockPos,pos.index));
-                WireRenderer = new PendingWireRenderer(capi, this,pos.blockPos, offset);
-            }
-            else
-            {
-                capi?.ShowChatMessage(String.Format("trying to attach {0}:{1}", pos.blockPos, pos.index));
-                WireConnection connection = new WireConnection(pendingNode, pos);
-                clientChannel.SendPacket(new AddConnectionPacket() { connection = connection, byPlayer = byPlayer.PlayerUID});
-                pendingNode = null;
-                WireRenderer?.Dispose();
-            }
         }
         #endregion
-    }
-
-    [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-    public class AddConnectionPacket
-    {
-        public WireConnection connection;
-        public string byPlayer;
-
-        public AddConnectionPacket()
-        {
-        }
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]

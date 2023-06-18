@@ -10,10 +10,8 @@ namespace signals.src.signalNetwork
 {
     public class BEBehaviorSignalNodeProvider : BlockEntityBehavior, ISignalNodeProvider
     {
-        HangingWiresMod wireMod;
         SignalNetworkMod signalMod;
         List<ISignalNode> nodes;
-        protected BlockPos Pos;
 
         public BEBehaviorSignalNodeProvider(BlockEntity blockentity) : base(blockentity)
         {
@@ -24,9 +22,8 @@ namespace signals.src.signalNetwork
         public override void Initialize(ICoreAPI api, JsonObject properties)
         {
             base.Initialize(api, properties);
-            wireMod = api.ModLoader.GetModSystem<HangingWiresMod>();
+            //wireMod = api.ModLoader.GetModSystem<HangingWiresMod>();
             signalMod = api.ModLoader.GetModSystem<SignalNetworkMod>();
-            Pos = this.Blockentity?.Pos;
             if (api.Side == EnumAppSide.Client) return;
             JsonObject[] nodesTree = properties["signalNodes"]?.AsArray() ;
             if(nodesTree != null)
@@ -126,8 +123,21 @@ namespace signals.src.signalNetwork
             return output;
         }
 
+        public void UpdateSource(NodePos pos, byte newValue)
+        {
+            /// <summary>
+            /// Changes the output value of a source node, and notify the network manager.
+            /// </summary>
+            ISignalNode node = this.GetNodeAt(pos);
+            if(node == null) {return;}
+            signalMod.netManager.UpdateSource(node, newValue);
+        }
+
         public void OnNodeUpdate(NodePos pos)
         {
+            /// <summary>
+            /// Called by the network manager when the value of a node changed
+            /// </summary>
             ISignalNode node = this.GetNodeAt(pos);
             if (node == null) return;
             IBESignalReceptor receptor = this.Blockentity as IBESignalReceptor;

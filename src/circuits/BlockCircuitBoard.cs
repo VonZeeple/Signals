@@ -87,7 +87,7 @@ namespace signals.src
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
 
-            HangingWiresMod mod = api.ModLoader.GetModSystem<HangingWiresMod>();
+            PlacingWiresMod mod = api.ModLoader.GetModSystem<PlacingWiresMod>();
             if (mod != null && api.Side == EnumAppSide.Client)
             {
                 NodePos pos = GetNodePosForWire(world, blockSel);

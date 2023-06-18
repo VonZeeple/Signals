@@ -3,3 +3,4 @@ obj/
 *.csproj.user
 *.dll
 *.pdb
+_build/

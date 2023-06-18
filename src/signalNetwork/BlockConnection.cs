@@ -3,6 +3,7 @@ using signals.src.signalNetwork;
 using System;
 using System.Collections.Generic;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
@@ -12,10 +13,12 @@ namespace signals.src.transmission
     public class WireAnchor: RotatableCube
     {
         public int Index;
+        public string Name;
 
-        public WireAnchor(int index, float MinX, float MinY, float MinZ, float MaxX, float MaxY, float MaxZ) : base(MinX, MinY, MinZ, MaxX, MaxY, MaxZ)
+        public WireAnchor(int index, string name, float MinX, float MinY, float MinZ, float MaxX, float MaxY, float MaxZ) : base(MinX, MinY, MinZ, MaxX, MaxY, MaxZ)
         {
             Index = index;
+            Name = name;
         }
     }
 
@@ -84,22 +87,21 @@ namespace signals.src.transmission
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
 
-            HangingWiresMod mod = api.ModLoader.GetModSystem<HangingWiresMod>();
+            PlacingWiresMod mod = api.ModLoader.GetModSystem<PlacingWiresMod>();
             if (mod == null)
             {
-                api.Logger.Error("HangingWiresMod mod system not found");
+                api.Logger.Error("PlacingWiresMod mod system not found");
             }
             else
             {
                 NodePos pos = GetNodePosForWire(world, blockSel, mod.GetPendingNode());
                 if (CanAttachWire(world, pos, mod.GetPendingNode()))
                 {
-                    if (pos != null) mod.ConnectWire(pos, byPlayer, this);
-                    return true;
+                    if (pos != null){
+                        if (mod.ConnectWire(pos, byPlayer, this)){return true;}
+                        }
                 }
             }
-
-
 
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
@@ -108,8 +110,12 @@ namespace signals.src.transmission
         {
             string info = base.GetPlacedBlockInfo(world, pos, forPlayer);
             BlockSelection sel = forPlayer.Entity.BlockSelection;
-            NodePos nodepos = this.GetNodePosForWire(world, sel);
-            if (!(nodepos == null)){info += nodepos?.ToString() + "\r\n";}
+            //NodePos nodepos = this.GetNodePosForWire(world, sel);
+            //if (!(nodepos == null)){info += nodepos?.ToString() + "\r\n";}
+            string name = this.GetAnchorName(world, sel);
+            if(name != null){
+                info += Lang.Get("signals:"+name)+"\r\n";
+            }
             return info;
         }
 
@@ -123,6 +129,15 @@ namespace signals.src.transmission
                 if (box.Index == pos.index) return position;
             }
             return new Vec3f(0f, 0f, 0f);
+        }
+
+        public string GetAnchorName(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null)
+        {
+            foreach (WireAnchor box in wireAnchors)
+            {
+                if (box.Index == blockSel.SelectionBoxIndex) return box.Name ?? "con-unamed";
+            }
+            return null;
         }
 
         public NodePos GetNodePosForWire(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null)

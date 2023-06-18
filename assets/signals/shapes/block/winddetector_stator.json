@@ -1,0 +1,173 @@
+{
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+		"0": [32, 32]
+	},
+	"textures": {
+		"0": "game:block/machine/device-plate"
+	},
+	"elements": [
+		{
+			"name": "cube0",
+			"from": [4, 5, 4],
+			"to": [12, 6, 12],
+			"rotationOrigin": [8, 0, 8],
+			"faces": {
+				"north": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 2.5],
+					"autoUv": false
+				},
+				"east": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 2.5],
+					"autoUv": false
+				},
+				"south": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 2.5],
+					"autoUv": false
+				},
+				"west": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 2.5],
+					"autoUv": false
+				},
+				"up": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				},
+				"down": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				}
+			},
+			"parent": null,
+			"children": []
+		},
+		{
+			"name": "cube1",
+			"from": [4, 0, 4],
+			"to": [12, 1, 12],
+			"rotationOrigin": [8, 0, 8],
+			"faces": {
+				"north": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 2.5],
+					"autoUv": false
+				},
+				"east": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 2.5],
+					"autoUv": false
+				},
+				"south": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 2.5],
+					"autoUv": false
+				},
+				"west": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 2.5],
+					"autoUv": false
+				},
+				"up": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				},
+				"down": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				}
+			},
+			"parent": null,
+			"children": []
+		},
+		{
+			"name": "cube2",
+			"from": [5, 1, 5],
+			"to": [11, 5, 11],
+			"rotationOrigin": [8, 0, 8],
+			"faces": {
+				"north": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				},
+				"east": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				},
+				"south": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				},
+				"west": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				},
+				"up": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				},
+				"down": {
+					"texture": "#0",
+					"uv": [0, 0, 16, 16],
+					"autoUv": false
+				}
+			},
+			"parent": null,
+			"children": []
+		},
+		{
+			"name": "cube3",
+			"from": [7, 5, 7],
+			"to": [9, 7, 9],
+			"rotationOrigin": [8, 7, 8],
+			"faces": {
+				"north": {
+					"texture": "#0",
+					"uv": [5.5, 6, 9.5, 10],
+					"autoUv": false
+				},
+				"east": {
+					"texture": "#0",
+					"uv": [5.5, 6, 9.5, 10],
+					"autoUv": false
+				},
+				"south": {
+					"texture": "#0",
+					"uv": [5.5, 6, 9.5, 10],
+					"autoUv": false
+				},
+				"west": {
+					"texture": "#0",
+					"uv": [5.5, 6, 9.5, 10],
+					"autoUv": false
+				},
+				"up": {
+					"texture": "#0",
+					"uv": [5.5, 6, 9.5, 10],
+					"autoUv": false
+				},
+				"down": {
+					"texture": "#0",
+					"uv": [5.5, 6, 9.5, 10],
+					"autoUv": false
+				}
+			},
+			"parent": null,
+			"children": []
+		}
+	],
+	"animations": []
+}
