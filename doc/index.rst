@@ -4,6 +4,7 @@ Index
 .. toctree::
    :maxdepth: 2
 
+   signals.rst
    blocklist.rst
 
 ..

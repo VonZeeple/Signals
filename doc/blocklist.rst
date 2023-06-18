@@ -7,6 +7,7 @@ Signal Emitters
 Source
 ^^^^^^
 
+Emits a signal of magnitude 15.
 
 Signal routing
 --------------
@@ -14,9 +15,13 @@ Signal routing
 Switch
 ^^^^^^
 
+When on, conducts signal without attenuation. When off, blocks signal. On/off state is changed when activated by a player, a ticker block or an actuator.
+
 
 Button
 ^^^^^^
+
+Similar to a switch, but returns to off state once interaction is finished.
 
 Delay
 ^^^^^
@@ -26,11 +31,17 @@ The delay outputs a signal of the same level than the signal applied at its inpu
 Pressure Plate
 ^^^^^^^^^^^^^^
 
+Transmits signal with no attenuation when colliding with an item or entity.
+
 Valve
 ^^^^^
 
+This block has three connections: an anode, a cathode and a grid. signal is transmitted only from cathode to anode with an attenuation given by the signal value on the grid.
+
 Connectors
 ^^^^^^^^^^
+
+Used to connect wires.
 
 Resistors
 ^^^^^^^^^
@@ -48,6 +59,8 @@ When powered with a signal of strength greater than 0, it activates the block in
 
 Buzzer
 ^^^^^^
+
+When powered, emits a continous sound. The pitch can be adjusted using right-click.
 
 Screen
 ^^^^^^
