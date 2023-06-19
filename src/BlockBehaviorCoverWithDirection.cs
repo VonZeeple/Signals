@@ -62,7 +62,7 @@ namespace signals.src
         }
 
 
-        private Block GetOrientedBlock(IWorldAccessor world, BlockSelection blockSel)
+        public Block GetOrientedBlock(IWorldAccessor world, BlockSelection blockSel)
         {
             BlockFacing onBlockFace = blockSel.Face;
             Vec3d hitPosition = blockSel.HitPosition;
