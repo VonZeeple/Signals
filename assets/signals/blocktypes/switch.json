@@ -12,51 +12,22 @@
                 "y2": 0.25,
                 "z2": 0.25,
                 "rotateXbytype": {
-                    "*-south-up-*": 180,
-                    "*-north-up-*": 180,
-                    "*-west-up-*": 180,
-                    "*-east-up-*": 180,
-                    "*-north-west-*": 180,
-                    "*-up-west-*": 270,
-                    "*-down-west-*": 90,
-                    "*-down-east-*": 270,
-                    "*-south-east-*": 180,
-                    "*-up-north-*": 90,
-                    "*-down-north-*": 90,
-                    "*-east-north-*": 90,
-                    "*-west-north-*": 90,
-                    "*-up-south-*": 270,
-                    "*-down-south-*": 270,
-                    "*-east-south-*": 270,
-                    "*-west-south-*": 270
+                    "*-*-north-*": 90,
+                    "*-*-south-*": 270,
+                    "@*-up-(east|west)-.*": 90,
+                    "@*-down-(east|west)-.*": 270,
+                    "@*-south-(east|west)-.*": 180
                 },
                 "rotateYbytype": {
-                    "*-south-down-*": 180,
-                    "*-east-down-*": 270,
-                    "*-west-down-*": 90,
-                    "*-north-up-*": 180,
-                    "*-west-up-*": 90,
-                    "*-east-up-*": 270,
-                    "*-north-west-*": 180,
-                    "*-south-west-*": 180,
-                    "*-up-west-*": 180,
-                    "*-down-west-*": 180,
-                    "*-down-north-*": 180,
-                    "*-east-north-*": 270,
-                    "*-west-north-*": 90,
-                    "*-up-south-*": 180,
-                    "*-east-south-*": 270,
-                    "*-west-south-*": 90
+                    "@*-east-(up|down|north|south)-.*": 270,
+                    "@*-south-(up|down)-.*": 180,
+                    "@*-west-(up|down|north|south)-.*": 90,
+                    "@*-(down-north|up-south)-.*": 180
                 },
                 "rotateZbyType": {
-                    "*-north-west-*": 90,
-                    "*-south-west-*": 90,
-                    "*-up-west-*": 90,
-                    "*-down-west-*": 90,
-                    "*-up-east-*": 90,
-                    "*-down-east-*": 90,
-                    "*-north-east-*": 90,
-                    "*-south-east-*": 90
+                    "*-*-up-*": 180,
+                    "*-*-east-*": 90,
+                    "*-*-west-*": 270
                 }
             },
             {
@@ -68,51 +39,22 @@
                 "y2": 0.25,
                 "z2": 0.25,
                 "rotateXbytype": {
-                    "*-south-up-*": 180,
-                    "*-north-up-*": 180,
-                    "*-west-up-*": 180,
-                    "*-east-up-*": 180,
-                    "*-north-west-*": 180,
-                    "*-up-west-*": 270,
-                    "*-down-west-*": 90,
-                    "*-down-east-*": 270,
-                    "*-south-east-*": 180,
-                    "*-up-north-*": 90,
-                    "*-down-north-*": 90,
-                    "*-east-north-*": 90,
-                    "*-west-north-*": 90,
-                    "*-up-south-*": 270,
-                    "*-down-south-*": 270,
-                    "*-east-south-*": 270,
-                    "*-west-south-*": 270
+                    "*-*-north-*": 90,
+                    "*-*-south-*": 270,
+                    "@*-up-(east|west)-.*": 90,
+                    "@*-down-(east|west)-.*": 270,
+                    "@*-south-(east|west)-.*": 180
                 },
                 "rotateYbytype": {
-                    "*-south-down-*": 180,
-                    "*-east-down-*": 270,
-                    "*-west-down-*": 90,
-                    "*-north-up-*": 180,
-                    "*-west-up-*": 90,
-                    "*-east-up-*": 270,
-                    "*-north-west-*": 180,
-                    "*-south-west-*": 180,
-                    "*-up-west-*": 180,
-                    "*-down-west-*": 180,
-                    "*-down-north-*": 180,
-                    "*-east-north-*": 270,
-                    "*-west-north-*": 90,
-                    "*-up-south-*": 180,
-                    "*-east-south-*": 270,
-                    "*-west-south-*": 90
+                    "@*-east-(up|down|north|south)-.*": 270,
+                    "@*-south-(up|down)-.*": 180,
+                    "@*-west-(up|down|north|south)-.*": 90,
+                    "@*-(down-north|up-south)-.*": 180
                 },
                 "rotateZbyType": {
-                    "*-north-west-*": 90,
-                    "*-south-west-*": 90,
-                    "*-up-west-*": 90,
-                    "*-down-west-*": 90,
-                    "*-up-east-*": 90,
-                    "*-down-east-*": 90,
-                    "*-north-east-*": 90,
-                    "*-south-east-*": 90
+                    "*-*-up-*": 180,
+                    "*-*-east-*": 90,
+                    "*-*-west-*": 270
                 }
             }
         ]
@@ -195,51 +137,22 @@
     "shape": {
         "base": "signals:block/switch_{state}",
         "rotateXbytype": {
-            "*-south-up-*": 180,
-            "*-north-up-*": 180,
-            "*-west-up-*": 180,
-            "*-east-up-*": 180,
-            "*-north-west-*": 180,
-            "*-up-west-*": 270,
-            "*-down-west-*": 90,
-            "*-down-east-*": 270,
-            "*-south-east-*": 180,
-            "*-up-north-*": 90,
-            "*-down-north-*": 90,
-            "*-east-north-*": 90,
-            "*-west-north-*": 90,
-            "*-up-south-*": 270,
-            "*-down-south-*": 270,
-            "*-east-south-*": 270,
-            "*-west-south-*": 270
+            "*-*-north-*": 90,
+            "*-*-south-*": 270,
+            "@*-up-(east|west)-.*": 90,
+            "@*-down-(east|west)-.*": 270,
+            "@*-south-(east|west)-.*": 180
         },
         "rotateYbytype": {
-            "*-south-down-*": 180,
-            "*-east-down-*": 270,
-            "*-west-down-*": 90,
-            "*-north-up-*": 180,
-            "*-west-up-*": 90,
-            "*-east-up-*": 270,
-            "*-north-west-*": 180,
-            "*-south-west-*": 180,
-            "*-up-west-*": 180,
-            "*-down-west-*": 180,
-            "*-down-north-*": 180,
-            "*-east-north-*": 270,
-            "*-west-north-*": 90,
-            "*-up-south-*": 180,
-            "*-east-south-*": 270,
-            "*-west-south-*": 90
+            "@*-east-(up|down|north|south)-.*": 270,
+            "@*-south-(up|down)-.*": 180,
+            "@*-west-(up|down|north|south)-.*": 90,
+            "@*-(down-north|up-south)-.*": 180
         },
         "rotateZbyType": {
-            "*-north-west-*": 90,
-            "*-south-west-*": 90,
-            "*-up-west-*": 90,
-            "*-down-west-*": 90,
-            "*-up-east-*": 90,
-            "*-down-east-*": 90,
-            "*-north-east-*": 90,
-            "*-south-east-*": 90
+            "*-*-up-*": 180,
+            "*-*-east-*": 90,
+            "*-*-west-*": 270
         }
     },
     "creativeinventory": {
@@ -265,51 +178,22 @@
         "y2": 0.15,
         "z2": 0.9,
         "rotateXbytype": {
-            "*-south-up-*": 180,
-            "*-north-up-*": 180,
-            "*-west-up-*": 180,
-            "*-east-up-*": 180,
-            "*-north-west-*": 180,
-            "*-up-west-*": 270,
-            "*-down-west-*": 90,
-            "*-down-east-*": 270,
-            "*-south-east-*": 180,
-            "*-up-north-*": 90,
-            "*-down-north-*": 90,
-            "*-east-north-*": 90,
-            "*-west-north-*": 90,
-            "*-up-south-*": 270,
-            "*-down-south-*": 270,
-            "*-east-south-*": 270,
-            "*-west-south-*": 270
+            "*-*-north-*": 90,
+            "*-*-south-*": 270,
+            "@*-up-(east|west)-.*": 90,
+            "@*-down-(east|west)-.*": 270,
+            "@*-south-(east|west)-.*": 180
         },
         "rotateYbytype": {
-            "*-south-down-*": 180,
-            "*-east-down-*": 270,
-            "*-west-down-*": 90,
-            "*-north-up-*": 180,
-            "*-west-up-*": 90,
-            "*-east-up-*": 270,
-            "*-north-west-*": 180,
-            "*-south-west-*": 180,
-            "*-up-west-*": 180,
-            "*-down-west-*": 180,
-            "*-down-north-*": 180,
-            "*-east-north-*": 270,
-            "*-west-north-*": 90,
-            "*-up-south-*": 180,
-            "*-east-south-*": 270,
-            "*-west-south-*": 90
+            "@*-east-(up|down|north|south)-.*": 270,
+            "@*-south-(up|down)-.*": 180,
+            "@*-west-(up|down|north|south)-.*": 90,
+            "@*-(down-north|up-south)-.*": 180
         },
         "rotateZbyType": {
-            "*-north-west-*": 90,
-            "*-south-west-*": 90,
-            "*-up-west-*": 90,
-            "*-down-west-*": 90,
-            "*-up-east-*": 90,
-            "*-down-east-*": 90,
-            "*-north-east-*": 90,
-            "*-south-east-*": 90
+            "*-*-up-*": 180,
+            "*-*-east-*": 90,
+            "*-*-west-*": 270
         }
     }
 }
