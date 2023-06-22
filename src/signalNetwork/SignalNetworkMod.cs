@@ -161,6 +161,17 @@ namespace signals.src
             return be.GetBehavior<BEBehaviorSignalNodeProvider>() as ISignalNodeProvider;
         }
 
+        public Connection GetConnection(NodePos pos1, NodePos pos2)
+        {
+            ISignalNode node1 = GetDeviceAt(pos1.blockPos)?.GetNodeAt(pos1);
+            ISignalNode node2 = GetDeviceAt(pos2.blockPos)?.GetNodeAt(pos2);
+            if ( node1 == null || node2 == null) return null;
+            foreach(Connection con in node1.Connections){
+                if(con.node1 == node2 || con.node2 == node2) return con;
+            }
+            return null;
+        }
+
         private SignalNetwork GetNetworkAt(NodePos pos)
         {
             foreach(SignalNetwork net in netManager.networks.Values)
