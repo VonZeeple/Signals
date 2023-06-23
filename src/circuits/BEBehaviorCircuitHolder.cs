@@ -120,7 +120,7 @@ namespace signals.src.circuits.components
 
 
             Item heldItem = holdingItemStack?.Item;
-            Vec3i compSize = SignalsUtils.GetCircuitComponentSizeFromItem(capi, heldItem);
+            Vec3i compSize = CircuitMod.GetCircuitComponentSizeFromItem(capi, heldItem);
 
             if (heldItem?.Code?.ToString() == "signals:el_wire")
             {
