@@ -1,0 +1,135 @@
+{
+    "code": "insulator",
+    "maxstacksize": 64,
+    "variantgroups": [
+        {
+            "code": "type",
+            "states": [
+                "raw",
+                "fired"
+            ]
+        }
+    ],
+    "behaviors": [
+    ],
+    "shape": {
+        "base": "signals:item/insulator"
+    },
+    "texturesByType": {
+        "*-raw": {
+            "ceramic": {
+                "base": "game:block/clay/blueclay"
+            }
+        },
+        "*-fired": {
+            "ceramic": {
+                "base": "game:block/clay/ceramic"
+            }
+        }
+    },
+    "attributes": {
+        "displaycaseable": true,
+        "shelvable": true,
+        "onDisplayTransform": {
+            "origin": {
+                "x": 0.5,
+                "y": 0,
+                "z": 0.5
+            },
+            "scale": 0.8
+        }
+    },
+    "creativeinventory": {
+        "general": [
+            "*"
+        ],
+        "signals": [
+            "*"
+        ]
+    },
+    "combustiblePropsByType": {
+        "*-raw": {
+            "meltingPoint": 850,
+            "meltingDuration": 15,
+            "smeltingType": "fire",
+            "smeltedStack": {
+                "type": "item",
+                "code": "signals:insulator-fired"
+            },
+            "requiresContainer": false
+        }
+    },
+    "materialDensity": 2600,
+    "guiTransform": {
+        "translation": {
+            "x": 2,
+            "y": 0,
+            "z": 0
+        },
+        "rotation": {
+            "x": 164,
+            "y": -37,
+            "z": 1
+        },
+        "origin": {
+            "x": 0.5,
+            "y": 0.2,
+            "z": 0.5
+        },
+        "scale": 2.78
+    },
+    "fpHandTransform": {
+        "translation": {
+            "x": 0,
+            "y": 0.1,
+            "z": 0
+        },
+        "rotation": {
+            "x": 111,
+            "y": 69,
+            "z": -57
+        },
+        "origin": {
+            "x": 0.5,
+            "y": 0.1,
+            "z": 0.5
+        },
+        "scale": 1.57
+    },
+    "tpHandTransform": {
+        "translation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "rotation": {
+            "x": -17,
+            "y": 8,
+            "z": -19
+        },
+        "origin": {
+            "x": 0.14,
+            "y": 0.04,
+            "z": 0.18
+        },
+        "scale": 0.46
+    },
+    "groundTransform": {
+        "translation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "origin": {
+            "x": 0.5,
+            "y": 0,
+            "z": 0.5
+        },
+        "scale": 3
+    }
+}

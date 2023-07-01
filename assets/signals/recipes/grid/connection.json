@@ -1,0 +1,12 @@
+{
+	"ingredientPattern": "IP",
+	"ingredients": {
+		"I": { "type": "item", "code": "signals:insulator-fired" },
+		"P": { "type": "item", "code": "game:plank-*"}
+	},
+
+	"width": 2,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:connection-north", "quantity": 1 }
+}
