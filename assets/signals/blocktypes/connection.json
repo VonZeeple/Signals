@@ -113,10 +113,10 @@
         ]
     },
     "creativeinventory": {
-        "general": [ "*-north" ],
-        "signals": [ "*-north" ]
+        "general": [ "*-up" ],
+        "signals": [ "*-up" ]
     },
-
+    "textures": { "ceramic": { "base": "game:block/clay/pot-lid"}},
     "shape": {
         "base": "signals:block/connections1",
         "rotateXbytype": {
