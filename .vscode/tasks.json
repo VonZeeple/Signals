@@ -8,7 +8,7 @@
     
     "type": "process",
     "command": "dotnet",
-    "args": [ "build", "-c", "Debug" ]
+    "args": [ "build","signals.csproj" , "-c", "Debug" ]
   },{
     "label": "Build (Release)",
     "group": "build",

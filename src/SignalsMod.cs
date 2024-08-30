@@ -10,9 +10,11 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
 [assembly: ModInfo("signals",
-    Description = "To be added",
+    "signals",
+    Description = "Wires, triodes and more.",
     Website = "",
-    Authors = new[] { "unknown" })]
+    Version = "0.1.3",
+    Authors = new[] { "PFev" })]
 
 namespace signals.src
 {

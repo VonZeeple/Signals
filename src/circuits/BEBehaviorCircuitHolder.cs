@@ -38,7 +38,6 @@ namespace signals.src.circuits.components
             Circuit.Initialize(api);
             listenerId = Blockentity.RegisterGameTickListener(Update, 50);
             block = Blockentity.Block;
-            Pos = this.Blockentity.Pos;
             //facing = BlockFacing.FromCode(block?.LastCodePart(0)?.ToString());
             //orientation = BlockFacing.FromCode(block?.LastCodePart(1)?.ToString());
             facing = BlockFacing.FromCode(properties["side"]?.AsString("down"));
