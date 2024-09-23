@@ -2,8 +2,6 @@
     "code": "el_resistor",
     "maxstacksize": 16,
     "creativeinventory": {
-        "general": [ "*" ],
-        "items": [ "*" ]
     },
     "shape": { "base": "signals:item/el_resistor" },
     "attributes": {

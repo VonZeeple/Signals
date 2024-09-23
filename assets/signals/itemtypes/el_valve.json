@@ -3,8 +3,6 @@
     "class": "ItemCircuitComponent",
     "maxstacksize": 16,
     "creativeinventory": {
-        "general": [ "*" ],
-        "items": [ "*" ]
     },
     "shape": { "base": "signals:item/el_valve_shape" },
     "attributes": {
