@@ -1,10 +1,45 @@
 ﻿{
-    "code": "el_wire",
-    "texture": { "base": "signals:item/el_wire" },
-    "creativeinventory": {
-        "general": [ "*" ],
-        "signals": [ "*" ]
-    },
-    "maxstacksize": 16,
-    "materialDensity": 510
+	"code": "el_wire",
+	"behaviors": [
+
+		{ "name": "GroundStorable",
+        "properties": { "layout": "Quadrants",
+                        "collisionBox": { "x1": 0,
+                                          "y1": 0,
+                                          "z1": 0,
+                                          "x2": 1,
+                                          "y2": 0.125,
+                                          "z2": 1 } } }
+
+	],
+	"shape": { "base": "game:item/resource/rope" },
+    "textures": {"rope": {"base": "game:block/metal/plate/lead"}},
+	"creativeinventory": { "general": ["*"], "signals": ["*"] },
+	"maxstacksize": 16,
+	"materialDensity": 510,
+	"guiTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": -32, "y": 36, "z": -180 },
+		"origin": { "x": 0.53, "y": 0.125, "z": 0.5 },
+		"scale": 2.1
+	},
+	"fpHandTransform": {
+		"translation": { "x": 0, "y": 0.1, "z": 0 },
+		"rotation": { "x": 19, "y": 180, "z": -30 },
+		"origin": { "x": 0.5, "y": 0.125, "z": 0.5 },
+		"scale": 2.11
+	},
+	"groundTransform": {
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": 0, "y": 0, "z": 0 },
+		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
+		"scale": 2.8
+	},
+	"tpHandTransform": {
+		"translation": { "x": -0.7, "y": -0.28, "z": -0.8 },
+		"rotation": { "x": -78, "y": 7, "z": 8 },
+		"origin": { "x": 0.5, "y": 0.125, "z": 0.5 },
+		"scale": 0.7
+	}
+
 }
