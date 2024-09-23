@@ -1,0 +1,42 @@
+[{
+    "side": "server",
+    "file": "game:entities/humanoid/trader-commodities.json",
+    "op": "add",
+    "path": "/attributes/tradeProps/selling/list/-",
+    "value": {
+      "code": "signals:el_wire",
+      "type": "item",
+      "stacksize": 32,
+      "stock": {
+        "avg": 4,
+        "var": 3
+      },
+      "price": {
+        "avg": 5,
+        "var": 2
+      }
+
+    }
+
+}
+,
+{
+    "side": "server",
+    "file": "game:entities/humanoid/trader-treasurehunter.json",
+    "op": "add",
+    "path": "/attributes/tradeProps/selling/list/-",
+    "value": {
+      "code": "signals:el_wire",
+      "type": "item",
+      "stacksize": 32,
+      "stock": {
+        "avg": 4,
+        "var": 3
+      },
+      "price": {
+        "avg": 5,
+        "var": 2
+      }
+
+    }
+}]

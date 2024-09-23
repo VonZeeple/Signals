@@ -1,0 +1,10 @@
+{
+	"ingredientPattern": "WWW,W_W,W_W",
+	"ingredients": {
+		"W": { "type": "item", "code": "game:clearquartz"}
+	},
+	"width": 3,
+	"height": 3,
+	"shapeless": false,
+	"output": { "type": "item", "code": "signals:glass_bulb", "quantity": 4 }
+}

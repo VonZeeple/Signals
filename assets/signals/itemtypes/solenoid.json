@@ -1,0 +1,14 @@
+﻿{
+    "code": "solenoid",
+    "texture": { "base": "signals:item/el_wire" },
+    "creativeinventory": {
+        "general": [ "*" ],
+        "signals": [ "*" ]
+    },
+    "attributes": {
+        "displaycaseable": true,
+        "shelvable": true
+    },
+    "maxstacksize": 16,
+    "materialDensity": 510
+}

@@ -1,0 +1,13 @@
+{
+	"ingredientPattern": "__P,III,_F_",
+	"ingredients": {
+		"I": { "type": "item", "code": "signals:el_wire" },
+		"F": { "type": "item", "code": "game:plank-*"},
+		"P": { "type": "item", "code": "game:metalbit-iron"}
+	},
+
+	"width": 3,
+	"height": 3,
+	"shapeless": false,
+	"output": { "type": "block", "code": "signals:blockdelay-north-down-1", "quantity": 1 }
+}
