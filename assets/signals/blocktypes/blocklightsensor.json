@@ -112,7 +112,7 @@
         "signals": ["*-north-down"]
     },
     "shape": {
-        "base": "signals:block/resistor",
+        "base": "signals:block/lightsensor",
         "rotateXbytype": {
             "*-*-north": 90,
             "*-*-south": 270,
