@@ -1,9 +1,10 @@
 {
-	"ingredientPattern": "_I_,IPI,_F_",
+	"ingredientPattern": "_S_,IPI,_F_",
 	"ingredients": {
 		"I": { "type": "item", "code": "signals:el_wire" },
 		"F": { "type": "item", "code": "game:plank-*"},
-		"P": { "type": "block", "code": "game:metal-parts"}
+		"P": { "type": "block", "code": "game:metal-parts"},
+		"S":{"type": "item", "code": "signals:solenoid"}
 	},
 
 	"width": 3,

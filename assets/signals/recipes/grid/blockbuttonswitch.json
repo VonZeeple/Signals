@@ -1,0 +1,12 @@
+{
+	"ingredientPattern": "IP",
+	"ingredients": {
+		"I": { "type": "item", "code": "game:wrench-*" , "isTool": true},
+		"P": { "type": "block", "code": "signals:knifeswitch-*"}
+	},
+
+	"width": 2,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:buttonswitch-north-down-off", "quantity": 1 }
+}

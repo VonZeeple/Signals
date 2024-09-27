@@ -1,0 +1,14 @@
+{
+	"ingredientPattern": "_M_,_P_,IFI",
+	"ingredients": {
+		"I": { "type": "item", "code": "signals:el_wire" },
+		"F": { "type": "item", "code": "signals:solenoid"},
+		"P": { "type": "block", "code": "game:metal-parts"},
+		"M": {"type": "item", "code": "game:metallamellae-*"}
+	},
+
+	"width": 3,
+	"height": 3,
+	"shapeless": false,
+	"output": { "type": "block", "code": "signals:blockanemometer", "quantity": 1 }
+}
