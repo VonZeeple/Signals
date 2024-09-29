@@ -10,7 +10,25 @@
                 "z1": 0.0625,
                 "x2": 0.3125,
                 "y2": 0.25,
-                "z2": 0.25
+                "z2": 0.25,
+                "rotateXbytype": {
+                    "*-*-north-*": 90,
+                    "*-*-south-*": 270,
+                    "@*-up-(east|west)-.*": 90,
+                    "@*-down-(east|west)-.*": 270,
+                    "@*-south-(east|west)-.*": 180
+                },
+                "rotateYbytype": {
+                    "@*-east-(up|down|north|south)-.*": 270,
+                    "@*-south-(up|down)-.*": 180,
+                    "@*-west-(up|down|north|south)-.*": 90,
+                    "@*-(down-north|up-south)-.*": 180
+                },
+                "rotateZbyType": {
+                    "*-*-up-*": 180,
+                    "*-*-east-*": 90,
+                    "*-*-west-*": 270
+                }
             },
             {
                 "index": 1,
@@ -19,7 +37,25 @@
                 "z1": 0.0625,
                 "x2": 0.8125,
                 "y2": 0.25,
-                "z2": 0.25
+                "z2": 0.25,
+                "rotateXbytype": {
+                    "*-*-north-*": 90,
+                    "*-*-south-*": 270,
+                    "@*-up-(east|west)-.*": 90,
+                    "@*-down-(east|west)-.*": 270,
+                    "@*-south-(east|west)-.*": 180
+                },
+                "rotateYbytype": {
+                    "@*-east-(up|down|north|south)-.*": 270,
+                    "@*-south-(up|down)-.*": 180,
+                    "@*-west-(up|down|north|south)-.*": 90,
+                    "@*-(down-north|up-south)-.*": 180
+                },
+                "rotateZbyType": {
+                    "*-*-up-*": 180,
+                    "*-*-east-*": 90,
+                    "*-*-west-*": 270
+                }
             }
         ]
     },
@@ -39,22 +75,91 @@
                     }
                 ]
             }
-
-
-
         }
     ],
-    "behaviors": [],
+    "behaviors": [
+        {
+            "name": "BlockBehaviorCoverWithDirection"
+        },
+        {
+            "name": "BlockBehaviorExchangeDuringInteract",
+            "properties": {
+                "onState":"*-on",
+                "offState":"*-off",
+                "onSound": "effect/woodswitch",
+                "offSound": "effect/woodswitch",
+                "actionLangCode": "blockhelp-knifeswitch-onoff"
+            }
+        }
+    ],
     "variantgroups": [
         {
+            "code": "orientation",
+            "states": [
+                "north",
+                "east",
+                "south",
+                "west",
+                "up",
+                "down"
+            ]
+        },
+        {
+            "code": "side",
+            "states": [
+                "north",
+                "east",
+                "south",
+                "west",
+                "up",
+                "down"
+            ]
+        },
+        {
             "code": "state",
-            "states": [ "on", "off" ]
+            "states": [
+                "on",
+                "off"
+            ]
         }
     ],
-    "shape": { "base": "signals:block/switch_{state}" },
+    "skipVariants": [
+        "*-north-north-*",
+        "*-south-north-*",
+        "*-north-south-*",
+        "*-south-south-*",
+        "*-east-east-*",
+        "*-east-west-*",
+        "*-west-east-*",
+        "*-west-west-*"
+    ],
+    "shape": { "base": "signals:block/switch_{state}",
+            "rotateXbytype": {
+                "*-*-north-*": 90,
+                "*-*-south-*": 270,
+                "@*-up-(east|west)-.*": 90,
+                "@*-down-(east|west)-.*": 270,
+                "@*-south-(east|west)-.*": 180
+            },
+            "rotateYbytype": {
+                "@*-east-(up|down|north|south)-.*": 270,
+                "@*-south-(up|down)-.*": 180,
+                "@*-west-(up|down|north|south)-.*": 90,
+                "@*-(down-north|up-south)-.*": 180
+            },
+            "rotateZbyType": {
+                "*-*-up-*": 180,
+                "*-*-east-*": 90,
+                "*-*-west-*": 270
+            }
+        },
     "creativeinventory": {
-        "general": [ "*-off" ],
-        "signals": [ "*-off" ]
+        "general": [
+            "*-north-down-off"
+        ],
+        "signals": [
+            "*-north-down-off"
+        ]
     },
     "sideopaque": { "all": false },
     "sidesolid": { "all": false },
@@ -65,7 +170,25 @@
         "z1": 0.1,
         "x2": 0.85,
         "y2": 0.15,
-        "z2": 0.9
+        "z2": 0.9,
+        "rotateXbytype": {
+            "*-*-north-*": 90,
+            "*-*-south-*": 270,
+            "@*-up-(east|west)-.*": 90,
+            "@*-down-(east|west)-.*": 270,
+            "@*-south-(east|west)-.*": 180
+        },
+        "rotateYbytype": {
+            "@*-east-(up|down|north|south)-.*": 270,
+            "@*-south-(up|down)-.*": 180,
+            "@*-west-(up|down|north|south)-.*": 90,
+            "@*-(down-north|up-south)-.*": 180
+        },
+        "rotateZbyType": {
+            "*-*-up-*": 180,
+            "*-*-east-*": 90,
+            "*-*-west-*": 270
+        }
     }
 
 }

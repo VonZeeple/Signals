@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
+using Vintagestory.GameContent;
 
 [assembly: ModInfo("signals",
     "signals",
@@ -52,6 +53,7 @@ namespace signals.src
 
             api.RegisterBlockBehaviorClass("BlockBehaviorCoverWithDirection", typeof(BlockBehaviorCoverWithDirection));
             api.RegisterBlockBehaviorClass("BlockBehaviorSoundOnActivate", typeof(BlockBehaviorSoundOnActivate));
+            api.RegisterBlockBehaviorClass("BlockBehaviorExchangeDuringInteract", typeof(BlockBehaviorExchangeDuringInteract));
 
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalProvider", typeof(BEBehaviorSignalNodeProvider));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalConnector", typeof(BEBehaviorSignalConnector));
