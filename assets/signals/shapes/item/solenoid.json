@@ -1,0 +1,119 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"coil": "signals:item/coil",
+		"iron": "game:block/metal/plate/iron"
+	},
+	"elements": [
+		{
+			"name": "Core",
+			"from": [ 6.0, 0.0, 8.5 ],
+			"to": [ 10.0, 1.0, 9.5 ],
+			"rotationOrigin": [ 6.0, 0.0, 8.0 ],
+			"faces": {
+				"north": { "texture": "#iron", "uv": [ 0.0, 5.0, 4.0, 6.0 ] },
+				"east": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"south": { "texture": "#iron", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+				"west": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"up": { "texture": "#iron", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+				"down": { "texture": "#iron", "uv": [ 0.0, 0.0, 4.0, 1.0 ] }
+			},
+			"children": [
+				{
+					"name": "Coil",
+					"from": [ 1.0, -0.25, -0.25 ],
+					"to": [ 3.0, 1.25, 1.25 ],
+					"rotationOrigin": [ 1.0, 1.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#coil", "uv": [ 0.0, 0.0, 6.0, 1.5 ], "autoUv": false },
+						"east": { "texture": "#coil", "uv": [ 0.0, 0.0, 1.5, 1.5 ] },
+						"south": { "texture": "#coil", "uv": [ 0.0, 0.0, 6.0, 1.5 ], "autoUv": false },
+						"west": { "texture": "#coil", "uv": [ 0.0, 0.0, 1.5, 1.5 ] },
+						"up": { "texture": "#coil", "uv": [ 0.0, 0.0, 6.0, 1.5 ], "autoUv": false },
+						"down": { "texture": "#coil", "uv": [ 0.0, 0.0, 6.0, 1.5 ], "autoUv": false }
+					}
+				},
+				{
+					"name": "Core2",
+					"from": [ 0.0, 0.0, -2.0 ],
+					"to": [ 4.0, 1.0, -1.0 ],
+					"rotationOrigin": [ 0.0, 0.0, -2.0 ],
+					"faces": {
+						"north": { "texture": "#iron", "uv": [ 0.0, 5.0, 4.0, 6.0 ] },
+						"east": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"south": { "texture": "#iron", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+						"west": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"up": { "texture": "#iron", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+						"down": { "texture": "#iron", "uv": [ 0.0, 0.0, 4.0, 1.0 ] }
+					},
+					"children": [
+						{
+							"name": "Coil2",
+							"from": [ 1.0, -0.25, -0.25 ],
+							"to": [ 3.0, 1.25, 1.25 ],
+							"rotationOrigin": [ 1.0, 1.0, 1.0 ],
+							"faces": {
+								"north": { "texture": "#coil", "uv": [ 0.0, 0.0, 6.0, 1.5 ], "autoUv": false },
+								"east": { "texture": "#coil", "uv": [ 0.0, 0.0, 1.5, 1.5 ] },
+								"south": { "texture": "#coil", "uv": [ 0.0, 0.0, 6.0, 1.5 ], "autoUv": false },
+								"west": { "texture": "#coil", "uv": [ 0.0, 0.0, 1.5, 1.5 ] },
+								"up": { "texture": "#coil", "uv": [ 0.0, 0.0, 6.0, 1.5 ], "autoUv": false },
+								"down": { "texture": "#coil", "uv": [ 0.0, 0.0, 6.0, 1.5 ], "autoUv": false }
+							}
+						}
+					]
+				},
+				{
+					"name": "Core3",
+					"from": [ 0.0, 0.0, -2.0 ],
+					"to": [ 1.0, 1.0, -1.0 ],
+					"rotationOrigin": [ 0.0, 0.0, -2.0 ],
+					"rotationY": -45.0,
+					"faces": {
+						"north": { "texture": "#iron", "uv": [ 0.0, 5.0, 1.0, 6.0 ] },
+						"east": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"south": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"west": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"up": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"down": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] }
+					}
+				},
+				{
+					"name": "Core4",
+					"from": [ -1.0, 0.0, 1.0 ],
+					"to": [ 0.0, 1.0, 2.0 ],
+					"rotationOrigin": [ 0.0, 0.0, 1.0 ],
+					"rotationY": -135.0,
+					"faces": {
+						"north": { "texture": "#iron", "uv": [ 0.0, 5.0, 1.0, 6.0 ] },
+						"east": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"south": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"west": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"up": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"down": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.0, 1.0 ] }
+					}
+				},
+				{
+					"name": "Core5",
+					"from": [ -0.75, 0.0, -1.25 ],
+					"to": [ 0.0, 1.0, 0.25 ],
+					"rotationOrigin": [ 0.0, 0.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#iron", "uv": [ 0.0, 5.0, 0.5, 6.0 ] },
+						"east": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.5, 1.0 ] },
+						"south": { "texture": "#iron", "uv": [ 0.0, 0.0, 0.5, 1.0 ] },
+						"west": { "texture": "#iron", "uv": [ 0.0, 0.0, 1.5, 1.0 ] },
+						"up": { "texture": "#iron", "uv": [ 0.0, 0.0, 0.5, 1.5 ] },
+						"down": { "texture": "#iron", "uv": [ 0.0, 0.0, 0.5, 1.5 ] }
+					}
+				}
+			]
+		}
+	]}
