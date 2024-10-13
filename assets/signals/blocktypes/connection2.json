@@ -161,6 +161,9 @@
             "*-east": 270
         }
     },
+    "groundTransform": {
+        "scale": 3
+    },
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
     "lightAbsorption": 0,

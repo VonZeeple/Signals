@@ -134,10 +134,14 @@
             "*-east": 270
         }
     },
+    "groundTransform": {
+        "scale": 3
+    },
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
     "lightAbsorption": 0,
     "blockmaterial": "Metal",
+    "resistance": 0.3,
     "drawtype": "json",
     "collisionbox": {
         "x1": 0.37,
