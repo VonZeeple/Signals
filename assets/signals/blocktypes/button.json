@@ -5,12 +5,12 @@
         "signalNodes": [
             {
                 "index": 0,
-                "x1": 0.125,
+                "x1": 0.8125,
                 "y1": 0.0625,
-                "z1": 0.0625,
-                "x2": 0.3125,
-                "y2": 0.25,
-                "z2": 0.25,
+                "z1": 0.4375,
+                "x2": 0.9375,
+                "y2": 0.3125,
+                "z2": 0.5625,
                 "rotateXbytype": {
                     "*-*-north-*": 90,
                     "*-*-south-*": 270,
@@ -32,12 +32,12 @@
             },
             {
                 "index": 1,
-                "x1": 0.625,
+                "x1": 0.0625,
                 "y1": 0.0625,
-                "z1": 0.0625,
-                "x2": 0.8125,
-                "y2": 0.25,
-                "z2": 0.25,
+                "z1": 0.4375,
+                "x2": 0.1875,
+                "y2": 0.3125,
+                "z2": 0.5625,
                 "rotateXbytype": {
                     "*-*-north-*": 90,
                     "*-*-south-*": 270,
@@ -133,7 +133,7 @@
         "*-west-east-*",
         "*-west-west-*"
     ],
-    "shape": { "base": "signals:block/switch_{state}",
+    "shape": { "base": "signals:block/button_{state}",
             "rotateXbytype": {
                 "*-*-north-*": 90,
                 "*-*-south-*": 270,
@@ -165,12 +165,12 @@
     "sidesolid": { "all": false },
     "lightAbsorption": 0,
     "selectionBox": {
-        "x1": 0.15,
-        "y1": 0,
-        "z1": 0.1,
-        "x2": 0.85,
-        "y2": 0.15,
-        "z2": 0.9,
+        "x1": 0.0,
+        "y1": 0.0,
+        "z1": 0.25,
+        "x2": 1.0,
+        "y2": 0.0625,
+        "z2": 0.75,
         "rotateXbytype": {
             "*-*-north-*": 90,
             "*-*-south-*": 270,
