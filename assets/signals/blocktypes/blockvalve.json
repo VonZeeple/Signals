@@ -209,6 +209,7 @@
     "sideopaque": {
         "all": false
     },
+    "resistance": 1,
     "blockmaterial": "Metal",
     "creativeinventory": {
         "general": [
@@ -219,7 +220,6 @@
         ]
     },
     "replaceable": 300,
-    "resistance": 2,
     "selectionbox": {
         "x1": 0,
         "y1": 0,

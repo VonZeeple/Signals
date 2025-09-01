@@ -148,7 +148,7 @@
         "signals": [ "*-off-north-down" ]
     },
     "replaceable": 300,
-    "resistance": 2,
+    "resistance": 1,
     "selectionbox": {
         "x1": 0,
         "y1": 0,

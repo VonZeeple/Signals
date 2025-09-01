@@ -146,6 +146,7 @@
         "all": false
     },
     "lightAbsorption": 0,
+    "resistance": 0.3,
     "shape": {
         "base": "signals:block/delay_{value}",
         "rotateXbytype": {
@@ -167,13 +168,13 @@
             "*-*-west-*": 270
         }
     },
-    "selectionBox": {
-        "x1": 0,
-        "y1": 0,
-        "z1": 0,
-        "x2": 1,
+    "CollisionSelectionBox": {
+        "x1": 0.0,
+        "y1": 0.0,
+        "z1": 0.25,
+        "x2": 1.0,
         "y2": 0.0625,
-        "z2": 1,
+        "z2": 0.75,
         "rotateXbytype": {
             "*-*-north-*": 90,
             "*-*-south-*": 270,

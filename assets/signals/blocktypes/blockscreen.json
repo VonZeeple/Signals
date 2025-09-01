@@ -86,6 +86,7 @@
             }
         }
     ],
+    "resistance": 1,
     "sideopaque": {
         "all": false
     },

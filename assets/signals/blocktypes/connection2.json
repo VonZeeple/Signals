@@ -168,6 +168,7 @@
     "sideopaque": { "all": false },
     "lightAbsorption": 0,
     "blockmaterial": "Metal",
+    "resistance": 1,
     "drawtype": "json",
     "collisionbox": {
         "x1": 0.12,

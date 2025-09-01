@@ -135,6 +135,7 @@
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
     "lightAbsorption": 0,
+    "resistance": 1,
     "blockmaterial": "Metal",
     "drawtype": "json",
     "collisionbox": {

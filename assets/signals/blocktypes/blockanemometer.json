@@ -39,6 +39,7 @@
         "all": false
     },
     "lightAbsorption": 0,
+    "resistance": 1,
     "collisionselectionbox": {
         "x1": 0,
         "y1": 0,
