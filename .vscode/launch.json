@@ -9,7 +9,7 @@
       "args": [
         "--playStyle" , "preset-surviveandbuild",
         "--openWorld" , "signals-testland",
-        "--addModPath", "${workspaceFolder}/bin/Debug/net7",
+        "--addModPath", "${workspaceFolder}/bin/Debug/net8",
         "--addOrigin" , "${workspaceFolder}/assets",
       ],
       "console": "internalConsole",

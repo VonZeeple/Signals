@@ -1,8 +1,8 @@
 [{
     "side": "server",
-    "file": "game:entities/humanoid/trader-commodities.json",
+    "file": "game:config/tradelists/trader-commodities.json",
     "op": "add",
-    "path": "/attributes/tradeProps/selling/list/-",
+    "path": "/selling/list/-",
     "value": {
       "code": "signals:el_wire",
       "type": "item",
@@ -22,9 +22,9 @@
 ,
 {
     "side": "server",
-    "file": "game:entities/humanoid/trader-treasurehunter.json",
+    "file": "game:config/tradelists/trader-treasurehunter.json",
     "op": "add",
-    "path": "/attributes/tradeProps/selling/list/-",
+    "path": "/selling/list/-",
     "value": {
       "code": "signals:el_wire",
       "type": "item",
@@ -42,9 +42,9 @@
 },
 {
     "side": "server",
-    "file": "game:entities/humanoid/trader-commodities.json",
+    "file": "game:config/tradelists/trader-commodities.json",
     "op": "add",
-    "path": "/attributes/tradeProps/selling/list/-",
+    "path": "/selling/list/-",
     "value": {
       "code": "signals:blocksource",
       "type": "block",
@@ -62,9 +62,9 @@
 },
 {
   "side": "server",
-  "file": "game:entities/humanoid/trader-treasurehunter.json",
+  "file": "game:config/tradelists/trader-treasurehunter.json",
   "op": "add",
-  "path": "/attributes/tradeProps/selling/list/-",
+  "path": "/selling/list/-",
   "value": {
     "code": "signals:blocksource",
     "type": "block",
@@ -82,9 +82,9 @@
 },
 {
   "side": "server",
-  "file": "game:entities/humanoid/trader-treasurehunter.json",
+  "file": "game:config/tradelists/trader-treasurehunter.json",
   "op": "add",
-  "path": "/attributes/tradeProps/selling/list/-",
+  "path": "/selling/list/-",
   "value": {
     "code": "signals:blockscreen-east",
     "type": "block",

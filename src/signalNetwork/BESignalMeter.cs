@@ -39,8 +39,7 @@ namespace signals.src.signalNetwork
 
             MeshData mesh;
             ITesselatorAPI mesher = ((ICoreClientAPI)Api).Tesselator;
-            IAsset asset = Api.Assets.TryGet("signals:shapes/block/signalmeter_needle.json");
-            //IAsset asset = Api.Assets.TryGet("game:shapes/block/wood/echochamber-needle.json");
+            IAsset asset = Api.Assets.TryGet(new AssetLocation("signals:shapes/block/signalmeter_needle.json"));
             if(asset == null) return null;
             mesher.TesselateShape(block, asset.ToObject<Shape>(), out mesh);
             return mesh;

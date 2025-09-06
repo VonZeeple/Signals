@@ -24,7 +24,6 @@ namespace signals.src.circuits.components
         BlockFacing facing;
         BlockFacing orientation;
         Block block;
-        BlockPos Pos;
 
         public BEBehaviorCircuitHolder(BlockEntity entity) : base(entity)
         {
