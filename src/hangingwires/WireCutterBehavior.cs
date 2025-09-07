@@ -35,8 +35,7 @@ namespace signals.src.hangingwires
             }
             else {
                 if(api.Side == EnumAppSide.Server){
-                        wireMod.TryToRemoveConnection(pos, pendingNode);
-                        api.Logger.Error("Trying to cut wire.");
+                        wireMod.CutWire(byEntity, pos, pendingNode);
                 }
                 pendingNode = null;
             }

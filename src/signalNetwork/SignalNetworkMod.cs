@@ -143,6 +143,14 @@ namespace signals.src
             devicesToLoad.Clear();
         }
 
+        public void OnWireRemoved(WireConnection wire)
+        {
+            if (Api.Side == EnumAppSide.Client) return;
+            netManager.RemoveConnections([GetConnection(wire.pos1, wire.pos2), GetConnection(wire.pos2, wire.pos1)]);
+            needRenderUpdate = true;
+
+        }
+
         public void OnWireAdded(WireConnection wire)
         {
             ISignalNode node1 = GetDeviceAt(wire.pos1.blockPos)?.GetNodeAt(wire.pos1);

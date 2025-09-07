@@ -179,24 +179,47 @@ namespace signals.src.signalNetwork
                 Mod.GetDeviceAt(node.Pos.blockPos)?.OnNodeUpdate(node.Pos);
             }
         }
+
+        public void RemoveConnections(Connection[] cons)
+        {
+            HashSet<long> netToRebuild = new HashSet<long>();
+            foreach (Connection con in cons)
+            {
+                ISignalNode node1 = con.node1;
+                ISignalNode node2 = con.node2;
+                node1.Connections.Remove(con);
+                node2.Connections.Remove(con);
+
+                if (node1.netId.HasValue)
+                {
+                    netToRebuild.Add(node1.netId.Value);
+                }
+                if (node2.netId.HasValue && node1.netId != node2.netId)
+                {
+                    netToRebuild.Add(node2.netId.Value);
+                }
+            }
+            foreach (long netId in netToRebuild) RebuildNetwork(networks[netId]);
+        }
+
         public void RemoveNodes(ISignalNode[] nodes)
         {
             HashSet<long> netToRebuild = new HashSet<long>();
-            foreach(ISignalNode node in nodes)
+            foreach (ISignalNode node in nodes)
             {
-                foreach(Connection con in node.Connections)
+                foreach (Connection con in node.Connections)
                 {
                     ISignalNode otherNode = con.GetOther(node);
                     otherNode.Connections.Remove(con);
                 }
 
-                if(node.netId.HasValue)
+                if (node.netId.HasValue)
                 {
                     netToRebuild.Add(node.netId.Value);
                     networks[node.netId.Value].RemoveNode(node);
                 }
             }
-            foreach(long netId in netToRebuild) RebuildNetwork(networks[netId]);
+            foreach (long netId in netToRebuild) RebuildNetwork(networks[netId]);
         }
     }
 }
