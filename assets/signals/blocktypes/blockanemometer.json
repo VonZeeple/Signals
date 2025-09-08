@@ -54,7 +54,7 @@
     },
     "textures": {
         "rotor": { "base":"game:block/machine/device-plate"},
-		"center": { "base":"game:block/creative/col39"}
+		"center": { "base":"game:block/machine/device-plate"}
 	},
     "shape": { "base": "signals:block/winddetector_stator"},
     "shapeinventory": { "base": "signals:block/winddetector_stator",
