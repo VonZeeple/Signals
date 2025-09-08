@@ -3,7 +3,7 @@
 	"ingredients": {
 		"I": { "type": "item", "code": "signals:el_wire" },
 		"F": { "type": "item", "code": "game:plank-*"},
-		"P": { "type": "item", "code": "game:glueportion-pitch-hot"}
+		"P": { "type": "item", "code": "game:resin"}
 	},
 	"width": 3,
 	"height": 2,
