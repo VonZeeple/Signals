@@ -143,7 +143,7 @@
         "general": [ "*-north" ],
         "signals": [ "*-north" ]
     },
-
+    "textures": { "ceramic": { "base": "game:block/clay/pot-lid"}},
     "shape": {
         "base": "signals:block/connections2",
         "rotateXbytype": {
@@ -161,10 +161,14 @@
             "*-east": 270
         }
     },
+    "groundTransform": {
+        "scale": 3
+    },
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
     "lightAbsorption": 0,
     "blockmaterial": "Metal",
+    "resistance": 1,
     "drawtype": "json",
     "collisionbox": {
         "x1": 0.12,

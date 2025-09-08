@@ -55,6 +55,7 @@ namespace signals.src.signalNetwork
             rpi.GlDisableCullFace();
 
             IStandardShaderProgram prog = rpi.PreparedStandardShader(pos.X, pos.Y, pos.Z);
+            prog.Tex2D = api.BlockTextureAtlas.AtlasTextures[0].TextureId;
             angle_deg += targetSpeed*deltaTime;
             prog.ModelMatrix = ModelMat
                 .Identity()

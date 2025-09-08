@@ -1,0 +1,74 @@
+﻿{
+    "code": "solenoid",
+    "shape": { "base": "signals:item/solenoid" },
+    "creativeinventory": {
+        "general": [ "*" ],
+        "signals": [ "*" ]
+    },
+    "attributes": {
+        "displaycaseable": true,
+        "shelvable": true
+    },
+    "maxstacksize": 16,
+    "materialDensity": 510,
+    "guiTransform": {
+		"translation": { "x": 2, "y": 0, "z": 0 },
+		"rotation": { "x": 104, "y": -39, "z": 6 },
+		"origin": { "x": 0.5, "y": 0.2, "z": 0.5 },
+		"scale": 3.57
+	},
+    "fpHandTransform": {
+        "translation": {
+            "x": 0,
+            "y": 0.1,
+            "z": 0
+        },
+        "rotation": {
+            "x": 111,
+            "y": 69,
+            "z": -57
+        },
+        "origin": {
+            "x": 0.5,
+            "y": 0.1,
+            "z": 0.5
+        },
+        "scale": 1.57
+    },
+    "tpHandTransform": {
+        "translation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "rotation": {
+            "x": -17,
+            "y": 8,
+            "z": -19
+        },
+        "origin": {
+            "x": 0.14,
+            "y": 0.04,
+            "z": 0.18
+        },
+        "scale": 1
+    },
+    "groundTransform": {
+        "translation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "origin": {
+            "x": 0.5,
+            "y": 0,
+            "z": 0.5
+        },
+        "scale": 5
+    }
+}

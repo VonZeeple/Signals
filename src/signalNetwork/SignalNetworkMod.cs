@@ -143,6 +143,14 @@ namespace signals.src
             devicesToLoad.Clear();
         }
 
+        public void OnWireRemoved(WireConnection wire)
+        {
+            if (Api.Side == EnumAppSide.Client) return;
+            netManager.RemoveConnections([GetConnection(wire.pos1, wire.pos2), GetConnection(wire.pos2, wire.pos1)]);
+            needRenderUpdate = true;
+
+        }
+
         public void OnWireAdded(WireConnection wire)
         {
             ISignalNode node1 = GetDeviceAt(wire.pos1.blockPos)?.GetNodeAt(wire.pos1);
@@ -159,6 +167,17 @@ namespace signals.src
             ISignalNodeProvider device = be as ISignalNodeProvider;
             if (device != null) return device;
             return be.GetBehavior<BEBehaviorSignalNodeProvider>() as ISignalNodeProvider;
+        }
+
+        public Connection GetConnection(NodePos pos1, NodePos pos2)
+        {
+            ISignalNode node1 = GetDeviceAt(pos1.blockPos)?.GetNodeAt(pos1);
+            ISignalNode node2 = GetDeviceAt(pos2.blockPos)?.GetNodeAt(pos2);
+            if ( node1 == null || node2 == null) return null;
+            foreach(Connection con in node1.Connections){
+                if(con.node1 == node2 || con.node2 == node2) return con;
+            }
+            return null;
         }
 
         private SignalNetwork GetNetworkAt(NodePos pos)

@@ -1,0 +1,13 @@
+{
+	"ingredientPattern": "FFF,IPI",
+	"ingredients": {
+		"I": { "type": "item", "code": "signals:el_wire" },
+		"F": { "type": "item", "code": "game:plank-*"},
+		"P": { "type": "block", "code": "game:metal-parts"}
+	},
+
+	"width": 3,
+	"height": 2,
+	"shapeless": false,
+	"output": { "type": "block", "code": "signals:pressureplate-up-false", "quantity": 1 }
+}

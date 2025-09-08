@@ -1,0 +1,178 @@
+[{
+	"ingredientPattern": "IPI,_F_",
+	"ingredients": {
+		"I": { "type": "item", "code": "signals:el_wire" },
+		"F": { "type": "item", "code": "game:plank-*"},
+		"P": { "type": "item", "code": "game:resin"}
+	},
+	"width": 3,
+	"height": 2,
+	"shapeless": false,
+	"output": { "type": "block", "code": "signals:blockresistor-1-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-1-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-2-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-2-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-3-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-3-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-4-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-4-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-5-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-5-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-6-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-6-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-7-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-7-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-8-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-8-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-9-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-9-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-10-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-10-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-11-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-11-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-12-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-12-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-13-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-13-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-14-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-14-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-15-north-down", "quantity": 1 }
+},
+{
+	"ingredientPattern": "R",
+	"ingredients": {
+		"R": { "type": "block", "code": "signals:blockresistor-15-*" }
+	},
+
+	"width": 1,
+	"height": 1,
+	"shapeless": true,
+	"output": { "type": "block", "code": "signals:blockresistor-1-north-down", "quantity": 1 }
+}
+]

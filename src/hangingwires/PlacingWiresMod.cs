@@ -58,7 +58,7 @@ namespace signals.src.hangingwires
 
             if (!UseWire(fromPlayer, false)){return;}
             bool added = wireMod.TryToAddConnection(connection);
-            if (added){UseWire(fromPlayer);}
+            if (added){UseWire(fromPlayer, true);}
         }
 
         public bool IsHoldingWire(IPlayer player){

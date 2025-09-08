@@ -24,7 +24,6 @@ namespace signals.src.circuits.components
         BlockFacing facing;
         BlockFacing orientation;
         Block block;
-        BlockPos Pos;
 
         public BEBehaviorCircuitHolder(BlockEntity entity) : base(entity)
         {
@@ -38,7 +37,6 @@ namespace signals.src.circuits.components
             Circuit.Initialize(api);
             listenerId = Blockentity.RegisterGameTickListener(Update, 50);
             block = Blockentity.Block;
-            Pos = this.Blockentity.Pos;
             //facing = BlockFacing.FromCode(block?.LastCodePart(0)?.ToString());
             //orientation = BlockFacing.FromCode(block?.LastCodePart(1)?.ToString());
             facing = BlockFacing.FromCode(properties["side"]?.AsString("down"));
@@ -120,7 +118,7 @@ namespace signals.src.circuits.components
 
 
             Item heldItem = holdingItemStack?.Item;
-            Vec3i compSize = SignalsUtils.GetCircuitComponentSizeFromItem(capi, heldItem);
+            Vec3i compSize = CircuitMod.GetCircuitComponentSizeFromItem(capi, heldItem);
 
             if (heldItem?.Code?.ToString() == "signals:el_wire")
             {

@@ -1,0 +1,14 @@
+{
+	"ingredientPattern": "_I_,FPF,_M_",
+	"ingredients": {
+		"I": { "type": "item", "code": "game:knifeblade-*" },
+		"F": { "type": "item", "code": "signals:solenoid"},
+		"P": { "type": "block", "code": "game:metal-parts"},
+		"M": {"type": "item", "code": "game:plank-*"}
+	},
+
+	"width": 3,
+	"height": 3,
+	"shapeless": false,
+	"output": { "type": "block", "code": "signals:blockmeter-wall-north", "quantity": 1 }
+}

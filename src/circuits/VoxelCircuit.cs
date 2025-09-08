@@ -146,7 +146,7 @@ namespace signals.src
             }
 
 
-                        CircuitComponent comp = SignalsUtils.GetCircuitComponentFromItem(api, heldItem);
+                        CircuitComponent comp = CircuitMod.GetCircuitComponentFromItem(api, heldItem);
                         if (comp != null)
                         {
                             comp.Pos = voxelBoxPos.Clone();
@@ -340,7 +340,7 @@ namespace signals.src
         {
             ICoreAPI api = world.Api;
             if (tree == null || api == null) return;
-            SignalsMod mod = api.ModLoader.GetModSystem<SignalsMod>();
+            CircuitMod mod = api.ModLoader.GetModSystem<CircuitMod>();
 
             foreach(KeyValuePair<string, IAttribute> kv in tree)
             {

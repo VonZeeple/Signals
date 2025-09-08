@@ -38,18 +38,18 @@ namespace signals.src.signalNetwork
             float size = 0.05f;
             MeshData mesh = new MeshData(6, 6, false, false, true, false);
             mesh.SetMode(EnumDrawMode.Lines);
-            mesh.AddVertex(-size, 0, 0, color);
-            mesh.AddVertex(size, 0, 0, color);
+            mesh.AddVertexSkipTex(-size, 0, 0, color);
+            mesh.AddVertexSkipTex(size, 0, 0, color);
             mesh.Indices[mesh.IndicesCount++] = 0;
             mesh.Indices[mesh.IndicesCount++] = 1;
 
-            mesh.AddVertex(0, -size, 0, color);
-            mesh.AddVertex(0, size, 0, color);
+            mesh.AddVertexSkipTex(0, -size, 0, color);
+            mesh.AddVertexSkipTex(0, size, 0, color);
             mesh.Indices[mesh.IndicesCount++] = 2;
             mesh.Indices[mesh.IndicesCount++] = 3;
 
-            mesh.AddVertex(0,0,-size, color);
-            mesh.AddVertex(0,0,size, color);
+            mesh.AddVertexSkipTex(0,0,-size, color);
+            mesh.AddVertexSkipTex(0,0,size, color);
             mesh.Indices[mesh.IndicesCount++] = 4;
             mesh.Indices[mesh.IndicesCount++] = 5;
 
@@ -62,8 +62,8 @@ namespace signals.src.signalNetwork
             MeshData mesh = new MeshData(2, 2, false, false, true, false);
             mesh.SetMode(EnumDrawMode.Lines);
 
-            mesh.AddVertex(pos1.X,pos1.Y,pos1.Z, color);
-            mesh.AddVertex(pos2.X, pos2.Y, pos2.Z, color);
+            mesh.AddVertexSkipTex(pos1.X,pos1.Y,pos1.Z, color);
+            mesh.AddVertexSkipTex(pos2.X, pos2.Y, pos2.Z, color);
 
             mesh.Indices[mesh.IndicesCount++] = 0;
             mesh.Indices[mesh.IndicesCount++] = 1;

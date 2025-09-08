@@ -87,6 +87,7 @@
 		"*-up-*": { "all": false, "up": true },
 		"*-down-*": { "all": false, "down": true }
 	},
+    "resistance": 1,
     "shape": {
         "base": "signals:block/pressure_plate",
 		"rotateXByType": {

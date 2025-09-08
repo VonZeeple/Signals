@@ -34,7 +34,7 @@ namespace signals.src.transmission
             byte[] values = new byte[6]{0,0,0,0,0,0};
 
             if (Block.BlockId != 0){
-                IAsset asset = capi.Assets.TryGet("signals:shapes/block/delay_lights.json");
+                IAsset asset = capi.Assets.TryGet(new AssetLocation("signals:shapes/block/delay_lights.json"));
                 if(asset != null){
                     shape = asset.ToObject<Shape>();
                 }

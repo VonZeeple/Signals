@@ -8,7 +8,7 @@ namespace signals.src
 {
     public class CachedModel
     {
-        public MeshRef MeshRef;
+        public MultiTextureMeshRef MeshRef;
         public float Age;
     }
     //We cache models for circuit blocks in a similar way than chisel blocks
@@ -54,14 +54,14 @@ namespace signals.src
         }
 
 
-        public MeshRef GetOrCreateMeshRef(ItemStack forStack)
+        public MultiTextureMeshRef GetOrCreateMeshRef(ItemStack forStack)
         {
             long meshid = forStack.Attributes.GetLong("meshId", 0);
 
 
             if (!cachedModels.ContainsKey(meshid))
             {
-                MeshRef meshref = CreateModel(forStack);
+                MultiTextureMeshRef meshref = CreateModel(forStack);
                 forStack.Attributes.SetLong("meshId", nextMeshId);
                 cachedModels[nextMeshId++] = new CachedModel() { MeshRef = meshref, Age = 0 };
                 return meshref;
@@ -82,7 +82,7 @@ namespace signals.src
             return renderer.GetCircuitMeshForItem(circuit);
         }
 
-        private MeshRef CreateModel(ItemStack forStack)
+        private MultiTextureMeshRef CreateModel(ItemStack forStack)
         {
             ITreeAttribute tree = forStack.Attributes;
             if (tree == null) tree = new TreeAttribute();
@@ -91,8 +91,7 @@ namespace signals.src
             MeshData mesh_board = new MeshData();
             capi.Tesselator.TesselateBlock(block, out mesh_board);
             mesh.AddMeshData(mesh_board);
-
-            return capi.Render.UploadMesh(mesh);
+            return capi.Render.UploadMultiTextureMesh(mesh);
         }
 
 

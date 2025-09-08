@@ -17,6 +17,7 @@ namespace signals.src.signalNetwork
         private double currentWindSpeed = 0;
         private BEAnemometerRenderer renderer;
         public BEBehaviorAnemometer(BlockEntity blockentity) : base(blockentity) { }
+        protected ILoadedSound ambientSound;
 
         public override void Initialize(ICoreAPI api, JsonObject properties)
         {
@@ -38,16 +39,56 @@ namespace signals.src.signalNetwork
 
         }
 
+        public void ToggleAmbientSounds(bool on)
+        {
+            if (Api == null) return;
+            if (Api.Side != EnumAppSide.Client) return;
+
+            if (on)
+            {
+                if (ambientSound == null || !ambientSound.IsPlaying)
+                {
+                    ambientSound = ((IClientWorldAccessor)Api.World).LoadSound(new SoundParams()
+                    {
+                        Location = new AssetLocation("Game:sounds/effect/gears.ogg"),
+                        ShouldLoop = true,
+                        Position = Blockentity.Pos.ToVec3f().Add(0.5f, 0.25f, 0.5f),
+                        DisposeOnFinish = false,
+                        Volume = 0.3f
+                    });
+
+                    if (ambientSound != null)
+                    {
+                        ambientSound.Start();
+                        //ambientSound.PlaybackPosition = ambientSound.SoundLengthSeconds * (float)Api.World.Rand.NextDouble();
+                    }
+                }
+            }
+            else
+            {
+                ambientSound?.Stop();
+                ambientSound?.Dispose();
+                ambientSound = null;
+            }
+
+        }
+
       public override void OnBlockUnloaded()
         {
-            base.OnBlockUnloaded();
             renderer?.Dispose();
+            ToggleAmbientSounds(false);
+            base.OnBlockUnloaded();
         }
 
         public override void OnBlockRemoved()
         {
-            base.OnBlockRemoved();
             renderer?.Dispose();
+            if (ambientSound != null)
+            {
+                ambientSound.Stop();
+                ambientSound.Dispose();
+            }
+            base.OnBlockRemoved();
         }
 
         private void initListener()
@@ -76,6 +117,8 @@ namespace signals.src.signalNetwork
             base.FromTreeAttributes(tree, worldAccessForResolve);
             currentWindSpeed = tree.GetDouble("windValue", 0);
             renderer?.UpdateWindSpeed((float)currentWindSpeed);
+            ToggleAmbientSounds(true);
+            ambientSound?.SetPitch((float)currentWindSpeed);
         }
 
         public override void ToTreeAttributes(ITreeAttribute tree)

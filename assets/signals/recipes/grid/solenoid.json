@@ -1,0 +1,12 @@
+{
+	"ingredientPattern": "_W_,WIW,_W_",
+	"ingredients": {
+		"I": { "type": "item", "code": "game:metalbit-iron" },
+		"W": { "type": "item", "code": "signals:el_wire"}
+	},
+
+	"width": 3,
+	"height": 3,
+	"shapeless": false,
+	"output": { "type": "item", "code": "signals:solenoid", "quantity": 1 }
+}

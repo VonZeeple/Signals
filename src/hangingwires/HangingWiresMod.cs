@@ -141,10 +141,39 @@ namespace signals.src.hangingwires
 
         #region interactions
 
-        public bool TryToRemoveConnection(NodePos pos1, NodePos pos2){
-            int removed = data.connections.RemoveWhere(c => ((c.pos1 == pos1) && (c.pos2 == pos2)) || ((c.pos1 == pos2) && (c.pos2 == pos1)));
-            serverChannel.BroadcastPacket(data);
-            return removed > 0;
+        public void CutWire(EntityAgent byEntity, NodePos pos1, NodePos pos2)
+        {
+            bool removed = TryToRemoveConnection(pos1, pos2);
+            if (removed)
+            {
+                Item item = api.World.GetItem(new AssetLocation("signals:el_wire"));
+                if(item != null)
+                {
+                    var itemStack = new ItemStack(item);
+                    byEntity.TryGiveItemStack(itemStack);
+                }
+
+            }
+
+        }
+
+        public bool TryToRemoveConnection(NodePos pos1, NodePos pos2)
+        {
+            List<WireConnection> toRemove = data.connections.Where((WireConnection con) =>
+            {
+                return (con.pos1 == pos1 && con.pos2 == pos2) || (con.pos1 == pos2 && con.pos2 == pos1);
+            }).ToList();
+            if (toRemove.Count > 0)
+            {
+                foreach (WireConnection con in toRemove)
+                {
+                    data.connections.Remove(con);
+                    api.ModLoader.GetModSystem<SignalNetworkMod>()?.OnWireRemoved(con);
+                }
+
+                serverChannel.BroadcastPacket(data);
+            }
+            return toRemove.Count > 0;
         }
 
         public bool TryToAddConnection(WireConnection connection){

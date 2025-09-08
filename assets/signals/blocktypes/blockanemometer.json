@@ -39,6 +39,7 @@
         "all": false
     },
     "lightAbsorption": 0,
+    "resistance": 1,
     "collisionselectionbox": {
         "x1": 0,
         "y1": 0,
@@ -53,7 +54,9 @@
     },
     "textures": {
         "rotor": { "base":"game:block/machine/device-plate"},
-		"center": { "base":"game:block/creative/col39"}
+		"center": { "base":"game:block/machine/device-plate"}
 	},
-    "shape": { "base": "signals:block/winddetector_stator" }
+    "shape": { "base": "signals:block/winddetector_stator"},
+    "shapeinventory": { "base": "signals:block/winddetector_stator",
+               "overlays": [{"base": "signals:block/winddetector_rotor"}]}
 }

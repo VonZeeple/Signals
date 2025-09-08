@@ -20,9 +20,10 @@ namespace signals.src.hangingwires
 
         public override void OnHeldInteractStart(ItemSlot itemslot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handHandling, ref EnumHandling handling)
         {
-            api.Logger.Error("AppSide: "+api.Side);
+            //api.Logger.Error("AppSide: "+api.Side);
             base.OnHeldInteractStart(itemslot, byEntity, blockSel, entitySel, firstEvent, ref handHandling, ref handling);
             //if (handHandling == EnumHandHandling.PreventDefault) return;
+            if(blockSel == null){return;}//Happens when clicking on an entiry for example
             IHangingWireAnchor anchor = byEntity.World.BlockAccessor.GetBlock(blockSel.Position) as IHangingWireAnchor;
             NodePos pos = anchor?.GetNodePosForWire(byEntity.World, blockSel, pendingNode);
             if (pos == null) return;
@@ -30,12 +31,11 @@ namespace signals.src.hangingwires
             api.Logger.Error(pos.ToString());
             if (pendingNode == null){
                 pendingNode = pos;
-                api.Logger.Error("added pending node");
+                //api.Logger.Error("added pending node");
             }
             else {
                 if(api.Side == EnumAppSide.Server){
-                        wireMod.TryToRemoveConnection(pos, pendingNode);
-                        api.Logger.Error("Trying to cut wire.");
+                        wireMod.CutWire(byEntity, pos, pendingNode);
                 }
                 pendingNode = null;
             }
