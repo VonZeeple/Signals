@@ -49,6 +49,23 @@ namespace signals.src
 
         };
 
+        public static Cuboidf MirrorCuboidf(Cuboidf cuboid, EnumAxis axis)
+        {
+            if (axis == EnumAxis.X)
+            {
+                return new Cuboidf(1 - cuboid.X2, cuboid.Y1, cuboid.Z1, 1 - cuboid.X1, cuboid.Y2, cuboid.Z2);
+            }
+            if (axis == EnumAxis.Y)
+            {
+                return new Cuboidf(cuboid.X1, 1 - cuboid.Y2, cuboid.Z1, cuboid.X2, 1 - cuboid.Y1, cuboid.Z2);
+            }
+            if (axis == EnumAxis.Z)
+            {
+                return new Cuboidf(cuboid.X1, cuboid.Y1, 1 - cuboid.Z2, cuboid.X2, cuboid.Y2, 1 - cuboid.Z1);
+            }
+            return cuboid;
+        }
+
         public static Vec3f FacingToRotation(BlockFacing orientation, BlockFacing side)
         {
             string key = "*-" + orientation.Code + "-" + side.Code;

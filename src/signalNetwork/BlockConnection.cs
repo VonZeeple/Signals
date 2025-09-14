@@ -22,7 +22,7 @@ namespace signals.src.transmission
         }
     }
 
-    class BlockConnection : Block, IHangingWireAnchor
+    public class BlockConnection : Block, IHangingWireAnchor
     {
 
         protected WireAnchor[] wireAnchors;
@@ -50,26 +50,21 @@ namespace signals.src.transmission
                 catch (Exception e)
                 {
                     api.World.Logger.Error("Failed loading SignalNodes for item/block {0}. Will ignore. Exception: {1}", Code, e);
-                    wireAnchors = new WireAnchor[0];
+                    wireAnchors = [];
                 }
             }
-
-
         }
-
 
         public override Cuboidf[] GetSelectionBoxes(IBlockAccessor world, BlockPos pos)
         {
             List<Cuboidf> boxes = new List<Cuboidf>();
-            foreach(WireAnchor nb in wireAnchors)
+            foreach (WireAnchor nb in wireAnchors)
             {
                 boxes.Add(nb.RotatedCopy());
             }
             boxes.AddRange(base.GetSelectionBoxes(world, pos));
             return boxes.ToArray();
         }
-
-
 
         public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos)
         {
