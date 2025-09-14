@@ -13,7 +13,7 @@
 
 	],
 	"shape": { "base": "game:item/resource/rope" },
-    "textures": {"rope": {"base": "game:block/metal/plate/lead"}},
+    "textures": {"rope": {"base": "signals:item/wire"}},
 	"creativeinventory": { "general": ["*"], "signals": ["*"] },
 	"maxstacksize": 16,
 	"materialDensity": 510,

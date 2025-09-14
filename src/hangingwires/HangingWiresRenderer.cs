@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
 namespace signals.src.hangingwires
@@ -27,7 +27,7 @@ namespace signals.src.hangingwires
         {
             this.mod = mod;
             this.capi = capi;
-            chunksize = capi.World.BlockAccessor.ChunkSize;
+            chunksize = GlobalConstants.ChunkSize;
             capi.Event.RegisterRenderer(this, EnumRenderStage.Opaque, "hangingwiresnetwork");
 
             //capi.Event.ReloadShader += LoadShader;
@@ -43,13 +43,6 @@ namespace signals.src.hangingwires
             {
                 meshRef?.Dispose();
             }
-        }
-
-
-        //Catenary: https://en.wikipedia.org/wiki/Catenary
-        private float Catenary(float x, float d=1, float a=2)
-        {
-            return a*((float)Math.Cosh((x-(d/2))/a) - (float)Math.Cosh((d / 2) / a));  
         }
 
         private int[] debugColors = new int[]
@@ -125,7 +118,7 @@ namespace signals.src.hangingwires
             IRenderAPI rpi = capi.Render;
             IClientWorldAccessor worldAccess = capi.World;
             Vec3d camPos = worldAccess.Player.Entity.CameraPos;
-            
+
             rpi.GLEnableDepthTest();
             rpi.GlEnableCullFace();
 
@@ -133,7 +126,7 @@ namespace signals.src.hangingwires
             IStandardShaderProgram prog = rpi.PreparedStandardShader(0, 0, 0);
             prog.Use();
 
-            AssetLocation wireTexName = new AssetLocation("block/metal/plate/lead.png");
+            AssetLocation wireTexName = new AssetLocation("signals:item/wire.png");
 
             int texid = capi.Render.GetOrLoadTexture(wireTexName);
             rpi.BindTexture2d(texid);

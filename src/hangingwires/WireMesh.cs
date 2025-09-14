@@ -9,9 +9,10 @@ namespace signals.src.hangingwires
 {
     class WireMesh
     {
-        static float Catenary(float x, float d=1, float a=2)
+        //Catenary: https://en.wikipedia.org/wiki/Catenary
+        static float Catenary(float x, float d = 1, float a = 2)
         {
-            return a*((float)Math.Cosh((x-(d/2))/a) - (float)Math.Cosh((d / 2) / a));
+            return a * ((float)Math.Cosh((x - (d / 2)) / a) - (float)Math.Cosh((d / 2) / a));
         }
 
         static Vec3f CrossProduct(Vec3f v1, Vec3f v2)
@@ -38,7 +39,6 @@ namespace signals.src.hangingwires
 
             MeshData mesh = new MeshData(4, 6);
             mesh.SetMode(EnumDrawMode.Triangles);
-
 
             MeshData mesh_top = new MeshData(4, 6);
             mesh_top.SetMode(EnumDrawMode.Triangles);
@@ -90,8 +90,9 @@ namespace signals.src.hangingwires
 
                 a = CrossProduct(direction, b * -1);
 
-                float du = dist / 2 / t / nSec;
+                float du = dist / nSec;
                 int color = 1;
+                float uv_v = 2f / 16;
                 mesh_top.AddVertex(
                     (pos - b * t + a * t).X,
                     (pos - b * t + a * t).Y,
@@ -101,7 +102,7 @@ namespace signals.src.hangingwires
                     (pos + b * t + a * t).X,
                     (pos + b * t + a * t).Y,
                     (pos + b * t + a * t).Z,
-                    j * du, 1, color);
+                    j * du, uv_v, color);
 
                 mesh_bot.AddVertex(
                     (pos - b * t - a * t).X,
@@ -112,14 +113,13 @@ namespace signals.src.hangingwires
                     (pos + b * t - a * t).X,
                     (pos + b * t - a * t).Y,
                     (pos + b * t - a * t).Z,
-                    j * du, 1,
-                    color);
+                    j * du, uv_v, color);
 
                 mesh_side.AddVertex(
                     (pos - b * t + a * t).X,
                     (pos - b * t + a * t).Y,
                     (pos - b * t + a * t).Z,
-                    j * du, 1, color);
+                    j * du, uv_v, color);
                 mesh_side.AddVertex(
                     (pos - b * t - a * t).X,
                     (pos - b * t - a * t).Y,
@@ -131,7 +131,7 @@ namespace signals.src.hangingwires
                     (pos + b * t + a * t).X,
                     (pos + b * t + a * t).Y,
                     (pos + b * t + a * t).Z,
-                    j * du, 1, color);
+                    j * du, uv_v, color);
                 mesh_side2.AddVertex(
                     (pos + b * t - a * t).X,
                     (pos + b * t - a * t).Y,
@@ -200,5 +200,5 @@ namespace signals.src.hangingwires
 
             return mesh;
         }
-    } 
+    }
 }
