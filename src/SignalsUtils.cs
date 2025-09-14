@@ -69,7 +69,7 @@ namespace signals.src
         public static Vec3f FacingToRotation(BlockFacing orientation, BlockFacing side)
         {
             string key = "*-" + orientation.Code + "-" + side.Code;
-            if (!rotations.ContainsKey(key)) return new Vec3f(0,0,0);
+            if (!rotations.ContainsKey(key)) return new Vec3f(0, 0, 0);
             return rotations[key].Clone();
         }
 

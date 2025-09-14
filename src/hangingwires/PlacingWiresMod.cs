@@ -97,12 +97,12 @@ namespace signals.src.hangingwires
             {
                 pendingNode = pos;
                 Vec3f offset = anchor.GetAnchorPosInBlock(pos);
-                capi?.ShowChatMessage(String.Format("Pending {0}:{1}",pos.blockPos,pos.index));
+                capi?.Logger.Debug(string.Format("Pending {0}:{1}", pos.blockPos, pos.index));
                 WireRenderer = new PendingWireRenderer(capi, this, pos.blockPos, offset);
             }
             else
             {
-                capi?.ShowChatMessage(String.Format("trying to attach {0}:{1}", pos.blockPos, pos.index));
+                capi?.Logger.Debug(string.Format("trying to attach {0}:{1}", pos.blockPos, pos.index));
                 WireConnection connection = new WireConnection(pendingNode, pos);
                 clientChannel.SendPacket(new AddConnectionPacket() { connection = connection, byPlayer = byPlayer.PlayerUID});
                 pendingNode = null;
