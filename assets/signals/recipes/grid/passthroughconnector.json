@@ -1,0 +1,12 @@
+{
+	"ingredientPattern": "IWI",
+	"ingredients": {
+		"I": { "type": "item", "code": "signals:insulator-fired" },
+		"W": { "type": "item", "code": "signals:el_wire" }
+	},
+
+	"width": 3,
+	"height": 1,
+	"shapeless": false,
+	"output": { "type": "block", "code": "signals:pass_through_connector-north", "quantity": 1 }
+}
