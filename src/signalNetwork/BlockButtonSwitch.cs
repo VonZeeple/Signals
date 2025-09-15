@@ -6,12 +6,12 @@ namespace signals.src.signalNetwork
 {
     class BlockButtonSwitch : BlockConnection
     {
-        string sound = "effect/woodswitch";
 
         public override void Activate(IWorldAccessor world, Caller caller, BlockSelection blockSel, ITreeAttribute activationArgs = null)
         {
             BESwitch be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BESwitch;
-            if(!(be is null)){
+            if(be is not null)
+            {
                 be.OnInteract();
                 be.ReleaseInteract();
             }

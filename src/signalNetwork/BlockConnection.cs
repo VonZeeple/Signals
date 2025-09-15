@@ -22,7 +22,7 @@ namespace signals.src.transmission
         }
     }
 
-    class BlockConnection : Block, IHangingWireAnchor
+    public class BlockConnection : Block, IHangingWireAnchor
     {
 
         protected WireAnchor[] wireAnchors;
@@ -42,7 +42,7 @@ namespace signals.src.transmission
                 try
                 {
                     wireAnchors = new WireAnchor[jsonObj.Length];
-                    for(int i=0;i<jsonObj.Length;i++)
+                    for (int i = 0; i < jsonObj.Length; i++)
                     {
                         wireAnchors[i] = jsonObj[i].AsObject<WireAnchor>();
                     }
@@ -50,26 +50,21 @@ namespace signals.src.transmission
                 catch (Exception e)
                 {
                     api.World.Logger.Error("Failed loading SignalNodes for item/block {0}. Will ignore. Exception: {1}", Code, e);
-                    wireAnchors = new WireAnchor[0];
+                    wireAnchors = [];
                 }
             }
-
-
         }
-
 
         public override Cuboidf[] GetSelectionBoxes(IBlockAccessor world, BlockPos pos)
         {
             List<Cuboidf> boxes = new List<Cuboidf>();
-            foreach(WireAnchor nb in wireAnchors)
+            foreach (WireAnchor nb in wireAnchors)
             {
                 boxes.Add(nb.RotatedCopy());
             }
             boxes.AddRange(base.GetSelectionBoxes(world, pos));
             return boxes.ToArray();
         }
-
-
 
         public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos)
         {
@@ -97,9 +92,10 @@ namespace signals.src.transmission
                 NodePos pos = GetNodePosForWire(world, blockSel, mod.GetPendingNode());
                 if (CanAttachWire(world, pos, mod.GetPendingNode()))
                 {
-                    if (pos != null){
-                        if (mod.ConnectWire(pos, byPlayer, this)){return true;}
-                        }
+                    if (pos != null)
+                    {
+                        if (mod.ConnectWire(pos, byPlayer, this)) { return true; }
+                    }
                 }
             }
 

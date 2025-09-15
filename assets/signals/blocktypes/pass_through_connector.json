@@ -1,0 +1,237 @@
+﻿{
+    "code": "pass_through_connector",
+    "class": "BlockPassThroughConnector",
+    "behaviors": [
+        {
+            "name": "BlockBehaviorSparseMultiblock",
+            "properties":{
+                "offsetbytype":
+                {
+                    "*-down": { "x": 0, "y": 2, "z": 0 },
+                    "*-up": { "x": 0, "y": -2, "z": 0 },
+                    "*-south": { "x": 0, "y": 0, "z": -2 },
+                    "*-east": { "x": -2, "y": 0, "z": 0 },
+                    "*-west": { "x": 2, "y": 0, "z": 0 },
+                    "*-north": { "x": 0, "y": 0, "z": 2 }
+                }
+            }
+        },
+        {
+            "name": "OmniAttachable",
+            "properties": {
+                "facingCode": "side",
+                "attachmentAreas": {
+                    "up": {
+                        "x1": 7,
+                        "y1": 15,
+                        "z1": 7,
+                        "x2": 8,
+                        "y2": 15,
+                        "z2": 8
+                    },
+                    "down": {
+                        "x1": 4,
+                        "y1": 0,
+                        "z1": 4,
+                        "x2": 11,
+                        "y2": 0,
+                        "z2": 11
+                    },
+                    "south": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1
+                    },
+                    "west": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 90
+                    },
+                    "north": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 180
+                    },
+                    "east": {
+                        "x1": 7,
+                        "y1": 11,
+                        "z1": 0,
+                        "x2": 8,
+                        "y2": 13,
+                        "z2": 1,
+                        "rotateY": 270
+                    }
+                }
+            }
+        }
+    ],
+    "entityclass": "Generic",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalConnector",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    },
+                    {
+                        "index": 1,
+                        "isSource": false
+                    }
+                ],
+                "connections": [
+                    {
+                        "i1": 0,
+                        "i2": 1,
+                        "att": 0
+                    }
+                ]
+            }
+        }
+    ],
+    "replaceable": 900,
+    "variantgroups": [
+        {
+            "code": "side",
+            "states": [ "north", "east", "south", "west", "up", "down" ]
+        }
+    ],
+    "attributes": {
+        "signalNodes": [
+            {
+                "index": 0,
+                "x1": 0.36,
+                "y1": 0.1,
+                "z1": 0.36,
+                "x2": 0.64,
+                "y2": 0.4,
+                "z2": 0.64,
+                "rotateXbytype": {
+                    "*-down": 180,
+                    "*-south": 90,
+                    "*-east": 90,
+                    "*-west": 90,
+                    "*-north": 270
+                },
+                "rotateYbytype": {
+                    "*-west": 180
+                },
+                "rotateZbytype": {
+                    "*-west": 270,
+                    "*-east": 270
+                }
+            },
+                        {
+                "index": 1,
+                "x1": 0.36,
+                "y1": -1.1,
+                "z1": 0.36,
+                "x2": 0.64,
+                "y2": -1.4,
+                "z2": 0.64,
+                "rotateXbytype": {
+                    "*-down": 180,
+                    "*-south": 90,
+                    "*-east": 90,
+                    "*-west": 90,
+                    "*-north": 270
+                },
+                "rotateYbytype": {
+                    "*-west": 180
+                },
+                "rotateZbytype": {
+                    "*-west": 270,
+                    "*-east": 270
+                }
+            }
+        ]
+    },
+    "creativeinventory": {
+        "general": [ "*-north" ],
+        "signals": [ "*-north" ]
+    },
+    "textures": { "ceramic": { "base": "game:block/clay/pot-lid"}},
+    "shape": {
+        "base": "signals:block/through",
+        "rotateXbytype": {
+            "*-down": 180,
+            "*-south": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-north": 270
+        },
+        "rotateYbytype": {
+            "*-west": 180
+        },
+        "rotateZbytype": {
+            "*-west": 270,
+            "*-east": 270
+        }
+    },
+    "groundTransform": {
+        "scale": 3
+    },
+    "sidesolid": { "all": false },
+    "sideopaque": { "all": false },
+    "lightAbsorption": 0,
+    "blockmaterial": "Metal",
+    "faceCullMode": "NeverCull",
+    "resistance": 1,
+    "drawtype": "json",
+    "collisionbox": {
+        "x1": 0.37,
+        "y1": 0.37,
+        "z1": 0,
+        "x2": 0.63,
+        "y2": 0.63,
+        "z2": 0.07,
+        "rotateXbytype": {
+            "*-down": 180,
+            "*-south": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-north": 270
+        },
+        "rotateYbytype": {
+            "*-west": 180
+        },
+        "rotateZbytype": {
+            "*-west": 270,
+            "*-east": 270
+        }
+    },
+    "selectionBox": {
+            "x1": 0.36,
+            "y1": 0,
+            "z1": 0.36,
+            "x2": 0.64,
+            "y2": 0.07,
+            "z2": 0.64,
+        "rotateXbytype": {
+            "*-down": 180,
+            "*-south": 90,
+            "*-east": 90,
+            "*-west": 90,
+            "*-north": 270
+        },
+        "rotateYbytype": {
+            "*-west": 180
+        },
+        "rotateZbytype": {
+            "*-west": 270,
+            "*-east": 270
+        }
+    }
+}
