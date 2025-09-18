@@ -20,7 +20,6 @@ namespace signals.src.signalNetwork
                 if(facing != null){
                     Orientation = facing;
                 }
-                Api.Logger.Notification(this.Block.Variant["orientation"]);
             }
         }
 
