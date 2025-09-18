@@ -17,15 +17,13 @@ namespace signals.src.signalNetwork
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
-            bool result = base.OnBlockInteractStart(world, byPlayer, blockSel);
-            if ( blockSel.SelectionBoxIndex == GetSelectionBoxes(world.BlockAccessor, blockSel.Position).Length - 1 ){
-                BESwitch be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BESwitch;
-                if(!(be is null)){
-                    be.OnInteract();
-                }
-                return true;
+            if(!base.OnBlockInteractStart(world, byPlayer, blockSel)) return false;
+            BESwitch be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BESwitch;
+            if (!(be is null))
+            {
+                be.OnInteract();
             }
-            return result;
+            return true;
         }
 
     }
