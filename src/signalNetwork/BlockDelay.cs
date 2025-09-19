@@ -14,7 +14,7 @@ namespace signals.src.signalNetwork
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
-            if(base.OnBlockInteractStart(world, byPlayer, blockSel)) return true;
+            if(!base.OnBlockInteractStart(world, byPlayer, blockSel)) return false;
 
             BlockPos pos = blockSel.Position;
             String sound = Attributes["triggerSound"].AsString();

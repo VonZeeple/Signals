@@ -3,20 +3,6 @@
     "class": "BlockPassThroughConnector",
     "behaviors": [
         {
-            "name": "BlockBehaviorSparseMultiblock",
-            "properties":{
-                "offsetbytype":
-                {
-                    "*-down": { "x": 0, "y": 2, "z": 0 },
-                    "*-up": { "x": 0, "y": -2, "z": 0 },
-                    "*-south": { "x": 0, "y": 0, "z": -2 },
-                    "*-east": { "x": -2, "y": 0, "z": 0 },
-                    "*-west": { "x": 2, "y": 0, "z": 0 },
-                    "*-north": { "x": 0, "y": 0, "z": 2 }
-                }
-            }
-        },
-        {
             "name": "OmniAttachable",
             "properties": {
                 "facingCode": "side",
@@ -72,6 +58,20 @@
                         "z2": 1,
                         "rotateY": 270
                     }
+                }
+            }
+        },
+        {
+            "name": "BlockBehaviorSparseMultiblock",
+            "properties":{
+                "offsetbytype":
+                {
+                    "*-down": { "x": 0, "y": 2, "z": 0 },
+                    "*-up": { "x": 0, "y": -2, "z": 0 },
+                    "*-south": { "x": 0, "y": 0, "z": -2 },
+                    "*-east": { "x": -2, "y": 0, "z": 0 },
+                    "*-west": { "x": 2, "y": 0, "z": 0 },
+                    "*-north": { "x": 0, "y": 0, "z": 2 }
                 }
             }
         }

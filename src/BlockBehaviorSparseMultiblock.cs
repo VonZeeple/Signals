@@ -28,18 +28,12 @@ namespace signals.src
 
         public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref EnumHandling handling, ref string failureCode)
         {
-            if (!CanPlaceBlock(world, byPlayer, blockSel, ref handling, ref failureCode))
-            {
-                handling = EnumHandling.PreventSubsequent;
-                return false;
-            }
-            return base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref handling, ref failureCode);
+            return true;
         }
 
-        public override bool CanPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ref EnumHandling handling, ref string failureCode)
+        public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack, ref EnumHandling handling)
         {
             bool blocked = false;
-
             IterateOverEach(blockSel.Position, (mpos) =>
             {
                 if (mpos == blockSel.Position) return true;
@@ -57,11 +51,10 @@ namespace signals.src
             if (blocked)
             {
                 handling = EnumHandling.PreventDefault;
-                failureCode = "notenoughspace";
                 return false;
             }
 
-            return true;
+            return base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack, ref handling);
         }
 
         public override void OnBlockPlaced(IWorldAccessor world, BlockPos pos, ref EnumHandling handling)

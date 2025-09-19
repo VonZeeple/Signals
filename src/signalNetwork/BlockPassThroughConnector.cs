@@ -79,12 +79,13 @@ namespace Vintagestory.GameContent
 
                     if (CanAttachWire(world, pos, mod.GetPendingNode()))
                     {
-                        if (mod.ConnectWire(pos, byPlayer, this)) { return true; }
+                        mod.ConnectWire(pos, byPlayer, this);
+                        return false;
                     }
                 }
             }
 
-            return base.OnBlockInteractStart(world, byPlayer, blockSel);
+            return true;
         }
 
         public bool MBOnBlockInteractStep(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, Vec3i offset)

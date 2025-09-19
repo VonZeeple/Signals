@@ -81,7 +81,6 @@ namespace signals.src.transmission
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
-
             PlacingWiresMod mod = api.ModLoader.GetModSystem<PlacingWiresMod>();
             if (mod == null)
             {
@@ -90,16 +89,17 @@ namespace signals.src.transmission
             else
             {
                 NodePos pos = GetNodePosForWire(world, blockSel, mod.GetPendingNode());
-                if (CanAttachWire(world, pos, mod.GetPendingNode()))
+                if (pos != null)
                 {
-                    if (pos != null)
+                    if (CanAttachWire(world, pos, mod.GetPendingNode()))
                     {
-                        if (mod.ConnectWire(pos, byPlayer, this)) { return true; }
+                        mod.ConnectWire(pos, byPlayer, this);
+                        return false;
                     }
                 }
             }
-
-            return base.OnBlockInteractStart(world, byPlayer, blockSel);
+            base.OnBlockInteractStart(world, byPlayer, blockSel);
+            return true;
         }
 
         public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
@@ -147,9 +147,8 @@ namespace signals.src.transmission
 
         public bool CanAttachWire(IWorldAccessor world, NodePos pos, NodePos posInit = null)
         {
-            if (pos == null) return false;
             if (posInit != null && posInit.blockPos == pos.blockPos) return false;
-            return pos != null;
+            return true;
         }
 
         public NodePos[] GetWireAnchors(IWorldAccessor world, BlockPos pos)
