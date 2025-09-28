@@ -12,6 +12,8 @@ namespace signals.src.hangingwires
 
         public int RenderRange => 100;
 
+        public bool dirty;
+
         HangingWiresMod mod;
         ICoreClientAPI capi;
 
@@ -112,6 +114,13 @@ namespace signals.src.hangingwires
 
         public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
         {
+            if (dirty)
+            {
+                // TODO: fix this, it is ugly
+                HangingWiresData data = capi.ModLoader.GetModSystem<HangingWiresMod>()?.data;
+                UpdateWiresMesh(data);
+                dirty = false;
+            }
             if (MeshRefPerChunk == null) return;
             if (stage != EnumRenderStage.Opaque) return;
 

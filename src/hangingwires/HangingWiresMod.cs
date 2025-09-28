@@ -19,7 +19,7 @@ namespace signals.src.hangingwires
         IServerNetworkChannel serverChannel;
         IClientNetworkChannel clientChannel;
 
-        HangingWiresData data = new HangingWiresData();
+        public HangingWiresData data = new HangingWiresData();
         ICoreAPI api;
         ICoreServerAPI sapi;
         ICoreClientAPI capi;
@@ -80,16 +80,18 @@ namespace signals.src.hangingwires
 
         }
 
-        private void OnChunkDirty(Vec3i chunkCoord, IWorldChunk chunk, EnumChunkDirtyReason reason){
-            if( reason == EnumChunkDirtyReason.NewlyLoaded){
-                Renderer.UpdateWiresMesh(data);
+        private void OnChunkDirty(Vec3i chunkCoord, IWorldChunk chunk, EnumChunkDirtyReason reason)
+        {
+            if (reason == EnumChunkDirtyReason.NewlyLoaded)
+            {
+                Renderer.dirty = true;
             }
         }
 
         private void onDataFromServer(HangingWiresData data)
         {
             this.data = data;
-            Renderer.UpdateWiresMesh(data);
+            Renderer.dirty = true;
         }
 
 
