@@ -80,16 +80,6 @@
     "behaviors": [
         {
             "name": "BlockBehaviorCoverWithDirection"
-        },
-        {
-            "name": "BlockBehaviorExchangeDuringInteract",
-            "properties": {
-                "onState":"*-on",
-                "offState":"*-off",
-                "onSound": "effect/woodswitch",
-                "offSound": "effect/woodswitch",
-                "actionLangCode": "blockhelp-knifeswitch-onoff"
-            }
         }
     ],
     "variantgroups": [
