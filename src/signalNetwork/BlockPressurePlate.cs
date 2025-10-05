@@ -10,9 +10,10 @@ namespace signals.src.signalNetwork
         public override void OnEntityCollide(IWorldAccessor world, Entity entity, BlockPos pos, BlockFacing facing, Vec3d collideSpeed, bool isImpact)
         {
             base.OnEntityCollide(world, entity, pos, facing, collideSpeed, isImpact);
+            if (world.Side == EnumAppSide.Client) return;
             BEPressurePlate be = world.BlockAccessor.GetBlockEntity(pos) as BEPressurePlate;
             if (be == null) return;
             be.OnEntityCollide(entity);
-        }   
+        }
     }
 }
