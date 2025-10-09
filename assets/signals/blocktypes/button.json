@@ -79,7 +79,8 @@
     ],
     "behaviors": [
         {
-            "name": "BlockBehaviorCoverWithDirection"
+            "name": "BlockBehaviorCoverWithDirection",
+            "properties": { "handleDrop": false }
         }
     ],
     "variantgroups": [
@@ -151,6 +152,9 @@
             "*-north-down-off"
         ]
     },
+    "drops": [
+		{ "type": "block", "code": "buttonswitch-north-down-off" }
+	],
     "sideopaque": { "all": false },
     "sidesolid": { "all": false },
     "lightAbsorption": 0,

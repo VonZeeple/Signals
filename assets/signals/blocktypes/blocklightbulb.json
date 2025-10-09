@@ -45,7 +45,12 @@
         }
     ]
     },
-    "behaviors": [ { "name": "BlockBehaviorCoverWithDirection" } ],
+    "behaviors": [
+        {
+            "name": "BlockBehaviorCoverWithDirection",
+            "properties": { "handleDrop": false }
+        }
+    ],
     "variantgroups": [
 
         {
@@ -150,6 +155,9 @@
         "general": [ "*-off-north-down" ],
         "signals": [ "*-off-north-down" ]
     },
+    "drops": [
+		{ "type": "block", "code": "blocklightbulb-off-north-down" }
+	],
     "replaceable": 300,
     "resistance": 1,
     "selectionbox": {
