@@ -24,6 +24,8 @@ namespace signals.src.hangingwires
         ICoreServerAPI sapi;
         ICoreClientAPI capi;
 
+        Item wireItem;
+
         #region ModSystem
 
         public override bool ShouldLoad(EnumAppSide forSide)
@@ -53,9 +55,9 @@ namespace signals.src.hangingwires
         {
             List<WireConnection> toProcess = data.connections.Where(c => c.pos1 == pos || c.pos2 == pos).ToList();
             List<WireConnection> output = new List<WireConnection>();
-            foreach(WireConnection con in toProcess)
+            foreach (WireConnection con in toProcess)
             {
-                if(con.pos1 == pos)
+                if (con.pos1 == pos)
                 {
                     output.Add(new WireConnection(con.pos1, con.pos2));
                 }
@@ -109,6 +111,8 @@ namespace signals.src.hangingwires
             api.Event.SaveGameLoaded += Event_SaveGameLoaded;
             sapi.Event.PlayerNowPlaying += Event_OnPlayerJoin;
             sapi.Event.ChunkColumnLoaded += Event_ChunksLoaded;
+
+            wireItem = api.World.GetItem(new AssetLocation("signals:el_wire"));
         }
 
         private void Event_ChunksLoaded(Vec2i chunkCoord, IWorldChunk[] chunks){
@@ -148,13 +152,11 @@ namespace signals.src.hangingwires
             bool removed = TryToRemoveConnection(pos1, pos2);
             if (removed)
             {
-                Item item = api.World.GetItem(new AssetLocation("signals:el_wire"));
-                if(item != null)
+                if(wireItem != null)
                 {
-                    var itemStack = new ItemStack(item);
+                    var itemStack = new ItemStack(wireItem);
                     byEntity.TryGiveItemStack(itemStack);
                 }
-
             }
 
         }
@@ -192,17 +194,22 @@ namespace signals.src.hangingwires
         {
             if (api.Side == EnumAppSide.Client) return;
 
-            List<WireConnection> toRemove = data.connections.Where((WireConnection con) => {
+            List<WireConnection> toRemove = data.connections.Where((WireConnection con) =>
+            {
                 return con.pos1.blockPos == pos || con.pos2.blockPos == pos;
             }).ToList();
-            if(toRemove.Count > 0)
+            if (toRemove.Count > 0)
             {
-                foreach(WireConnection con in toRemove)
+                foreach (WireConnection con in toRemove)
                 {
                     data.connections.Remove(con);
                 }
 
                 serverChannel.BroadcastPacket(data);
+            }
+            if(wireItem != null)
+            {
+                api.World.SpawnItemEntity(new ItemStack(wireItem,toRemove.Count), pos);
             }
         }
         #endregion
