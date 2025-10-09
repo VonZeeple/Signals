@@ -42,7 +42,7 @@ namespace signals.src.signalNetwork
 
         private byte GetSignalValue()
         {
-            int light = Api.World.GetBlockAccessor(false,false,false).GetLightLevel(this.Pos, EnumLightLevelType.MaxLight);
+            int light = Api.World.GetBlockAccessor(false,false,false).GetLightLevel(Pos, EnumLightLevelType.MaxTimeOfDayLight);
             light = 32-light;
             if(light >= 30) {return (byte)15;}
             return (byte) Math.Floor(light*0.5d);
