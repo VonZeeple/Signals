@@ -64,7 +64,8 @@
     },
     "behaviors": [
         {
-            "name": "BlockBehaviorCoverWithDirection"
+            "name": "BlockBehaviorCoverWithDirection",
+            "properties": { "handleDrop": false }
         }
     ],
     "entityclass": "BEDelay",
@@ -139,6 +140,9 @@
             "*-north-down-1"
         ]
     },
+    "drops": [
+		{ "type": "block", "code": "blockdelay-north-down-1" }
+	],
     "sideopaque": {
         "all": false
     },

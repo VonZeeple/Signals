@@ -113,7 +113,8 @@
     },
     "behaviors": [
         {
-            "name": "BlockBehaviorCoverWithDirection"
+            "name": "BlockBehaviorCoverWithDirection",
+            "properties": { "handleDrop": false }
         }
     ],
     "variantgroups": [
@@ -219,6 +220,9 @@
             "*-off-north-down"
         ]
     },
+    "drops": [
+		{ "type": "block", "code": "blockvalve-off-north-down" }
+	],
     "replaceable": 300,
     "selectionbox": {
         "x1": 0,

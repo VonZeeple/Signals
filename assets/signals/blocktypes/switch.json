@@ -79,7 +79,8 @@
     ],
     "behaviors": [
         {
-            "name": "BlockBehaviorCoverWithDirection"
+            "name": "BlockBehaviorCoverWithDirection",
+            "properties": { "handleDrop": false }
         },
         {
             "name": "ExchangeOnInteract",
@@ -163,6 +164,9 @@
             "*-north-down-off"
         ]
     },
+    "drops": [
+		{ "type": "block", "code": "knifeswitch-north-down-off" }
+	],
     "sideopaque": {
         "all": false
     },

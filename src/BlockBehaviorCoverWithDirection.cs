@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
 namespace signals.src
@@ -9,15 +10,29 @@ namespace signals.src
         public string orientationCode => "orientation";
         public string sideCode => "side";
 
+        public bool handleDrop;
+
         public BlockBehaviorCoverWithDirection(Block block) : base(block)
         {
 
         }
 
+        public override void Initialize(JsonObject properties)
+        {
+            handleDrop = properties["handleDrop"].AsBool(true);
+            base.Initialize(properties);
+
+        }
         public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, ref float dropQuantityMultiplier, ref EnumHandling handled)
         {
+            if (!handleDrop)
+            {
+                handled = EnumHandling.PassThrough;
+                return null;
+            }
+
             handled = EnumHandling.PreventDefault;
-            AssetLocation baseBlock = block.CodeWithVariants(new string[]{orientationCode, sideCode}, new string[]{"north","down"});
+            AssetLocation baseBlock = block.CodeWithVariants([orientationCode, sideCode], ["north", "down"]);
             return new ItemStack[] { new ItemStack(world.BlockAccessor.GetBlock(baseBlock)) };
         }
 
