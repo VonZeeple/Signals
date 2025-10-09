@@ -61,6 +61,9 @@
             "states": [ "north", "east", "south", "west", "up", "down" ]
         }
     ],
+    "lightHsvbytype":{
+        "*-on-*-*": [34, 7, 7]
+    },
     "lightAbsorption": 0,
     "drawtype": "json",
     "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south", "*-east-east", "*-east-west", "*-west-east", "*-west-west" ],
