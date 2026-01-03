@@ -1,0 +1,323 @@
+﻿{
+    "code": "blocktetrode",
+    "class": "BlockSignalConnection",
+    "entityclass": "Generic",
+    "entityBehaviors": [
+        {
+            "name": "BEBehaviorSignalTetrode",
+            "properties": {
+                "signalNodes": [
+                    {
+                        "index": 0,
+                        "isSource": false
+                    },
+                    {
+                        "index": 1,
+                        "isSource": false
+                    },
+                    {
+                        "index": 2,
+                        "isSource": false
+                    },
+                    {
+                        "index": 3,
+                        "isSource": false
+                    }
+                ]
+            }
+        }
+    ],
+    "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-tetrode", "text": "signals:block-handbooktext-tetrode" }
+			]
+		},
+        "signalNodes": [
+            {
+                "index": 0,
+                "name": "con-grid",
+                "x1": 0.66875,
+                "y1": 0.0625,
+                "z1": 0.65625,
+                "x2": 0.85625,
+                "y2": 0.25,
+                "z2": 0.84375,
+                "rotateXbytype": {
+                    "*-*-north": 90,
+                    "*-*-south": 270,
+                    "@*-up-(east|west)": 90,
+                    "@*-down-(east|west)": 270,
+                    "@*-south-(east|west)": 180
+                },
+                "rotateYbytype": {
+                    "@*-east-(up|down|north|south)": 270,
+                    "@*-south-(up|down)": 180,
+                    "@*-west-(up|down|north|south)": 90,
+                    "@*-(down-north|up-south)": 180
+                },
+                "rotateZbyType": {
+                    "*-*-up": 180,
+                    "*-*-east": 90,
+                    "*-*-west": 270
+                }
+            },
+            {
+                "index": 1,
+                "name": "con-cathode",
+                "x1": 0.09375,
+                "y1": 0.0625,
+                "z1": 0.40625,
+                "x2": 0.28125,
+                "y2": 0.25,
+                "z2": 0.59375,
+                "rotateXbytype": {
+                    "*-*-north": 90,
+                    "*-*-south": 270,
+                    "@*-up-(east|west)": 90,
+                    "@*-down-(east|west)": 270,
+                    "@*-south-(east|west)": 180
+                },
+                "rotateYbytype": {
+                    "@*-east-(up|down|north|south)": 270,
+                    "@*-south-(up|down)": 180,
+                    "@*-west-(up|down|north|south)": 90,
+                    "@*-(down-north|up-south)": 180
+                },
+                "rotateZbyType": {
+                    "*-*-up": 180,
+                    "*-*-east": 90,
+                    "*-*-west": 270
+                }
+            },
+            {
+                "index": 2,
+                "name": "con-anode",
+                "x1": 0.40625,
+                "y1": 0.6625,
+                "z1": 0.40625,
+                "x2": 0.59375,
+                "y2": 0.85,
+                "z2": 0.59375,
+                "rotateXbytype": {
+                    "*-*-north": 90,
+                    "*-*-south": 270,
+                    "@*-up-(east|west)": 90,
+                    "@*-down-(east|west)": 270,
+                    "@*-south-(east|west)": 180
+                },
+                "rotateYbytype": {
+                    "@*-east-(up|down|north|south)": 270,
+                    "@*-south-(up|down)": 180,
+                    "@*-west-(up|down|north|south)": 90,
+                    "@*-(down-north|up-south)": 180
+                },
+                "rotateZbyType": {
+                    "*-*-up": 180,
+                    "*-*-east": 90,
+                    "*-*-west": 270
+                }
+            },
+            {
+                "index": 3,
+                "name": "con-screen",
+                "x1": 0.66875,
+                "y1": 0.0625,
+                "z1": 0.15625,
+                "x2": 0.85625,
+                "y2": 0.25,
+                "z2": 0.34375,
+                "rotateXbytype": {
+                    "*-*-north": 90,
+                    "*-*-south": 270,
+                    "@*-up-(east|west)": 90,
+                    "@*-down-(east|west)": 270,
+                    "@*-south-(east|west)": 180
+                },
+                "rotateYbytype": {
+                    "@*-east-(up|down|north|south)": 270,
+                    "@*-south-(up|down)": 180,
+                    "@*-west-(up|down|north|south)": 90,
+                    "@*-(down-north|up-south)": 180
+                },
+                "rotateZbyType": {
+                    "*-*-up": 180,
+                    "*-*-east": 90,
+                    "*-*-west": 270
+                }
+            }
+        ]
+    },
+    "behaviors": [
+        {
+            "name": "BlockBehaviorCoverWithDirection",
+            "properties": { "handleDrop": false }
+        }
+    ],
+    "variantgroups": [
+        {
+            "code": "powered",
+            "states": [
+                "on",
+                "off"
+            ]
+        },
+        {
+            "code": "orientation",
+            "states": [
+                "north",
+                "east",
+                "south",
+                "west",
+                "up",
+                "down"
+            ]
+        },
+        {
+            "code": "side",
+            "states": [
+                "north",
+                "east",
+                "south",
+                "west",
+                "up",
+                "down"
+            ]
+        }
+    ],
+    "lightAbsorption": 0,
+    "drawtype": "json",
+    "skipVariants": [
+        "*-north-north",
+        "*-south-north",
+        "*-north-south",
+        "*-south-south",
+        "*-east-east",
+        "*-east-west",
+        "*-west-east",
+        "*-west-west"
+    ],
+    "shape": {
+        "base": "block/tetrode",
+        "rotateXbytype": {
+            "*-*-north": 90,
+            "*-*-south": 270,
+            "@*-up-(east|west)": 90,
+            "@*-down-(east|west)": 270,
+            "@*-south-(east|west)": 180
+        },
+        "rotateYbytype": {
+            "@*-east-(up|down|north|south)": 270,
+            "@*-south-(up|down)": 180,
+            "@*-west-(up|down|north|south)": 90,
+            "@*-(down-north|up-south)": 180
+        },
+        "rotateZbyType": {
+            "*-*-up": 180,
+            "*-*-east": 90,
+            "*-*-west": 270
+        }
+    },
+    "sidesolidByType": {
+        "*-down": {
+            "all": false,
+            "down": true
+        },
+        "*-up": {
+            "all": false,
+            "up": true
+        },
+        "*-north": {
+            "all": false,
+            "north": true
+        },
+        "*-east": {
+            "all": false,
+            "east": true
+        },
+        "*-west": {
+            "all": false,
+            "west": true
+        },
+        "*-south": {
+            "all": false,
+            "south": true
+        }
+    },
+    "sideopaque": {
+        "all": false
+    },
+    "resistance": 1,
+    "blockmaterial": "Metal",
+    "creativeinventory": {
+        "general": [
+            "*-off-north-down"
+        ],
+        "signals": [
+            "*-off-north-down"
+        ]
+    },
+    "drops": [
+		{ "type": "block", "code": "blocktetrode-off-north-down" }
+	],
+    "replaceable": 300,
+    "selectionbox": {
+        "x1": 0,
+        "y1": 0,
+        "z1": 0,
+        "x2": 1,
+        "y2": 0.0625,
+        "z2": 1,
+        "rotateXbytype": {
+            "*-*-north": 90,
+            "*-*-south": 270,
+            "@*-up-(east|west)": 90,
+            "@*-down-(east|west)": 270,
+            "@*-south-(east|west)": 180
+        },
+        "rotateYbytype": {
+            "@*-east-(up|down|north|south)": 270,
+            "@*-south-(up|down)": 180,
+            "@*-west-(up|down|north|south)": 90,
+            "@*-(down-north|up-south)": 180
+        },
+        "rotateZbyType": {
+            "*-*-up": 180,
+            "*-*-east": 90,
+            "*-*-west": 270
+        }
+    },
+    "collisionbox": {
+        "x1": 0,
+        "y1": 0,
+        "z1": 0,
+        "x2": 1,
+        "y2": 0.0625,
+        "z2": 1,
+        "rotateXbytype": {
+            "*-*-north": 90,
+            "*-*-south": 270,
+            "@*-up-(east|west)": 90,
+            "@*-down-(east|west)": 270,
+            "@*-south-(east|west)": 180
+        },
+        "rotateYbytype": {
+            "@*-east-(up|down|north|south)": 270,
+            "@*-south-(up|down)": 180,
+            "@*-west-(up|down|north|south)": 90,
+            "@*-(down-north|up-south)": 180
+        },
+        "rotateZbyType": {
+            "*-*-up": 180,
+            "*-*-east": 90,
+            "*-*-west": 270
+        }
+    },
+    "guiTransform": {
+        "origin": {
+            "x": 0.5,
+            "y": 0.0625,
+            "z": 0.5
+        }
+    }
+}
