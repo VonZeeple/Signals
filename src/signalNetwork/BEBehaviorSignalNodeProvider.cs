@@ -140,8 +140,14 @@ namespace signals.src.signalNetwork
             /// </summary>
             ISignalNode node = this.GetNodeAt(pos);
             if (node == null) return;
+            if (this.Blockentity == null) return;
             IBESignalReceptor receptor = this.Blockentity as IBESignalReceptor;
             receptor?.OnValueChanged(pos, node.value);
+            foreach(BlockEntityBehavior be in this.Blockentity.Behaviors)
+            {
+                receptor = be as IBESignalReceptor;
+                receptor?.OnValueChanged(pos, node.value);
+            }
 
             return;
         }
