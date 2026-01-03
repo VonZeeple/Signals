@@ -147,7 +147,6 @@ namespace signals.src.transmission
 
         public bool CanAttachWire(IWorldAccessor world, NodePos pos, NodePos posInit = null)
         {
-            if (posInit != null && posInit.blockPos == pos.blockPos) return false;
             return true;
         }
 
