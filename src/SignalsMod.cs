@@ -64,6 +64,7 @@ namespace signals.src
             api.RegisterBlockEntityBehaviorClass("BEBehaviorAnemometer", typeof(BEBehaviorAnemometer));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorRiftDetector", typeof(BEBehaviorRiftDetector));
             api.RegisterBlockEntityBehaviorClass("BEBehaviorLightSensor", typeof(BEBehaviorLightSensor));
+            api.RegisterBlockEntityBehaviorClass("BEBehaviorSignalTetrode", typeof(BEBehaviorSignalTetrode));
 
             api.RegisterCollectibleBehaviorClass("WireCutterBehavior", typeof(WireCutterBehavior));
             api.RegisterItemClass("WireCutterItem", typeof(WireCutterItem));
