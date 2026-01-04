@@ -113,9 +113,12 @@
         ]
     },
     "creativeinventory": {
-        "general": [ "*-up" ],
-        "signals": [ "*-up" ]
+        "general": [ "*-north" ],
+        "signals": [ "*-north" ]
     },
+    "drops": [
+		{ "type": "block", "code": "connection-north" }
+	],
     "textures": { "ceramic": { "base": "game:block/clay/pot-lid"}},
     "shape": {
         "base": "signals:block/connections1",
