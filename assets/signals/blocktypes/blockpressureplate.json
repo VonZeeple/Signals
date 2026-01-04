@@ -37,6 +37,11 @@
         "signals": ["*-up-false"]
 	},
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-pressureplate" }
+			]
+		},
         "signalNodes": [
             {
                 "index": 0,

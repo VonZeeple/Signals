@@ -63,6 +63,11 @@
     ],
     "skipVariants": [ "*-north-north", "*-south-north", "*-north-south", "*-south-south", "*-east-east", "*-east-west", "*-west-east", "*-west-west" ],
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-resistor" }
+			]
+		},
         "signalNodes": [
             {
                 "index": 0,

@@ -2,6 +2,11 @@
     "code": "blockmeter",
     "class": "BlockSignalMeter",
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-meter" }
+			]
+		},
         "signalNodesbytype": {
             "*-wall-*":
             [

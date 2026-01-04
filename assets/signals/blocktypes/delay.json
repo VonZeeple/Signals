@@ -2,6 +2,11 @@
     "code": "blockdelay",
     "class": "BlockDelay",
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-delay" }
+			]
+		},
         "signalNodes": [
             {
                 "index": 0,

@@ -1,5 +1,12 @@
 ﻿{
 	"code": "el_wire",
+	"attributes":{
+		"handbook": {
+			"extraSections": [
+				{ "title": "signals:item-handbooktitle-wire", "text": "signals:item-handbooktext-wire" }
+			]
+		}
+	},
 	"behaviors": [
 
 		{ "name": "GroundStorable",

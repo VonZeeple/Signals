@@ -2,6 +2,11 @@
     "code": "blockactuator",
     "class": "BlockSignalConnection",
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-actuator" }
+			]
+		},
         "signalNodes": [
             {
                 "index": 0,

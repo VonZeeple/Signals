@@ -109,6 +109,11 @@
         }
     ],
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-passthrough" }
+			]
+		},
         "signalNodes": [
             {
                 "index": 0,
