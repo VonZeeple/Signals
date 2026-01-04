@@ -2,6 +2,11 @@
     "code": "blocksource",
     "class": "BlockSignalConnection",
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-source" }
+			]
+		},
         "signalNodes": [
             {
                 "x1": 0.40625,

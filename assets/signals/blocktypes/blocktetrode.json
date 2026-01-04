@@ -30,7 +30,7 @@
     "attributes": {
         "handbook": {
 			"extraSections": [
-				{ "title": "signals:block-handbooktitle-tetrode", "text": "signals:block-handbooktext-tetrode" }
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-tetrode" }
 			]
 		},
         "signalNodes": [

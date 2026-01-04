@@ -24,6 +24,11 @@
         }
     ],
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-triode" }
+			]
+		},
         "signalNodes": [
             {
                 "index": 0,

@@ -2,6 +2,11 @@
     "code": "blockanemometer",
     "class": "BlockSignalConnection",
     "attributes": {
+        "handbook": {
+			"extraSections": [
+				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-anemometer" }
+			]
+		},
         "signalNodes": [
             {
                 "index": 0,
