@@ -8,8 +8,8 @@
   "authors": ["PFev"],
   "description": "Wires, triodes and more.",
   "website": "https://github.com/VonZeeple/Signals",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "dependencies": {
-    "game": "1.21.0"
+    "game": "1.21.6"
   }
 }
