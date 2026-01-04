@@ -143,6 +143,9 @@
         "general": [ "*-north" ],
         "signals": [ "*-north" ]
     },
+    "drops": [
+		{ "type": "block", "code": "connection2-north" }
+	],
     "textures": { "ceramic": { "base": "game:block/clay/pot-lid"}},
     "shape": {
         "base": "signals:block/connections2",
