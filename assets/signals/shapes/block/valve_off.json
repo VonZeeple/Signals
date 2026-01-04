@@ -197,7 +197,8 @@
 						0.0,
 						4.0,
 						6.0
-					]
+					],
+					"reflectiveMode": 2
 				},
 				"east": {
 					"texture": "#statictranslocator_glass",
@@ -206,7 +207,8 @@
 						0.0,
 						4.0,
 						6.0
-					]
+					],
+					"reflectiveMode": 2
 				},
 				"south": {
 					"texture": "#statictranslocator_glass",
@@ -215,7 +217,8 @@
 						0.0,
 						4.0,
 						6.0
-					]
+					],
+					"reflectiveMode": 2
 				},
 				"west": {
 					"texture": "#statictranslocator_glass",
@@ -224,7 +227,8 @@
 						0.0,
 						4.0,
 						6.0
-					]
+					],
+					"reflectiveMode": 2
 				},
 				"up": {
 					"texture": "#statictranslocator_glass",
@@ -233,16 +237,8 @@
 						0.0,
 						4.0,
 						4.0
-					]
-				},
-				"down": {
-					"texture": "#statictranslocator_glass",
-					"uv": [
-						0.0,
-						0.0,
-						4.0,
-						4.0
-					]
+					],
+					"reflectiveMode": 2
 				}
 			}
 		},
@@ -258,7 +254,6 @@
 				10.0,
 				9.0
 			],
-			"renderPass": 3,
 			"rotationOrigin": [
 				7.0,
 				9.0,
