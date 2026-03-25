@@ -64,7 +64,7 @@ namespace signals.src.hangingwires
             mesh_side.Flags.Fill(0);
             mesh_side2.Flags.Fill(0);
 
-            Vec3f[] positions = [];
+            Vec3f[] positions = new Vec3f[nSec + 1];
             for (int j = 0; j <= nSec; j++)
             {
                 float x = dPos.X / nSec * j;
@@ -72,7 +72,7 @@ namespace signals.src.hangingwires
                 float z = dPos.Z / nSec * j;
                 float l = (float)Math.Sqrt(x * x + y * y + z * z);
                 float dy = Catenary(l / dist, 1, 2f);
-                positions = positions.Append(new Vec3f(x, y + dy, z));
+                positions[j] = new Vec3f(x, y + dy, z);
             }
 
             Vec3f pos;
