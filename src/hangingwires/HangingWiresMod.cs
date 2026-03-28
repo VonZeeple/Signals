@@ -74,6 +74,7 @@ namespace signals.src.hangingwires
             base.StartClientSide(api);
             capi = api;
             capi.Event.ChunkDirty += OnChunkDirty;
+            capi.Event.RegisterGameTickListener(OnClientTick, 16);
             api.Event.BlockTexturesLoaded += onLoaded;
             api.Event.LeaveWorld += () =>
             {
@@ -94,6 +95,11 @@ namespace signals.src.hangingwires
         {
             this.data = data;
             Renderer.dirty = true;
+        }
+
+        private void OnClientTick(float dt)
+        {
+            Renderer?.OnClientTick(dt);
         }
 
 
