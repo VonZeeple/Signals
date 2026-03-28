@@ -5,7 +5,7 @@
     "group": { "kind": "build", "isDefault": true },
     "presentation": { "reveal": "silent" },
     "problemMatcher": "$msCompile",
-    
+
     "type": "process",
     "command": "dotnet",
     "args": [ "build","signals.csproj" , "-c", "Debug" ]
@@ -14,9 +14,15 @@
     "group": "build",
     "presentation": { "reveal": "silent" },
     "problemMatcher": "$msCompile",
-    
+
     "type": "process",
     "command": "dotnet",
     "args": [ "build", "-c", "Release" ]
+  },{
+    "label": "Package Mod (Debug Zip)",
+    "presentation": { "reveal": "always" },
+    "type": "process",
+    "command": "py",
+    "args": ["-3", "scripts/package_mod.py"]
   }]
 }
