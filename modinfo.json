@@ -10,6 +10,6 @@
   "website": "https://github.com/VonZeeple/Signals",
   "version": "0.3.0",
   "dependencies": {
-    "game": "1.22.0-rc.*"
+    "game": "1.22.0-rc.1"
   }
 }

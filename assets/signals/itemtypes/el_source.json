@@ -1,6 +1,5 @@
 ﻿{
     "code": "el_source",
-    "class": "ItemCircuitComponent",
     "maxstacksize": 16,
     "creativeinventory": {
     },
