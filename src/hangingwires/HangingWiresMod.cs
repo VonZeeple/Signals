@@ -87,14 +87,14 @@ namespace signals.src.hangingwires
         {
             if (reason == EnumChunkDirtyReason.NewlyLoaded)
             {
-                Renderer.dirty = true;
+                Renderer?.RequestFullRebuild();
             }
         }
 
         private void onDataFromServer(HangingWiresData data)
         {
             this.data = data;
-            Renderer.dirty = true;
+            Renderer?.RequestIncrementalRebuild(data);
         }
 
         private void OnClientTick(float dt)
