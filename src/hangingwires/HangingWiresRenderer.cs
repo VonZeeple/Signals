@@ -14,7 +14,16 @@ namespace signals.src.hangingwires
 
         public int RenderRange => 100;
 
-        public bool dirty;
+        enum RebuildRequestMode
+        {
+            None,
+            Partial,
+            Full
+        }
+
+        RebuildRequestMode pendingRequestMode = RebuildRequestMode.None;
+        HashSet<Vec3i> pendingPartialChunks = new HashSet<Vec3i>();
+        HashSet<WireConnection> lastKnownConnections = new HashSet<WireConnection>();
 
         HangingWiresMod mod;
         ICoreClientAPI capi;
@@ -31,17 +40,21 @@ namespace signals.src.hangingwires
         int rebuildConnectionIndex;
         List<KeyValuePair<Vec3i, MeshData>> uploadQueue;
         int uploadIndex;
+        HashSet<Vec3i> activeRebuildChunks;
+        bool activeRebuildIsFull;
+        Dictionary<Vec3i, int> activeChunkPriority;
 
         bool isRebuilding;
-        bool rebuildRequestedWhileRunning;
 
         readonly AssetLocation wireTexName = new AssetLocation("signals:item/wire.png");
         int wireTextureId = -1;
 
         // Hard limits + time budget keep the per-tick cost bounded.
         const int MaxConnectionsPerTick = 20;
-        const int MaxChunkUploadsPerTick = 1;
+        const int MaxConnectionsPerTickPartial = 200;
+        const int MaxChunkUploadsPerTick = 4;
         const double RebuildTimeBudgetMs = 2.0;
+        const double RebuildTimeBudgetMsPartial = 6.0;
 
 
         public HangingWiresRenderer(ICoreClientAPI capi, HangingWiresMod mod)
@@ -85,12 +98,125 @@ namespace signals.src.hangingwires
             (255 << 24) | (255 << 16) | (0 << 8) | (255),
             (255 << 24) | (255 << 16) | (255 << 8) | (255)
         };
-        void BeginMeshRebuild(HangingWiresData data)
+        Vec3i GetChunkPos(BlockPos pos)
+        {
+            int cx = (int)Math.Floor((double)pos.X / chunksize);
+            int cy = (int)Math.Floor((double)pos.Y / chunksize);
+            int cz = (int)Math.Floor((double)pos.Z / chunksize);
+            return new Vec3i(cx, cy, cz);
+        }
+
+        HashSet<Vec3i> ComputeChangedChunks(HangingWiresData data)
+        {
+            HashSet<WireConnection> currentConnections = data == null
+                ? new HashSet<WireConnection>()
+                : new HashSet<WireConnection>(data.connections);
+
+            HashSet<Vec3i> changedChunks = new HashSet<Vec3i>();
+
+            foreach (WireConnection con in currentConnections)
+            {
+                if (!lastKnownConnections.Contains(con))
+                {
+                    changedChunks.Add(GetChunkPos(con.pos1.blockPos));
+                }
+            }
+
+            foreach (WireConnection con in lastKnownConnections)
+            {
+                if (!currentConnections.Contains(con))
+                {
+                    changedChunks.Add(GetChunkPos(con.pos1.blockPos));
+                }
+            }
+
+            lastKnownConnections = currentConnections;
+            return changedChunks;
+        }
+
+        public void RequestFullRebuild()
+        {
+            pendingRequestMode = RebuildRequestMode.Full;
+            // Keep pendingPartialChunks – they serve as priority hints for upload ordering
+        }
+
+        public void RequestIncrementalRebuild(HangingWiresData data)
+        {
+            if (pendingRequestMode == RebuildRequestMode.Full)
+            {
+                return;
+            }
+
+            HashSet<Vec3i> changedChunks = ComputeChangedChunks(data);
+            if (changedChunks.Count == 0)
+            {
+                return;
+            }
+
+            pendingRequestMode = RebuildRequestMode.Partial;
+            foreach (Vec3i chunk in changedChunks)
+            {
+                pendingPartialChunks.Add(chunk);
+            }
+        }
+
+        Dictionary<Vec3i, int> BuildChunkPriority(HashSet<Vec3i> targetChunks)
+        {
+            Dictionary<Vec3i, int> chunkPriority = new Dictionary<Vec3i, int>();
+            if (targetChunks == null || targetChunks.Count == 0)
+            {
+                return chunkPriority;
+            }
+
+            Vec3d camPos = capi.World.Player?.Entity?.CameraPos;
+            if (camPos == null)
+            {
+                return chunkPriority;
+            }
+
+            List<KeyValuePair<Vec3i, double>> distances = new List<KeyValuePair<Vec3i, double>>();
+            foreach (Vec3i chunk in targetChunks)
+            {
+                double cx = chunk.X * chunksize + chunksize * 0.5 - camPos.X;
+                double cy = chunk.Y * chunksize + chunksize * 0.5 - camPos.Y;
+                double cz = chunk.Z * chunksize + chunksize * 0.5 - camPos.Z;
+                distances.Add(new KeyValuePair<Vec3i, double>(chunk, cx * cx + cy * cy + cz * cz));
+            }
+
+            distances.Sort((a, b) => a.Value.CompareTo(b.Value));
+            for (int i = 0; i < distances.Count; i++)
+            {
+                chunkPriority[distances[i].Key] = i;
+            }
+
+            return chunkPriority;
+        }
+
+        void BeginMeshRebuild(HangingWiresData data, bool fullRebuild, HashSet<Vec3i> targetChunks, HashSet<Vec3i> priorityChunks = null)
         {
             IBlockAccessor accessor = capi?.World?.BlockAccessor;
             if (data == null || accessor == null) return;
 
-            rebuildConnections = new List<WireConnection>(data.connections);
+            activeRebuildIsFull = fullRebuild;
+            activeRebuildChunks = fullRebuild ? null : new HashSet<Vec3i>(targetChunks);
+            activeChunkPriority = BuildChunkPriority(fullRebuild ? priorityChunks : activeRebuildChunks);
+
+            if (fullRebuild)
+            {
+                rebuildConnections = new List<WireConnection>(data.connections);
+            }
+            else
+            {
+                rebuildConnections = new List<WireConnection>();
+                foreach (WireConnection con in data.connections)
+                {
+                    if (targetChunks.Contains(GetChunkPos(con.pos1.blockPos)))
+                    {
+                        rebuildConnections.Add(con);
+                    }
+                }
+            }
+
             rebuildConnectionIndex = 0;
             uploadQueue = null;
             uploadIndex = 0;
@@ -115,10 +241,12 @@ namespace signals.src.hangingwires
             if (uploadQueue == null)
             {
                 int processedConnections = 0;
+                int maxConnectionsThisTick = activeRebuildIsFull ? MaxConnectionsPerTick : MaxConnectionsPerTickPartial;
+                double budgetMsThisTick = activeRebuildIsFull ? RebuildTimeBudgetMs : RebuildTimeBudgetMsPartial;
                 for (; rebuildConnectionIndex < rebuildConnections.Count; rebuildConnectionIndex++)
                 {
-                    if (processedConnections >= MaxConnectionsPerTick) break;
-                    if (sw.Elapsed.TotalMilliseconds >= RebuildTimeBudgetMs) break;
+                    if (processedConnections >= maxConnectionsThisTick) break;
+                    if (sw.Elapsed.TotalMilliseconds >= budgetMsThisTick) break;
 
                     WireConnection con = rebuildConnections[rebuildConnectionIndex];
                     processedConnections++;
@@ -127,8 +255,7 @@ namespace signals.src.hangingwires
                     IHangingWireAnchor block2 = accessor.GetBlock(con.pos2.blockPos) as IHangingWireAnchor;
                     if (block1 == null || block2 == null) continue;
 
-                    BlockPos blockPos1 = con.pos1.blockPos;
-                    Vec3i chunkpos = new Vec3i(blockPos1.X / chunksize, blockPos1.Y / chunksize, blockPos1.Z / chunksize);
+                    Vec3i chunkpos = GetChunkPos(con.pos1.blockPos);
 
                     Vec3f pos1 = con.pos1.blockPos.ToVec3f().AddCopy(-chunkpos.X * chunksize, -chunkpos.Y * chunksize, -chunkpos.Z * chunksize) + block1.GetAnchorPosInBlock(con.pos1);
                     Vec3f pos2 = con.pos2.blockPos.ToVec3f().AddCopy(-chunkpos.X * chunksize, -chunkpos.Y * chunksize, -chunkpos.Z * chunksize) + block2.GetAnchorPosInBlock(con.pos2);
@@ -149,15 +276,25 @@ namespace signals.src.hangingwires
                 }
 
                 uploadQueue = new List<KeyValuePair<Vec3i, MeshData>>(rebuildMeshPerChunk);
+                uploadQueue.Sort((a, b) =>
+                {
+                    bool aHasPriority = activeChunkPriority.TryGetValue(a.Key, out int aPri);
+                    bool bHasPriority = activeChunkPriority.TryGetValue(b.Key, out int bPri);
+                    if (aHasPriority && bHasPriority) return aPri.CompareTo(bPri);
+                    if (aHasPriority) return -1;
+                    if (bHasPriority) return 1;
+                    return 0;
+                });
                 rebuildConnections = null;
                 rebuildMeshPerChunk = null;
             }
 
             int uploadedChunks = 0;
+            double uploadBudgetMsThisTick = activeRebuildIsFull ? RebuildTimeBudgetMs : RebuildTimeBudgetMsPartial;
             for (; uploadIndex < uploadQueue.Count; uploadIndex++)
             {
                 if (uploadedChunks >= MaxChunkUploadsPerTick) break;
-                if (sw.Elapsed.TotalMilliseconds >= RebuildTimeBudgetMs) break;
+                if (sw.Elapsed.TotalMilliseconds >= uploadBudgetMsThisTick) break;
 
                 KeyValuePair<Vec3i, MeshData> mesh = uploadQueue[uploadIndex];
                 mesh.Value.SetMode(EnumDrawMode.Triangles);
@@ -170,47 +307,91 @@ namespace signals.src.hangingwires
                 return;
             }
 
-            if (MeshRefPerChunk != null)
+            if (activeRebuildIsFull)
             {
-                foreach (MeshRef meshRef in MeshRefPerChunk.Values)
+                if (MeshRefPerChunk != null)
                 {
-                    meshRef?.Dispose();
+                    foreach (MeshRef meshRef in MeshRefPerChunk.Values)
+                    {
+                        meshRef?.Dispose();
+                    }
+                }
+
+                MeshRefPerChunk = nextMeshRefPerChunk;
+            }
+            else
+            {
+                if (MeshRefPerChunk == null)
+                {
+                    MeshRefPerChunk = new Dictionary<Vec3i, MeshRef>();
+                }
+
+                foreach (KeyValuePair<Vec3i, MeshRef> entry in nextMeshRefPerChunk)
+                {
+                    if (MeshRefPerChunk.TryGetValue(entry.Key, out MeshRef oldRef))
+                    {
+                        oldRef?.Dispose();
+                    }
+                    MeshRefPerChunk[entry.Key] = entry.Value;
+                }
+
+                foreach (Vec3i chunk in activeRebuildChunks)
+                {
+                    if (nextMeshRefPerChunk.ContainsKey(chunk)) continue;
+                    if (MeshRefPerChunk.TryGetValue(chunk, out MeshRef oldRef))
+                    {
+                        oldRef?.Dispose();
+                        MeshRefPerChunk.Remove(chunk);
+                    }
                 }
             }
-
-            MeshRefPerChunk = nextMeshRefPerChunk;
             nextMeshRefPerChunk = null;
             uploadQueue = null;
+            activeRebuildChunks = null;
+            activeChunkPriority = null;
             isRebuilding = false;
 
         }
 
         public void OnClientTick(float dt)
         {
-            if (dirty)
+            HangingWiresData data = capi.ModLoader.GetModSystem<HangingWiresMod>()?.data;
+
+            if (!isRebuilding && pendingRequestMode != RebuildRequestMode.None)
             {
-                if (isRebuilding)
+                if (pendingRequestMode == RebuildRequestMode.Full)
                 {
-                    rebuildRequestedWhileRunning = true;
+                    BeginMeshRebuild(data, true, null, pendingPartialChunks.Count > 0 ? pendingPartialChunks : null);
                 }
                 else
                 {
-                    HangingWiresData data = capi.ModLoader.GetModSystem<HangingWiresMod>()?.data;
-                    BeginMeshRebuild(data);
+                    BeginMeshRebuild(data, false, pendingPartialChunks);
                 }
-                dirty = false;
+
+                pendingRequestMode = RebuildRequestMode.None;
+                pendingPartialChunks.Clear();
             }
 
             ContinueMeshRebuild();
 
-            if (!isRebuilding && rebuildRequestedWhileRunning)
+            // If rebuild just finished and a new request arrived during the same tick,
+            // only start it — do NOT call ContinueMeshRebuild again to avoid doubling
+            // the per-tick time budget.
+            if (!isRebuilding && pendingRequestMode != RebuildRequestMode.None)
             {
-                HangingWiresData data = capi.ModLoader.GetModSystem<HangingWiresMod>()?.data;
-                BeginMeshRebuild(data);
-                rebuildRequestedWhileRunning = false;
-                ContinueMeshRebuild();
+                if (pendingRequestMode == RebuildRequestMode.Full)
+                {
+                    BeginMeshRebuild(data, true, null, pendingPartialChunks.Count > 0 ? pendingPartialChunks : null);
+                }
+                else
+                {
+                    BeginMeshRebuild(data, false, pendingPartialChunks);
+                }
+
+                pendingRequestMode = RebuildRequestMode.None;
+                pendingPartialChunks.Clear();
             }
-            }
+        }
 
             public void OnRenderFrame(float deltaTime, EnumRenderStage stage)
             {
@@ -244,13 +425,15 @@ namespace signals.src.hangingwires
 
             foreach(KeyValuePair<Vec3i,MeshRef> mesh in MeshRefPerChunk)
             {
-                Vec3d offset = new Vec3d(mesh.Key.X * chunksize, mesh.Key.Y * chunksize, mesh.Key.Z * chunksize);
-                double cx = offset.X + chunksize * 0.5 - camPos.X;
-                double cy = offset.Y + chunksize * 0.5 - camPos.Y;
-                double cz = offset.Z + chunksize * 0.5 - camPos.Z;
+                double ox = mesh.Key.X * chunksize;
+                double oy = mesh.Key.Y * chunksize;
+                double oz = mesh.Key.Z * chunksize;
+                double cx = ox + chunksize * 0.5 - camPos.X;
+                double cy = oy + chunksize * 0.5 - camPos.Y;
+                double cz = oz + chunksize * 0.5 - camPos.Z;
                 if (cx * cx + cy * cy + cz * cz > maxRenderDistanceSq) continue;
 
-                prog.ModelMatrix = ModelMat.Identity().Translate(offset.X - camPos.X, offset.Y - camPos.Y, offset.Z - camPos.Z).Values;
+                prog.ModelMatrix = ModelMat.Identity().Translate(ox - camPos.X, oy - camPos.Y, oz - camPos.Z).Values;
                 rpi.RenderMesh(mesh.Value);
             }
 

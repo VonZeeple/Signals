@@ -27,7 +27,7 @@ namespace signals.src.hangingwires
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as Connection);
+            return Equals(obj as WireConnection);
         }
 
         public override int GetHashCode()
