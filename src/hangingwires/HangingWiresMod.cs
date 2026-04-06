@@ -181,6 +181,7 @@ namespace signals.src.hangingwires
         }
 
         public bool TryToAddConnection(WireConnection connection){
+            if (connection.pos1 == connection.pos2) return false;
             bool added = data.connections.Add(connection);
             if (added)
             {
