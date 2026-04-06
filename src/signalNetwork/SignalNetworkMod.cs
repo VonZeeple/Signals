@@ -203,7 +203,11 @@ namespace signals.src
 
         internal void OnDeviceUnloaded(ISignalNodeProvider device)
         {
-            
+            if(this.Api.Side == EnumAppSide.Client) return;
+            Dictionary<NodePos,ISignalNode> nodes = device.GetNodes();
+            netManager.RemoveNodes(nodes.Values.ToArray());
+            devicesToLoad.Remove(device);
+            needRenderUpdate = true;
         }
 
         internal void OnDeviceInitialized(ISignalNodeProvider device)
