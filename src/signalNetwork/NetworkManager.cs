@@ -114,6 +114,11 @@ namespace signals.src.signalNetwork
         /// </summary>
         public void AddConnection(Connection con)
         {
+            foreach (Connection existing in con.node1.Connections)
+            {
+                if (existing.GetOther(con.node1) == con.node2) return;
+            }
+
             con.node1.Connections.Add(con);
             con.node2.Connections.Add(con);
 
@@ -207,7 +212,7 @@ namespace signals.src.signalNetwork
             HashSet<long> netToRebuild = new HashSet<long>();
             foreach (ISignalNode node in nodes)
             {
-                foreach (Connection con in node.Connections)
+                foreach (Connection con in node.Connections.ToList())
                 {
                     ISignalNode otherNode = con.GetOther(node);
                     otherNode.Connections.Remove(con);
