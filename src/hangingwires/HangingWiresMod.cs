@@ -102,6 +102,11 @@ namespace signals.src.hangingwires
             Renderer?.OnClientTick(dt);
         }
 
+        private void OnClientTick(float dt)
+        {
+            Renderer?.OnClientTick(dt);
+        }
+
 
         private void onLoaded()
         {

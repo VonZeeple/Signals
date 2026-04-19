@@ -98,8 +98,7 @@ namespace signals.src.transmission
                     }
                 }
             }
-            base.OnBlockInteractStart(world, byPlayer, blockSel);
-            return true;
+            return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
 
         public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
