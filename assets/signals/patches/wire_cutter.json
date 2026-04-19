@@ -1,7 +1,40 @@
 [
     {
         "op": "add",
-        "path": "/behaviors/-",
+        "path": "/behaviorsByType/*/-",
+        "value":
+            {
+                "name": "WireCutterBehavior",
+                "properties": {}
+            }
+        ,
+        "file": "game:itemtypes/tool/shears.json"
+    },
+    {
+        "op": "add",
+        "path": "/behaviorsByType/*-iron/-",
+        "value":
+            {
+                "name": "WireCutterBehavior",
+                "properties": {}
+            }
+        ,
+        "file": "game:itemtypes/tool/shears.json"
+    },
+    {
+        "op": "add",
+        "path": "/behaviorsByType/*-meteoriciron/-",
+        "value":
+            {
+                "name": "WireCutterBehavior",
+                "properties": {}
+            }
+        ,
+        "file": "game:itemtypes/tool/shears.json"
+    },
+    {
+        "op": "add",
+        "path": "/behaviorsByType/*-steel/-",
         "value":
             {
                 "name": "WireCutterBehavior",

@@ -114,7 +114,7 @@ namespace signals.src
         }
 
         //Allows the selection of individual selectionBoxes
-        public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos)
+        public override bool DoPartialSelection(IWorldAccessor world, BlockPos pos)
         {
             return true;
         }
