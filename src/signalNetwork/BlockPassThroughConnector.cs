@@ -56,9 +56,9 @@ namespace Vintagestory.GameContent
             return [.. from box in GetSelectionBoxes(blockAccessor, pos) select SignalsUtils.MirrorCuboidf(box, GetAxis(offset))];
         }
 
-        public bool MBDoParticalSelection(IWorldAccessor world, BlockPos pos, Vec3i offset)
+        public bool MBDoPartialSelection(IWorldAccessor world, BlockPos pos, Vec3i offset)
         {
-            return base.DoParticalSelection(world, pos);
+            return base.DoPartialSelection(world, pos);
         }
 
         public bool MBOnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, Vec3i offset)
