@@ -14,7 +14,7 @@ using Vintagestory.GameContent;
     "signals",
     Description = "Wires, triodes and more.",
     Website = "",
-    Version = "0.2.7",
+    Version = "0.2.8",
     Authors = new[] { "PFev" })]
 
 namespace signals.src

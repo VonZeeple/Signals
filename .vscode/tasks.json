@@ -5,7 +5,6 @@
     "group": { "kind": "build", "isDefault": true },
     "presentation": { "reveal": "silent" },
     "problemMatcher": "$msCompile",
-    
     "type": "process",
     "command": "dotnet",
     "args": [ "build","signals.csproj" , "-c", "Debug" ]
@@ -14,7 +13,6 @@
     "group": "build",
     "presentation": { "reveal": "silent" },
     "problemMatcher": "$msCompile",
-    
     "type": "process",
     "command": "dotnet",
     "args": [ "build", "-c", "Release" ]

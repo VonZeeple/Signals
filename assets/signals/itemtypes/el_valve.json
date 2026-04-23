@@ -1,6 +1,5 @@
 ﻿{
     "code": "el_valve",
-    "class": "ItemCircuitComponent",
     "maxstacksize": 16,
     "creativeinventory": {
     },
