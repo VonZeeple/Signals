@@ -9,5 +9,16 @@
             }
         ,
         "file": "game:itemtypes/tool/shears.json"
+    },
+    {
+        "op": "add",
+        "path": "/behaviorsByType/@(.*-steel|.*-meteoriciron|.*-iron)/-",
+        "value":
+            {
+                "name": "WireCutterBehavior",
+                "properties": {}
+            }
+        ,
+        "file": "game:itemtypes/tool/shears.json"
     }
 ]
