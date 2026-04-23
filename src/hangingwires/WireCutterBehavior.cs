@@ -28,14 +28,13 @@ namespace signals.src.hangingwires
             NodePos pos = anchor?.GetNodePosForWire(byEntity.World, blockSel, pendingNode);
             if (pos == null) return;
 
-            api.Logger.Error(pos.ToString());
             if (pendingNode == null){
                 pendingNode = pos;
-                //api.Logger.Error("added pending node");
             }
             else {
                 if(api.Side == EnumAppSide.Server){
                         wireMod.CutWire(byEntity, pos, pendingNode);
+                        api.Logger.Debug("Cutting wire between "+pendingNode+" and "+pos);
                 }
                 pendingNode = null;
             }
