@@ -949,5 +949,29 @@
 				}
 			]
 		}
+	],
+	"animations": [
+		{
+			"name": "activate",
+			"code": "activate",
+			"quantityframes": 3,
+			"onActivityStopped": "Rewind",
+			"onAnimationEnd": "Hold",
+			"blendMode": "Add",
+			"keyframes": [
+				{
+					"frame": 0,
+					"elements": {
+						"button": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
+					}
+				},
+				{
+					"frame": 2,
+					"elements": {
+						"button": { "offsetX": 0.0, "offsetY": -1.0, "offsetZ": 0.0 }
+					}
+				}
+			]
+		}
 	]
 }
