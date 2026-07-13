@@ -1,14 +1,25 @@
+using System;
+using FluffyClouds;
+using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
 
 namespace signals.src.signalNetwork
 {
     class BEButtonSwitch : BESwitch
     {
-        SignalNetworkMod signalMod;
+        protected SignalNetworkMod signalMod;
         public bool waitForReset = false;
         public bool waitToTurnOn = false;
 
+        
+        BlockEntityAnimationUtil animUtil
+        {
+            get { return GetBehavior<BEBehaviorAnimatable>().animUtil; }
+        }
+        
         public override void Initialize(ICoreAPI api)
         {
             Block block = this.Block as Block;
@@ -34,12 +45,14 @@ namespace signals.src.signalNetwork
         internal override bool ReleaseInteract()
         {
             waitForReset = true;
+            animUtil?.StopAnimation("activate");
             return true;
         }
 
-        internal override bool OnInteract()
-        {
+        internal override bool OnInteract() {
             BEBehaviorSignalSwitch sw = GetBehavior<BEBehaviorSignalSwitch>();
+            animUtil?.StartAnimation(new AnimationMetaData() { Animation = "activate", Code = "activate", EaseInSpeed = 10, EaseOutSpeed = 10, AnimationSpeed = 5f });
+            MarkDirty(true);
             sw?.commute(true);
             state = true;
             waitForReset = false;
@@ -72,6 +85,18 @@ namespace signals.src.signalNetwork
             base.ToTreeAttributes(tree);
             tree.SetBool("waitForReset", waitForReset);
             tree.SetBool("waitToTurnOn", waitToTurnOn);
+        }
+        public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
+        {
+            if (animUtil?.animator == null)
+            {
+                float rotX = this.Block.Shape.rotateX;
+                float rotY = this.Block.Shape.rotateY;
+                float rotZ = this.Block.Shape.rotateZ;
+                animUtil?.InitializeAnimator("bebuttonswitch", rotationDeg: new Vec3f(rotX, rotY, rotZ));
+            }
+
+            return base.OnTesselation(mesher, tessThreadTesselator);
         }
     }
 }

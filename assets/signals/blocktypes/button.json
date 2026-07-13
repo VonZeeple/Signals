@@ -80,7 +80,7 @@
                     }
                 ]
             }
-        }
+        },{ "name": "Animatable" }
     ],
     "behaviors": [
         {
