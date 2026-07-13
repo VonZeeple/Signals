@@ -37,12 +37,12 @@
     },
     "lightAbsorption": 0,
     "resistance": 1,
-    "collisionselectionbox": {
+    "collisionSelectionBox": {
         "x1": 0,
         "y1": 0,
         "z1": 0,
         "x2": 1,
-        "y2": 0.0625,
+        "y2": 0.8125,
         "z2": 1
     },
     "creativeinventory": {
