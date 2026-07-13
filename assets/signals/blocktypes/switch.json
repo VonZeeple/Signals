@@ -180,7 +180,7 @@
     },
     "lightAbsorption": 0,
     "resistance": 1,
-    "selectionBox": {
+    "collisionSelectionBox": {
         "x1": 0.15,
         "y1": 0,
         "z1": 0.1,

@@ -177,7 +177,7 @@
             "*-*-west-*": 270
         }
     },
-    "CollisionSelectionBox": {
+    "collisionSelectionBox": {
         "x1": 0.0,
         "y1": 0.0,
         "z1": 0.25,
