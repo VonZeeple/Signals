@@ -8,14 +8,16 @@ namespace signals.src.signalNetwork
     {
         Connection con;
         SignalNetworkMod signalMod;
+        byte onAttenuation = 0;
+        byte offAttenuation = 15;
 
         public BEBehaviorSignalSwitch(BlockEntity blockentity) : base(blockentity)
         {
         }
 
-        public void commute(bool state){
+        public virtual void commute(bool state){
             if(signalMod.Api.Side == EnumAppSide.Client) return;
-            byte newValue = state? (byte)0: (byte)15;
+            byte newValue = state? onAttenuation: offAttenuation;
             signalMod.netManager.UpdateConnection(con, newValue, newValue);
         }
 
@@ -23,6 +25,8 @@ namespace signals.src.signalNetwork
         {
             signalMod = api.ModLoader.GetModSystem<SignalNetworkMod>();
             base.Initialize(api, properties);
+            onAttenuation = properties.KeyExists("onAttenuation") ? (byte)(properties["onAttenuation"].AsInt()): (byte)0;
+            offAttenuation = properties.KeyExists("offAttenuation") ? (byte)(properties["offAttenuation"].AsInt()): (byte)15;
 
             NodePos pos1 = new NodePos(this.Pos, 0);
             NodePos pos2 = new NodePos(this.Pos, 1);
@@ -34,7 +38,7 @@ namespace signals.src.signalNetwork
             if(signalMod.Api.Side == EnumAppSide.Client) return;
             BESwitch be = this.Blockentity as BESwitch;
             if(be == null) return;
-            con = new Connection(node1, node2, be.state? (byte)0: (byte)15);
+            con = new Connection(node1, node2, be.state? onAttenuation: offAttenuation);
             signalMod.netManager.AddConnection(con);
         }
     }
