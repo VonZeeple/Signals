@@ -48,8 +48,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Signals'
-copyright = None
-author = 'Pfev'
+copyright = '2020, Pfev (VonZeeple)'
+author = 'Pfev (VonZeeple)'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
