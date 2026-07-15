@@ -2,13 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using signals.src.circuits;
 using signals.src.circuits.components;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
-namespace signals.src
+namespace signals.src.circuits
 {
     public class CircuitMod : ModSystem
     {

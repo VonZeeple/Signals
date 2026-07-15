@@ -1,7 +1,6 @@
-﻿using signals.src.signalNetwork;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace signals.src.transmission
+namespace signals.src.signalNetwork
 {
     /// <summary>
     /// Node of a signal network.

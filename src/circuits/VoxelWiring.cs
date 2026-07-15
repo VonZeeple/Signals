@@ -5,7 +5,7 @@ using System.Linq;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 
-namespace signals.src
+namespace signals.src.circuits
 {
 
     public class VoxelWire

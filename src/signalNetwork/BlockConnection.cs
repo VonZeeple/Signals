@@ -1,5 +1,4 @@
 ﻿using signals.src.hangingwires;
-using signals.src.signalNetwork;
 using System;
 using System.Collections.Generic;
 using Vintagestory.API.Common;
@@ -7,7 +6,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
-namespace signals.src.transmission
+namespace signals.src.signalNetwork
 {
 
     public class WireAnchor: RotatableCube

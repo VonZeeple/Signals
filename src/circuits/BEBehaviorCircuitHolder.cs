@@ -1,19 +1,14 @@
 ﻿using signals.src.signalNetwork;
-using signals.src.transmission;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Vintagestory.API;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Server;
 
-namespace signals.src.circuits.components
+namespace signals.src.circuits
 {
     class BEBehaviorCircuitHolder : BlockEntityBehavior
     {

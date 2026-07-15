@@ -4,7 +4,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
-namespace signals.src
+namespace signals.src.circuits
 {
     public class CachedModel
     {

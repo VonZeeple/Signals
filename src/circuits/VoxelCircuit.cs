@@ -1,5 +1,5 @@
-﻿using signals.src.signalNetwork;
-using signals.src.transmission;
+﻿using signals.src.circuits.components;
+using signals.src.signalNetwork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
-namespace signals.src
+namespace signals.src.circuits
 {
 
     //The circuit contains all electrical components and wires

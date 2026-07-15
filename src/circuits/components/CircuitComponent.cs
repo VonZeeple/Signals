@@ -1,6 +1,4 @@
-﻿using signals.src.circuits;
-using signals.src.signalNetwork;
-using signals.src.transmission;
+﻿using signals.src.signalNetwork;
 using System;
 using System.Collections.Generic;
 using Vintagestory.API.Client;
@@ -8,7 +6,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
-namespace signals.src
+namespace signals.src.circuits.components
 {
     public abstract class CircuitComponent: ICircuitComponent, ITexPositionSource
     {
