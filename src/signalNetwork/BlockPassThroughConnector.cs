@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using signals.src;
+﻿using System.Linq;
 using signals.src.hangingwires;
-using signals.src.signalNetwork;
-using signals.src.transmission;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;
 
 
-namespace Vintagestory.GameContent
+namespace signals.src.signalNetwork
 {
     public class BlockPassThroughConnector : BlockConnection, IMultiBlockColSelBoxes, IMultiBlockInteract
     {

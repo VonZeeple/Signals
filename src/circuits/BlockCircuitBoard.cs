@@ -1,7 +1,5 @@
-﻿using signals.src.circuits.components;
-using signals.src.hangingwires;
+﻿using signals.src.hangingwires;
 using signals.src.signalNetwork;
-using signals.src.transmission;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -9,7 +7,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 
-namespace signals.src
+namespace signals.src.circuits
 {
     class BlockCircuitBoard : Block, IHangingWireAnchor
     {

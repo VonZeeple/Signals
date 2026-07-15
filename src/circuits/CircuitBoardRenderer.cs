@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using signals.src.circuits.components;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 
-namespace signals.src
+namespace signals.src.circuits
 {
     class CircuitBoardRenderer : IRenderer
     {

@@ -1,9 +1,8 @@
-﻿using signals.src.signalNetwork;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace signals.src.transmission
+namespace signals.src.signalNetwork
 {
     public interface ISignalNetwork
     {

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vintagestory.API.Client;
+﻿using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
-using signals.src.transmission;
 
-namespace signals.src.circuits
+namespace signals.src.circuits.components
 {
     public class CircuitComponentValve : CircuitComponent
     {
