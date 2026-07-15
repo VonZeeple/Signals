@@ -39,7 +39,7 @@
     "signals:con-screen": "Screen",
     "signals:block-pass_through_connector-*": "Pass-through connector",
     "signals:craftinginfo-signals-title": "Game Mechanic: Signals",
-    "signals:craftinginfo-signals-text": "<strong>Signals</strong><br><i>Glowing wires.</i><br><br>To start working with signals, buy a <a href=\"handbook://block-signals:blocksource\">Signal source</a> and some <a href=\"handbook://item-signals:el_wire\">Signal wire</a> to a merchant.",
+    "signals:craftinginfo-signals-text": "<strong>Signals</strong><br><i>Glowing wires.</i><br><br>To start working with signals, buy a <a href=\"handbook://block-signals:blocksource\">Signal source</a> and some <a href=\"handbook://item-signals:el_wire\">Signal wire</a> to a merchant. To know the function of each block, check the block documentation in the handbook.",
     "signals:block-handbooktitle-signals":"Signal functions",
     "signals:block-handbooktitle-other":"Other functions",
     "signals:block-handbooktext-tetrode": "If no signal is applied on the screen lead, this component behaves like a triode. When signal is applied on the screen, it accentuates the cathode to anode attenuation with grid signal.",
