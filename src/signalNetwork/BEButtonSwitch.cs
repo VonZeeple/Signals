@@ -93,7 +93,18 @@ namespace signals.src.signalNetwork
                 float rotX = this.Block.Shape.rotateX;
                 float rotY = this.Block.Shape.rotateY;
                 float rotZ = this.Block.Shape.rotateZ;
-                animUtil?.InitializeAnimator("bebuttonswitch", rotationDeg: new Vec3f(rotX, rotY, rotZ));
+                animUtil?.InitializeAnimator("bebuttonswitch");
+                if (animUtil?.renderer != null)
+                {
+                    // The default renderer only rotates around Y; match the block's XYZ rotation around its center.
+                    animUtil.renderer.CustomTransform = new Matrixf()
+                        .Translate(0.5f, 0.5f, 0.5f)
+                        .RotateX(rotX * GameMath.DEG2RAD)
+                        .RotateY(rotY * GameMath.DEG2RAD)
+                        .RotateZ(rotZ * GameMath.DEG2RAD)
+                        .Translate(-0.5f, -0.5f, -0.5f)
+                        .Values;
+                }
             }
 
             return base.OnTesselation(mesher, tessThreadTesselator);
