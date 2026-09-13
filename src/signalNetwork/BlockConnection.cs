@@ -127,6 +127,9 @@ namespace signals.src.signalNetwork
 
         public string GetAnchorName(IWorldAccessor world, BlockSelection blockSel, NodePos posInit = null)
         {
+            // Block info can be requested without a selection; skip anchor lookup to avoid a null reference.
+            if (blockSel == null) return null;
+
             foreach (WireAnchor box in wireAnchors)
             {
                 if (box.Index == blockSel.SelectionBoxIndex) return box.Name ?? "con-unamed";
