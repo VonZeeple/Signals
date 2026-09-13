@@ -114,7 +114,8 @@ namespace signals.src.signalNetwork
         }
 
         #region Wire anchor
-        public Vec3f GetAnchorPosInBlock(NodePos pos)
+        // Allow derived blocks to align wire anchors with their custom rotation.
+        public virtual Vec3f GetAnchorPosInBlock(NodePos pos)
         {
             foreach (WireAnchor box in wireAnchors)
             {
