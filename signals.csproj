@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <Version>0.3.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="VintagestoryAPI">
@@ -28,14 +29,28 @@
     <!--
     <None Include="LICENSE" CopyToOutputDirectory="PreserveNewest"/>
     -->
-    <None Include="modinfo.json" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="assets/**">
       <Link>assets/%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(BaseIntermediateOutputPath)$(Configuration)/$(TargetFramework)/ModVersion.g.cs" />
+  </ItemGroup>
+
+  <Target Name="GenerateModVersion" BeforeTargets="CoreCompile">
+    <WriteLinesToFile
+      File="$(BaseIntermediateOutputPath)$(Configuration)/$(TargetFramework)/ModVersion.g.cs"
+      Lines="internal static class ModVersion { internal const string Value = &quot;$(Version)&quot;%3B }"
+      Overwrite="true" />
+  </Target>
+
+  <Target Name="GenerateModInfo" BeforeTargets="Package" Condition="'$(Configuration)' == 'Release'">
+    <MakeDir Directories="$(TargetDir)" />
+    <Exec Command="sed 's/@VERSION@/$(Version)/g' modinfo.json.in &gt; &quot;$(TargetDir)modinfo.json&quot;" />
+  </Target>
 
   <Target Name="Package" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
-    <ZipDirectory DestinationFile="bin/$(TargetName).zip" SourceDirectory="$(TargetDir)" Overwrite="true"/>
+    <ZipDirectory DestinationFile="bin/$(TargetName)_v$(Version).zip" SourceDirectory="$(TargetDir)" Overwrite="true"/>
   </Target>
 </Project>
