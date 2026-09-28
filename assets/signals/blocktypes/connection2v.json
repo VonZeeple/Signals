@@ -1,6 +1,6 @@
-﻿{
-    "code": "connection2",
-    "class": "BlockConnection2",
+{
+    "code": "connection2v",
+    "class": "BlockConnection2Vertical",
     "entityclass": "Generic",
     "entityBehaviors": [
         {
@@ -17,69 +17,13 @@
                     }
                 ]
             }
-
-
-
         }
     ],
     "behaviors": [
         {
             "name": "OmniAttachable",
             "properties": {
-                "facingCode": "side",
-                "attachmentAreas": {
-                    "up": {
-                        "x1": 7,
-                        "y1": 15,
-                        "z1": 7,
-                        "x2": 8,
-                        "y2": 15,
-                        "z2": 8
-                    },
-                    "down": {
-                        "x1": 4,
-                        "y1": 0,
-                        "z1": 4,
-                        "x2": 11,
-                        "y2": 0,
-                        "z2": 11
-                    },
-                    "south": {
-                        "x1": 7,
-                        "y1": 11,
-                        "z1": 0,
-                        "x2": 8,
-                        "y2": 13,
-                        "z2": 1
-                    },
-                    "west": {
-                        "x1": 7,
-                        "y1": 11,
-                        "z1": 0,
-                        "x2": 8,
-                        "y2": 13,
-                        "z2": 1,
-                        "rotateY": 90
-                    },
-                    "north": {
-                        "x1": 7,
-                        "y1": 11,
-                        "z1": 0,
-                        "x2": 8,
-                        "y2": 13,
-                        "z2": 1,
-                        "rotateY": 180
-                    },
-                    "east": {
-                        "x1": 7,
-                        "y1": 11,
-                        "z1": 0,
-                        "x2": 8,
-                        "y2": 13,
-                        "z2": 1,
-                        "rotateY": 270
-                    }
-                }
+                "facingCode": "side"
             }
         }],
     "variantgroups": [
@@ -89,11 +33,6 @@
         }
     ],
     "attributes": {
-        "handbook": {
-			"extraSections": [
-				{ "title": "signals:block-handbooktitle-signals", "text": "signals:block-handbooktext-connection" }
-			]
-		},
         "signalNodes": [
             {
                 "index": 0,
@@ -106,18 +45,18 @@
                 "rotateXbytype": {
                     "*-down": 180,
                     "*-south": 90,
-                    "*-east": 90,
-                    "*-west": 90,
                     "*-north": 270
                 },
                 "rotateYbytype": {
-                    "*-west": 180
+                    "*-up": 90,
+                    "*-down": 90,
+                    "*-north": 90,
+                    "*-south": 90
                 },
                 "rotateZbytype": {
-                    "*-west": 270,
+                    "*-west": 90,
                     "*-east": 270
                 }
-
             },
             {
                 "index": 1,
@@ -130,47 +69,42 @@
                 "rotateXbytype": {
                     "*-down": 180,
                     "*-south": 90,
-                    "*-east": 90,
-                    "*-west": 90,
                     "*-north": 270
                 },
                 "rotateYbytype": {
-                    "*-west": 180
+                    "*-up": 90,
+                    "*-down": 90,
+                    "*-north": 90,
+                    "*-south": 90
                 },
                 "rotateZbytype": {
-                    "*-west": 270,
+                    "*-west": 90,
                     "*-east": 270
                 }
             }
         ]
     },
-    "creativeinventory": {
-        "general": [ "*-north" ],
-        "signals": [ "*-north" ]
-    },
     "drops": [
-		{ "type": "block", "code": "connection2-north" }
-	],
+        { "type": "block", "code": "connection2-north" }
+    ],
     "textures": { "ceramic": { "base": "game:block/clay/pot-lid"}},
     "shape": {
         "base": "signals:block/connections2",
         "rotateXbytype": {
             "*-down": 180,
             "*-south": 90,
-            "*-east": 90,
-            "*-west": 90,
             "*-north": 270
         },
         "rotateYbytype": {
-            "*-west": 180
+            "*-up": 90,
+            "*-down": 90,
+            "*-north": 90,
+            "*-south": 90
         },
         "rotateZbytype": {
-            "*-west": 270,
+            "*-west": 90,
             "*-east": 270
         }
-    },
-    "groundTransform": {
-        "scale": 3
     },
     "sidesolid": { "all": false },
     "sideopaque": { "all": false },
@@ -188,15 +122,16 @@
         "rotateXbytype": {
             "*-down": 180,
             "*-south": 90,
-            "*-east": 90,
-            "*-west": 90,
             "*-north": 270
         },
         "rotateYbytype": {
-            "*-west": 180
+            "*-up": 90,
+            "*-down": 90,
+            "*-north": 90,
+            "*-south": 90
         },
         "rotateZbytype": {
-            "*-west": 270,
+            "*-west": 90,
             "*-east": 270
         }
     },
@@ -210,15 +145,16 @@
         "rotateXbytype": {
             "*-down": 180,
             "*-south": 90,
-            "*-east": 90,
-            "*-west": 90,
             "*-north": 270
         },
         "rotateYbytype": {
-            "*-west": 180
+            "*-up": 90,
+            "*-down": 90,
+            "*-north": 90,
+            "*-south": 90
         },
         "rotateZbytype": {
-            "*-west": 270,
+            "*-west": 90,
             "*-east": 270
         }
     }

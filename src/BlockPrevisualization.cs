@@ -7,6 +7,15 @@ using Vintagestory.API.MathTools;
 
 namespace signals.src
 {
+    /// <summary>
+    /// A block that decides at placement which block really goes into the world.
+    /// The ghost preview asks it, so the player sees the block the way it will be placed.
+    /// </summary>
+    public interface IPlacementPreview
+    {
+        Block GetPlacedBlock(IWorldAccessor world, BlockSelection blockSel);
+    }
+
     public class BlockPrevisualizationMod : ModSystem
     {
         public GhostBlockRenderer renderer;
@@ -64,7 +73,9 @@ namespace signals.src
             if (istack == null) return;
             Block invBlock = istack?.Block;
             if (invBlock == null) return;
-            if (invBlock.GetBehavior<BlockBehaviorCoverWithDirection>() == null) return;
+            BlockBehaviorCoverWithDirection cover = invBlock.GetBehavior<BlockBehaviorCoverWithDirection>();
+            IPlacementPreview preview = invBlock as IPlacementPreview;
+            if (cover == null && preview == null) return;
             if (selection == null) return;
             IBlockAccessor ba = capi.World.GetBlockAccessor(false, false, false);
             Block block = ba.GetBlock(selection.Position);
@@ -72,7 +83,7 @@ namespace signals.src
             BlockPos pos = block.IsReplacableBy(invBlock) ? selection.Position : selection.Position.Offset(selection.Face);
             if (!ba.GetBlock(pos).IsReplacableBy(invBlock)) return;
 
-            Block oBlock = invBlock.GetBehavior<BlockBehaviorCoverWithDirection>()?.GetOrientedBlock(capi.World, selection);
+            Block oBlock = preview != null ? preview.GetPlacedBlock(capi.World, selection) : cover.GetOrientedBlock(capi.World, selection);
             if (oBlock == null) UpdateBlockMesh(invBlock, pos);
             else UpdateBlockMesh(oBlock, pos);
             if (mRef == null) return;

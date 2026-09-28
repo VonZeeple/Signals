@@ -1,6 +1,6 @@
 ﻿{
     "code": "blocksource",
-    "class": "BlockSignalConnection",
+    "class": "BlockSignalSource",
     "attributes": {
         "handbook": {
 			"extraSections": [
