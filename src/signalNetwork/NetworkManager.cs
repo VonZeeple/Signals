@@ -222,6 +222,7 @@ namespace signals.src.signalNetwork
                 {
                     netToRebuild.Add(node.netId.Value);
                     networks[node.netId.Value].RemoveNode(node);
+                    node.netId = null; // the network may be gone after rebuild, do not point to it
                 }
             }
             foreach (long netId in netToRebuild) RebuildNetwork(networks[netId]);

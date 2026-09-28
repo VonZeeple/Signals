@@ -104,8 +104,48 @@ namespace signals.src
         }
         public void DisposeSignalTickListener(Action OnSignalTick){
             ToDoOnSignalTick.Remove(OnSignalTick);
+            tickFailures.Remove(OnSignalTick);
         }
         List<ISignalNodeProvider> devicesToLoad = new List<ISignalNodeProvider>();
+
+        // A device that throws in every tick would fill the log ten times a second.
+        // So the first failure is logged with the full exception, then only counted,
+        // and once a minute one summary line says how many times it happened.
+        Dictionary<Action, int> tickFailures = new Dictionary<Action, int>();
+        long failureSummaryDueMs = 0;
+        const long FailureSummaryPeriodMs = 60000;
+
+        private void OnTickListenerFailed(Action listener, Exception e)
+        {
+            if (!tickFailures.TryGetValue(listener, out int count))
+            {
+                Api.Logger.Error("Signal tick listener {0} failed, further failures will be counted and summarized once a minute: {1}",
+                    Describe(listener), e);
+            }
+            tickFailures[listener] = count + 1;
+        }
+
+        private void LogFailureSummary()
+        {
+            long now = Api.World.ElapsedMilliseconds;
+            if (now < failureSummaryDueMs) return;
+            failureSummaryDueMs = now + FailureSummaryPeriodMs;
+
+            foreach (KeyValuePair<Action, int> entry in tickFailures.ToList())
+            {
+                if (entry.Value > 1)
+                {
+                    Api.Logger.Error("Signal tick listener {0} failed {1} times in the last minute", Describe(entry.Key), entry.Value);
+                }
+                tickFailures[entry.Key] = 1; // keep it known, so the full exception is not logged again
+            }
+        }
+
+        private static string Describe(Action listener)
+        {
+            BlockEntity be = listener.Target as BlockEntity;
+            return be != null ? be.GetType().Name + " at " + be.Pos : listener.Target?.GetType().Name ?? "?";
+        }
 
         private float timeFromLastTick = 0;
         public void OnServerGameTick(float dt)
@@ -116,8 +156,17 @@ namespace signals.src
 
             LoadDevices();
             foreach (Action toDo in ToDoOnSignalTick){
-                toDo();
+                // One broken device must not stop the others and the network simulation.
+                try
+                {
+                    toDo();
+                }
+                catch (Exception e)
+                {
+                    OnTickListenerFailed(toDo, e);
+                }
             }
+            LogFailureSummary();
 
             foreach(SignalNetwork net in netManager.networks.Values)
             {
