@@ -54,6 +54,19 @@ namespace signals.src.signalNetwork
                 state = false;
             }
         }
+        // Stop ticking when the plate is gone, otherwise it keeps a dead connection alive.
+        public override void OnBlockUnloaded()
+        {
+            base.OnBlockUnloaded();
+            signalMod?.DisposeSignalTickListener(OnSignalNetworkTick);
+        }
+
+        public override void OnBlockRemoved()
+        {
+            base.OnBlockRemoved();
+            signalMod?.DisposeSignalTickListener(OnSignalNetworkTick);
+        }
+
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
             base.FromTreeAttributes(tree, worldForResolving);
