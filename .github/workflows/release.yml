@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release (for example: 0.3.3)"
+        description: "Version to release (for example: 0.3.4 or 0.3.4-rc1)"
         required: true
         type: string
 
@@ -75,28 +75,42 @@ jobs:
       # 6. Display the version we're going to release
       # ------------------------------------------------------------
       - name: Show release version
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
         run: |
-          echo "Release version: ${{ inputs.version }}"
-          echo "Release tag: v${{ inputs.version }}"
+          echo "Release version: $RELEASE_VERSION"
+          echo "Release tag: v$RELEASE_VERSION"
 
       # ------------------------------------------------------------
       # 7. Build Mod
       # ------------------------------------------------------------
       - name: Build Mod
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
         run: |
+          if [[ ! "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$ ]]; then
+            echo "ERROR: Version must use x.y.z or x.y.z-prerelease (received: $RELEASE_VERSION)"
+            exit 1
+          fi
+
+          sed -i -E "s#<Version>[^<]*</Version>#<Version>${RELEASE_VERSION}</Version>#" signals.csproj
+          grep -qF "<Version>${RELEASE_VERSION}</Version>" signals.csproj
+
           dotnet build \
             --configuration Release \
-            -p:Version=${{ inputs.version }}
+            -p:Version="$RELEASE_VERSION"
 
       # ------------------------------------------------------------
       # 8. Find the ZIP created by the build
       # ------------------------------------------------------------
       - name: Find release package
         id: package
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
         run: |
           echo "Looking for release package..."
 
-          PACKAGE=$(find . -type f -name "*_v${{ inputs.version }}.zip" | head -n 1)
+          PACKAGE=$(find . -type f -name "*_v${RELEASE_VERSION}.zip" | head -n 1)
 
           if [ -z "$PACKAGE" ]; then
             echo "ERROR: No release ZIP was found!"
