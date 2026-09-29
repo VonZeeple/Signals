@@ -7,6 +7,11 @@ on:
         description: "Version to release (for example: 0.3.4 or 0.3.4-rc1)"
         required: true
         type: string
+      prerelease:
+        description: "Mark this release as a prerelease (it will not be the latest release)"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -139,6 +144,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.version }}
           PACKAGE: ${{ steps.package.outputs.path }}
+          PRERELEASE: ${{ inputs.prerelease }}
         run: |
           TAG="v${VERSION}"
 
@@ -146,9 +152,15 @@ jobs:
           echo "Tag will point to master"
           echo "Uploading $PACKAGE"
 
+          RELEASE_FLAGS=()
+          if [[ "$PRERELEASE" == "true" ]]; then
+            RELEASE_FLAGS+=(--prerelease)
+          fi
+
           gh release create "$TAG" \
             --target master \
             --generate-notes \
             --title "$TAG" \
             --fail-on-no-commits \
+            "${RELEASE_FLAGS[@]}" \
             "$PACKAGE"
