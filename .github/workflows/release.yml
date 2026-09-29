@@ -18,7 +18,7 @@ jobs:
 
     steps:
       # ------------------------------------------------------------
-      # 1. Get the source code from the main branch
+      # 1. Get the source code from the master branch
       # ------------------------------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -116,7 +116,7 @@ jobs:
       #
       # gh release create will:
       #   - create tag v<version>
-      #   - point it at main
+      #   - point it at master
       #   - generate release notes
       #   - upload the ZIP
       # ------------------------------------------------------------
@@ -129,11 +129,11 @@ jobs:
           TAG="v${VERSION}"
 
           echo "Creating release $TAG"
-          echo "Tag will point to main"
+          echo "Tag will point to master"
           echo "Uploading $PACKAGE"
 
           gh release create "$TAG" \
-            --target main \
+            --target master \
             --generate-notes \
             --title "$TAG" \
             --fail-on-no-commits \
