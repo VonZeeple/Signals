@@ -1,0 +1,140 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (for example: 0.3.3)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------------------------------------
+      # 1. Get the source code from the main branch
+      # ------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      # ------------------------------------------------------------
+      # 2. Install .NET 10
+      # ------------------------------------------------------------
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      # ------------------------------------------------------------
+      # 3. Download Vintage Story 1.22.0
+      # ------------------------------------------------------------
+      - name: Download Vintage Story 1.22.0
+        run: |
+          mkdir -p "$HOME/vintagestory"
+
+          wget -O /tmp/vintagestory.tar.gz \
+            "https://cdn.vintagestory.at/gamefiles/stable/vs_server_linux-x64_1.22.0.tar.gz"
+
+          tar -xzf /tmp/vintagestory.tar.gz \
+            -C "$HOME/vintagestory"
+
+      # ------------------------------------------------------------
+      # 4. Tell the project where Vintage Story is installed
+      # ------------------------------------------------------------
+      - name: Set Vintage Story path
+        run: |
+          echo "VINTAGE_STORY=$HOME/vintagestory" >> "$GITHUB_ENV"
+
+      # ------------------------------------------------------------
+      # 5. Check that all required Vintage Story DLLs exist
+      # ------------------------------------------------------------
+      - name: Check Vintage Story dependencies
+        run: |
+          echo "Checking Vintage Story installation..."
+          echo "VINTAGE_STORY=$VINTAGE_STORY"
+          echo
+
+          test -f "$VINTAGE_STORY/VintagestoryAPI.dll"
+          test -f "$VINTAGE_STORY/Mods/VSEssentials.dll"
+          test -f "$VINTAGE_STORY/Mods/VSSurvivalMod.dll"
+          test -f "$VINTAGE_STORY/Lib/protobuf-net.dll"
+          test -f "$VINTAGE_STORY/Lib/Newtonsoft.Json.dll"
+
+          echo "All required DLLs were found!"
+
+      # ------------------------------------------------------------
+      # 6. Display the version we're going to release
+      # ------------------------------------------------------------
+      - name: Show release version
+        run: |
+          echo "Release version: ${{ inputs.version }}"
+          echo "Release tag: v${{ inputs.version }}"
+
+      # ------------------------------------------------------------
+      # 7. Build Mod
+      # ------------------------------------------------------------
+      - name: Build Mod
+        run: |
+          dotnet build \
+            --configuration Release \
+            -p:Version=${{ inputs.version }}
+
+      # ------------------------------------------------------------
+      # 8. Find the ZIP created by the build
+      # ------------------------------------------------------------
+      - name: Find release package
+        id: package
+        run: |
+          echo "Looking for release package..."
+
+          PACKAGE=$(find . -type f -name "*_v${{ inputs.version }}.zip" | head -n 1)
+
+          if [ -z "$PACKAGE" ]; then
+            echo "ERROR: No release ZIP was found!"
+            echo
+            echo "ZIP files that do exist:"
+            find . -type f -name "*.zip"
+            exit 1
+          fi
+
+          echo "Found package:"
+          echo "$PACKAGE"
+
+          echo "path=$PACKAGE" >> "$GITHUB_OUTPUT"
+
+      # ------------------------------------------------------------
+      # 9. Create the GitHub Release
+      #
+      # gh release create will:
+      #   - create tag v<version>
+      #   - point it at main
+      #   - generate release notes
+      #   - upload the ZIP
+      # ------------------------------------------------------------
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          PACKAGE: ${{ steps.package.outputs.path }}
+        run: |
+          TAG="v${VERSION}"
+
+          echo "Creating release $TAG"
+          echo "Tag will point to main"
+          echo "Uploading $PACKAGE"
+
+          gh release create "$TAG" \
+            --target main \
+            --generate-notes \
+            --title "$TAG" \
+            --fail-on-no-commits \
+            "$PACKAGE"

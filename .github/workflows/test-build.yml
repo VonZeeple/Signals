@@ -1,0 +1,66 @@
+name: Test Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Download our source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install .NET 10
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      # 3. Download Vintage Story 1.22.0
+      - name: Download Vintage Story
+        run: |
+          mkdir -p "$HOME/vintagestory"
+
+          wget -O /tmp/vintagestory.tar.gz \
+            "https://cdn.vintagestory.at/gamefiles/stable/vs_server_linux-x64_1.22.0.tar.gz"
+
+          tar -xzf /tmp/vintagestory.tar.gz \
+            -C "$HOME/vintagestory"
+
+      # 4. Tell the project where Vintage Story is installed
+      - name: Set Vintage Story path
+        run: |
+          echo "VINTAGE_STORY=$HOME/vintagestory" >> "$GITHUB_ENV"
+
+      # 5. Show what we downloaded
+      - name: Check Vintage Story files
+        run: |
+          echo "VINTAGE_STORY=$VINTAGE_STORY"
+          echo
+          echo "Files:"
+          find "$VINTAGE_STORY" -maxdepth 2 -type f | sort
+
+      # 6. Verify the DLLs Signals needs
+      - name: Check required DLLs
+        run: |
+          test -f "$VINTAGE_STORY/VintagestoryAPI.dll"
+          test -f "$VINTAGE_STORY/Mods/VSEssentials.dll"
+          test -f "$VINTAGE_STORY/Mods/VSSurvivalMod.dll"
+          test -f "$VINTAGE_STORY/Lib/protobuf-net.dll"
+          test -f "$VINTAGE_STORY/Lib/Newtonsoft.Json.dll"
+
+          echo "All required DLLs were found!"
+
+      # 8. Build Mod
+      - name: Build Mod
+        run: |
+          dotnet build \
+            --configuration Release \
+            -p:Version=0.1.0
