@@ -40,6 +40,9 @@ namespace signals.src
             api.RegisterBlockClass("BlockBuzzer", typeof(BlockBuzzer));
             api.RegisterBlockClass("BlockButtonSwitch", typeof(BlockButtonSwitch));
             api.RegisterBlockClass("BlockPassThroughConnector", typeof(BlockPassThroughConnector));
+            api.RegisterBlockClass("BlockSignalSource", typeof(BlockSignalSource));
+            api.RegisterBlockClass("BlockConnection2", typeof(BlockConnection2));
+            api.RegisterBlockClass("BlockConnection2Vertical", typeof(BlockConnection2Vertical));
 
             api.RegisterBlockEntityClass("BlockEntityLightBulb", typeof(BlockEntityLightBulb));
             api.RegisterBlockEntityClass("BlockEntitySwitch", typeof(BESwitch));

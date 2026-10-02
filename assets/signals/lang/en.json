@@ -25,6 +25,8 @@
     "signals:block-connection2-*": "Double connector",
     "signals:block-knifeswitch-*": "Switch",
     "signals:block-blocksource": "Signal source",
+    "signals:block-blocksource-*": "Signal source",
+    "signals:block-connection2v-*": "Double connector",
     "signals:block-blockbuzzer": "Buzzer",
     "signals:block-blockactuator-*": "Actuator",
     "signals:block-buttonswitch-*": "Button switch",

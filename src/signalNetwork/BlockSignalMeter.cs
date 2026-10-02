@@ -27,6 +27,22 @@ namespace signals.src.signalNetwork
             }
         }
 
+        // Floor and wall meters are the same item, so they stack in the inventory.
+        ItemStack BaseItem(IWorldAccessor world)
+        {
+            return new ItemStack(world.GetBlock(new AssetLocation("signals:blockmeter-wall-north")) ?? this);
+        }
+
+        public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
+        {
+            return BaseItem(world);
+        }
+
+        public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+        {
+            return new[] { BaseItem(world) };
+        }
+
         public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode)
         {
             if (byPlayer.Entity.Controls.Sneak)
@@ -83,7 +99,11 @@ namespace signals.src.signalNetwork
 
             if (block.CanAttachBlockAt(world.BlockAccessor, this, attachingBlockPos, onFace, attachmentArea))
             {
-                int blockId = world.BlockAccessor.GetBlock(CodeWithVariant("orientation", onBlockFace.Code)).BlockId;
+                // Always the wall type here, the item may be a floor variant picked up earlier.
+                Dictionary<string, string> dict = new Dictionary<string, string>()
+                            {{"type", "wall"},
+                            {"orientation", onBlockFace.Code}};
+                int blockId = world.BlockAccessor.GetBlock(CodeWithVariants(dict)).BlockId;
                 world.BlockAccessor.SetBlock(blockId, blockpos);
                 return true;
             }
