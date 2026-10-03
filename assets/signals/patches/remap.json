@@ -4,7 +4,13 @@
         "op": "add",
         "path": "/signals:0.3.5",
         "value": [
-            "/bir remap signals:blocksource-north-down signals:blocksource force"
+            "/bir remap signals:blocksource-north-down signals:blocksource force",
+            "/bir remap signals:connection2-east-north signals:connection2-north force",
+            "/bir remap signals:connection2-down-east signals:connection2-east force",
+            "/bir remap signals:connection2-west-south signals:connection2-south force",
+            "/bir remap signals:connection2-up-west signals:connection2-west force",
+            "/bir remap signals:connection2-east-up signals:connection2-up force",
+            "/bir remap signals:connection2-east-down signals:connection2-down force"
         ],
         "file": "game:config/remaps.json"
     }
