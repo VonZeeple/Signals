@@ -168,12 +168,19 @@ namespace signals.src
             }
             LogFailureSummary();
 
+            // Compute all networks first, then notify. Otherwise a device reacts in this tick or the next
+            // one depending on the order of the networks.
+            List<ISignalNode> changed = new List<ISignalNode>();
             foreach(SignalNetwork net in netManager.networks.Values)
             {
                 if (!net.isValid)
                 {
-                    net.Simulate();
+                    changed.AddRange(net.Compute());
                 }
+            }
+            foreach(ISignalNode node in changed)
+            {
+                GetDeviceAt(node.Pos.blockPos)?.OnNodeUpdate(node.Pos);
             }
 
             if(needRenderUpdate){
