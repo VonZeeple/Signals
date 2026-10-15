@@ -45,6 +45,16 @@ namespace signals.src.signalNetwork
         /// </summary>
         public void Simulate()
         {
+            foreach(ISignalNode node in Compute()){
+                mod.GetDeviceAt(node.Pos.blockPos)?.OnNodeUpdate(node.Pos);
+            }
+        }
+
+        /// <summary>
+        /// Compute values at nodes without notifying the devices; returns the changed nodes
+        /// </summary>
+        public HashSet<ISignalNode> Compute()
+        {
             List<ISignalNode> sources = nodes.Values.Where(v => v.isSource).ToList();
             HashSet<ISignalNode> updated = new HashSet<ISignalNode>();
             HashSet<ISignalNode> changed = new HashSet<ISignalNode>();
@@ -93,17 +103,15 @@ namespace signals.src.signalNetwork
                 }
             }
 
-            isValid = true;//Needs to be here as following
+            isValid = true;//Needs to be here, notified devices may invalidate the network again
             foreach(ISignalNode node in nodes.Values){
                 if(!updated.Contains(node)){
                     if(node.value != 0 | firstTick){changed.Add(node);};
                     node.value = 0;
                 }
             }
-            foreach(ISignalNode node in changed){
-                mod.GetDeviceAt(node.Pos.blockPos)?.OnNodeUpdate(node.Pos);
-            }
             firstTick = false;
+            return changed;
         }
 
         public void AddNode(ISignalNode node){
