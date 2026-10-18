@@ -17,7 +17,8 @@
 			"name": "base",
 			"from": [ 2.0, 0.0, 6.0 ], 
 			"to": [ 14.0, 1.0, 10.0 ], 
-			"rotationOrigin": [ 2.0, 0.0, 6.0 ],
+			"rotationOrigin": [ 8.0, 0.0, 8.0 ],
+			"rotationY": 90.0,
 			"faces": {
 				"north": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 1.0, 12.0 ], "rotation": 90 },
 				"east": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 1.0, 4.0 ], "rotation": 90 },
@@ -31,7 +32,8 @@
 			"name": "insulator1",
 			"from": [ 3.5, 1.0, 7.0 ], 
 			"to": [ 5.5, 2.5, 9.0 ], 
-			"rotationOrigin": [ 5.0, 1.0, 7.5 ],
+			"rotationOrigin": [ 8.0, 1.0, 8.0 ],
+			"rotationY": 90.0,
 			"faces": {
 				"north": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 2.0, 1.5 ] },
 				"east": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 2.0, 1.5 ] },
@@ -89,7 +91,8 @@
 			"name": "insulator7",
 			"from": [ 10.5, 1.0, 7.0 ], 
 			"to": [ 12.5, 2.5, 9.0 ], 
-			"rotationOrigin": [ 12.0, 1.0, 7.5 ],
+			"rotationOrigin": [ 8.0, 1.0, 8.0 ],
+			"rotationY": 90.0,
 			"faces": {
 				"north": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 2.0, 1.5 ] },
 				"east": { "texture": "#oak-dark", "uv": [ 0.0, 0.0, 2.0, 1.5 ] },
@@ -148,6 +151,7 @@
 			"from": [ 7.5, 1.0, 7.5 ], 
 			"to": [ 8.5, 1.5, 8.5 ], 
 			"rotationOrigin": [ 8.0, 1.0, 8.0 ],
+			"rotationY": 90.0,
 			"faces": {
 				"north": { "texture": "#normal3", "uv": [ 0.0, 0.0, 1.0, 0.5 ] },
 				"east": { "texture": "#normal3", "uv": [ 0.0, 0.0, 1.0, 0.5 ] },

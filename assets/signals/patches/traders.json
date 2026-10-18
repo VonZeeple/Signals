@@ -46,7 +46,7 @@
     "op": "add",
     "path": "/selling/list/-",
     "value": {
-      "code": "signals:blocksource",
+      "code": "signals:blocksource-north-down",
       "type": "block",
       "stacksize": 1,
       "stock": {
@@ -66,7 +66,7 @@
   "op": "add",
   "path": "/selling/list/-",
   "value": {
-    "code": "signals:blocksource",
+    "code": "signals:blocksource-north-down",
     "type": "block",
     "stacksize": 1,
     "stock": {
