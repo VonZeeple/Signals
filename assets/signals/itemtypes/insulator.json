@@ -11,6 +11,22 @@
         }
     ],
     "behaviors": [
+        {
+		"name": "GroundStorable",
+		"properties": {
+			"layout": "Stacking",
+			"placeRemoveSound": "game:sounds/block/ceramicplace",
+            "stackingModel": "signals:block/insulator_pile",
+            "modelItemsToStackSizeRatio": 12,
+			"upSolid": false,
+			"stackingCapacity": 16,
+			"transferQuantity": 1,
+			"bulkTransferQuantity": 4,
+			"maxFireable": 48,
+			"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.0625, "z2": 1 },
+			"cbScaleYByLayer": 0.0833333333333333
+		}
+    }
     ],
     "shape": {
         "base": "signals:item/insulator"
